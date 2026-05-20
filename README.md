@@ -1,4 +1,4 @@
-# Client Operations OS (Panze)
+# Serenops
 
 A full-stack web app for managing the end-to-end client lifecycle:
 leads, onboarding, proposals, contracts, invoices, payments, projects, tasks, revisions, timeline, and handover.
