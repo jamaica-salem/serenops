@@ -1,17 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   BadgeCheck,
   Building2,
   CheckCircle2,
-  ClipboardPenLine,
-  FileSignature,
+  Clock3,
   Landmark,
   Mail,
   MessageCircle,
-  NotebookPen,
+  Rocket,
   ShieldCheck,
-  XCircle,
 } from "lucide-react";
 import api from "../lib/api";
 import { formatMoney } from "../lib/invoiceUtils";
@@ -31,9 +29,10 @@ export default function ClientPortalPage() {
   const [signatures, setSignatures] = useState({});
   const [payments, setPayments] = useState({});
   const [feedback, setFeedback] = useState({ message: "", rating: "" });
+  const [proposalNotes, setProposalNotes] = useState({});
   const [busy, setBusy] = useState({});
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
@@ -59,11 +58,11 @@ export default function ClientPortalPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     load();
-  }, [token]);
+  }, [load]);
 
   const summary = useMemo(() => {
     const proposals = data?.proposals || [];
@@ -75,6 +74,7 @@ export default function ClientPortalPage() {
       pendingContracts: contracts.filter((c) => ["draft", "sent"].includes(c.status)).length,
       unpaidInvoices: invoices.filter((i) => Number(i.balance_due || 0) > 0 && i.status !== "cancelled").length,
       openTasks: tasks.filter((t) => t.status !== "done").length,
+      activeProjects: (data?.projects || []).filter((p) => p.status !== "completed").length,
     };
   }, [data]);
 
@@ -124,8 +124,12 @@ export default function ClientPortalPage() {
     setActionError("");
     setActionSuccess("");
     try {
-      await api.post(`/portal/${token}/proposals/${proposalId}/decision`, { status });
+      await api.post(`/portal/${token}/proposals/${proposalId}/decision`, {
+        status,
+        notes: proposalNotes[proposalId] || "",
+      });
       setActionSuccess(`Proposal ${status}.`);
+      setProposalNotes((prev) => ({ ...prev, [proposalId]: "" }));
       await load();
     } catch (e) {
       setActionError(e?.response?.data?.detail || "Unable to update proposal.");
@@ -158,6 +162,12 @@ export default function ClientPortalPage() {
     } finally {
       setBusy((prev) => ({ ...prev, [invoiceId]: false }));
     }
+  };
+
+  const formatDate = (value) => {
+    if (!value) return "N/A";
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? value : d.toLocaleDateString();
   };
 
   const submitFeedback = async () => {
@@ -219,7 +229,7 @@ export default function ClientPortalPage() {
               <SummaryCard label="Pending approvals" value={summary.pendingProposals + summary.pendingContracts} />
               <SummaryCard label="Unpaid invoices" value={summary.unpaidInvoices} />
               <SummaryCard label="Open tasks" value={summary.openTasks} />
-              <SummaryCard label="Active items" value={summary.pendingContracts + summary.unpaidInvoices} />
+              <SummaryCard label="Active projects" value={summary.activeProjects} />
             </div>
           </div>
         </div>
@@ -249,10 +259,15 @@ export default function ClientPortalPage() {
                       <div className="text-xs text-[#8EA39B] mt-1">Status: {proposal.status}</div>
                     </div>
                     <div className="flex gap-2">
+                      {["approved", "rejected"].includes(proposal.status) && (
+                        <span className="inline-flex items-center px-2.5 h-9 rounded-lg bg-[#F4F8F6] text-[#51645D] text-xs">
+                          Finalized
+                        </span>
+                      )}
                       <button
                         type="button"
                         onClick={() => decideProposal(proposal.id, "approved")}
-                        disabled={busy[proposal.id]}
+                        disabled={busy[proposal.id] || ["approved", "rejected"].includes(proposal.status)}
                         className="h-9 px-3 rounded-lg bg-[#5FA38D] text-white text-xs font-medium hover:bg-[#4E8C79] disabled:opacity-60"
                       >
                         Approve
@@ -260,18 +275,32 @@ export default function ClientPortalPage() {
                       <button
                         type="button"
                         onClick={() => decideProposal(proposal.id, "rejected")}
-                        disabled={busy[proposal.id]}
+                        disabled={busy[proposal.id] || ["approved", "rejected"].includes(proposal.status)}
                         className="h-9 px-3 rounded-lg border border-[#F0D9D9] text-[#9A3838] text-xs font-medium hover:bg-[#FFF6F6] disabled:opacity-60"
                       >
                         Reject
                       </button>
                     </div>
                   </div>
+                  {!["approved", "rejected"].includes(proposal.status) && (
+                    <textarea
+                      rows={2}
+                      value={proposalNotes[proposal.id] || ""}
+                      onChange={(e) => setProposalNotes((prev) => ({ ...prev, [proposal.id]: e.target.value }))}
+                      className="mt-3 w-full px-3 py-2 rounded-lg border border-[#E5ECE8] text-sm"
+                      placeholder="Optional note for your decision"
+                    />
+                  )}
                   {proposal.scope_of_work && (
                     <p className="text-sm text-[#42534d] mt-3 whitespace-pre-wrap">{proposal.scope_of_work}</p>
                   )}
                 </div>
               ))}
+              {(data?.proposals || []).length === 0 && (data?.contracts || []).length === 0 && (
+                <div className="rounded-xl border border-dashed border-[#D6E4DE] p-5 text-sm text-[#667C74]">
+                  No approvals pending right now.
+                </div>
+              )}
 
               {(data?.contracts || []).map((contract) => {
                 const signature = signatures[contract.id] || {};
@@ -432,13 +461,18 @@ export default function ClientPortalPage() {
                   <button
                     type="button"
                     onClick={() => recordPayment(invoice.id)}
-                    disabled={busy[invoice.id]}
+                    disabled={busy[invoice.id] || Number(invoice.balance_due || 0) <= 0 || invoice.status === "cancelled"}
                     className="h-10 px-4 rounded-lg bg-[#5FA38D] text-white text-sm font-medium hover:bg-[#4E8C79] disabled:opacity-60 inline-flex items-center gap-2"
                   >
                     <Landmark className="w-4 h-4" /> {busy[invoice.id] ? "Submitting..." : "Record payment"}
                   </button>
                 </div>
               ))}
+              {(data?.invoices || []).length === 0 && (
+                <div className="rounded-xl border border-dashed border-[#D6E4DE] p-5 text-sm text-[#667C74]">
+                  No invoices shared in this portal.
+                </div>
+              )}
             </div>
 
             <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
@@ -460,6 +494,59 @@ export default function ClientPortalPage() {
             </div>
 
             <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
+              <div>
+                <h2 className="font-display text-xl font-semibold">Projects</h2>
+                <p className="text-sm text-[#667C74]">Delivery status across your active workstreams.</p>
+              </div>
+              <div className="space-y-3">
+                {(data?.projects || []).slice(0, 6).map((project) => (
+                  <div key={project.id} className="rounded-xl border border-[#E5ECE8] p-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="font-medium">{project.name}</div>
+                        <div className="text-xs text-[#8EA39B] mt-1">
+                          {project.start_date ? `Started ${formatDate(project.start_date)}` : "Start date pending"}
+                        </div>
+                      </div>
+                      <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-[#EEF5F1] text-[#476158]">
+                        <Rocket className="w-3.5 h-3.5" /> {project.status || "active"}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                {(!data?.projects || data.projects.length === 0) && (
+                  <div className="text-sm text-[#8EA39B]">No projects published yet.</div>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
+              <div>
+                <h2 className="font-display text-xl font-semibold">Recent activity</h2>
+                <p className="text-sm text-[#667C74]">A timeline of updates shared with you.</p>
+              </div>
+              <div className="space-y-3">
+                {(data?.timeline_events || []).slice(0, 6).map((evt) => (
+                  <div key={evt.id} className="rounded-xl border border-[#E5ECE8] p-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="font-medium">{evt.title}</div>
+                        {evt.details && <div className="text-sm text-[#536660] mt-1 whitespace-pre-wrap">{evt.details}</div>}
+                      </div>
+                      <div className="text-xs text-[#8EA39B] inline-flex items-center gap-1.5">
+                        <Clock3 className="w-3.5 h-3.5" /> {formatDate(evt.occurred_at)}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {(!data?.timeline_events || data.timeline_events.length === 0) && (
+                  <div className="text-sm text-[#8EA39B]">No activity posted yet.</div>
+                )}
+              </div>
+            </div>
+
+            {data?.portal?.allow_feedback ? (
+              <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
               <div>
                 <h2 className="font-display text-xl font-semibold">Leave feedback</h2>
                 <p className="text-sm text-[#667C74]">Share notes or questions with the delivery team.</p>
@@ -495,7 +582,12 @@ export default function ClientPortalPage() {
               >
                 <MessageCircle className="w-4 h-4" /> {busy.feedback ? "Sending..." : "Send feedback"}
               </button>
-            </div>
+              </div>
+            ) : (
+              <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 text-sm text-[#667C74]">
+                Feedback is currently disabled for this portal link.
+              </div>
+            )}
           </section>
         </div>
       </div>
