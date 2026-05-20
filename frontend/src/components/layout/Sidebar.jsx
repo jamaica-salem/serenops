@@ -20,14 +20,28 @@ const items = [
   { to: "/settings", icon: Settings, label: "Settings", testid: "nav-settings" },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuth();
+  const handleNavClick = () => {
+    if (window.innerWidth < 768) onClose?.();
+  };
 
   return (
-    <aside
-      className="hidden md:flex relative w-60 shrink-0 border-r border-[#1e3a31] bg-gradient-to-b from-[#0F2B24] to-[#123C31] flex-col text-[#F3F7F5] overflow-hidden"
-      data-testid="sidebar"
-    >
+    <>
+      {isOpen && (
+        <button
+          type="button"
+          aria-label="Close sidebar overlay"
+          onClick={onClose}
+          className="md:hidden fixed inset-0 bg-black/40 z-40"
+        />
+      )}
+      <aside
+        className={`fixed md:relative z-50 md:z-auto inset-y-0 left-0 w-60 shrink-0 border-r border-[#1e3a31] bg-gradient-to-b from-[#0F2B24] to-[#123C31] flex flex-col text-[#F3F7F5] overflow-hidden transition-all duration-200 ${
+          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0 md:w-0 md:border-r-0"
+        }`}
+        data-testid="sidebar"
+      >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_8%,rgba(123,196,164,0.26),transparent_38%),radial-gradient(circle_at_20%_85%,rgba(95,163,141,0.18),transparent_34%)]" />
 
       <div className="relative h-20 flex items-center gap-3 px-5 border-b border-white/10">
@@ -46,6 +60,7 @@ export default function Sidebar() {
             key={to}
             to={to}
             end={end}
+            onClick={handleNavClick}
             data-testid={testid}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors ${
@@ -83,6 +98,7 @@ export default function Sidebar() {
           </button>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

@@ -50,11 +50,52 @@ code, pre, .font-mono {
         --chart-5: 0 56% 67%; /* #D97C7C */
         --radius: 0.75rem;
     }
+
+    .dark {
+        --background: 157 26% 9%;
+        --foreground: 150 20% 94%;
+        --card: 157 22% 12%;
+        --card-foreground: 150 20% 94%;
+        --popover: 157 22% 12%;
+        --popover-foreground: 150 20% 94%;
+        --primary: 158 34% 56%;
+        --primary-foreground: 157 26% 9%;
+        --secondary: 157 20% 18%;
+        --secondary-foreground: 150 20% 94%;
+        --muted: 157 18% 16%;
+        --muted-foreground: 155 10% 70%;
+        --accent: 154 30% 40%;
+        --accent-foreground: 150 20% 94%;
+        --destructive: 0 62% 58%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 157 14% 22%;
+        --input: 157 14% 22%;
+        --ring: 158 34% 56%;
+        --chart-1: 158 34% 56%;
+        --chart-2: 154 27% 46%;
+        --chart-3: 196 9% 62%;
+        --chart-4: 30 46% 56%;
+        --chart-5: 0 58% 62%;
+    }
 }
 
 @layer base {
     * { @apply border-border; }
     body { @apply bg-background text-foreground; }
+}
+
+@layer utilities {
+    .dark .bg-white { background-color: hsl(var(--card)) !important; }
+    .dark .bg-\[\#F7FAF8\],
+    .dark .bg-\[\#F6FAF8\],
+    .dark .bg-\[\#f7faf8\] { background-color: hsl(var(--background)) !important; }
+    .dark .border-\[\#E5ECE8\] { border-color: hsl(var(--border)) !important; }
+    .dark .text-\[\#1D2A25\],
+    .dark .text-\[\#31443d\] { color: hsl(var(--foreground)) !important; }
+    .dark .text-\[\#667C74\],
+    .dark .text-\[\#8EA39B\] { color: hsl(var(--muted-foreground)) !important; }
+    .dark .hover\:bg-\[\#edf3ef\]:hover,
+    .dark .hover\:bg-\[\#FFF6F6\]:hover { background-color: hsl(var(--muted)) !important; }
 }
 
 /* Custom scrollbar */
