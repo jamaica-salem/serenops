@@ -202,6 +202,16 @@ async def list_invoices(client_id: Optional[str] = None, user=Depends(get_curren
     return await db.invoices.find(q, {"_id": 0}).sort("created_at", -1).to_list(500)
 
 
+@router.get("/invoices/{invoice_id}", response_model=InvoiceOut)
+async def get_invoice(invoice_id: str, user=Depends(get_current_user)):
+    from server import db
+
+    invoice = await db.invoices.find_one({"id": invoice_id}, {"_id": 0})
+    if not invoice:
+        raise HTTPException(404, "Invoice not found")
+    return invoice
+
+
 @router.post("/invoices", response_model=InvoiceOut)
 async def create_invoice(payload: InvoiceIn, user=Depends(get_current_user)):
     from server import db
@@ -209,6 +219,13 @@ async def create_invoice(payload: InvoiceIn, user=Depends(get_current_user)):
     client = await db.clients.find_one({"id": payload.client_id}, {"_id": 1})
     if not client:
         raise HTTPException(404, "Client not found")
+
+    if payload.project_id:
+        project = await db.projects.find_one({"id": payload.project_id}, {"_id": 0, "client_id": 1})
+        if not project:
+            raise HTTPException(404, "Project not found")
+        if project.get("client_id") and project.get("client_id") != payload.client_id:
+            raise HTTPException(400, "Project does not belong to the selected client")
 
     now = _now()
     doc = payload.model_dump()
@@ -247,6 +264,14 @@ async def update_invoice(invoice_id: str, payload: InvoiceUpdate, user=Depends(g
 
     patch = {k: v for k, v in payload.model_dump().items() if v is not None}
     next_doc = {**existing, **patch, "updated_at": _now()}
+
+    if next_doc.get("project_id"):
+        project = await db.projects.find_one({"id": next_doc["project_id"]}, {"_id": 0, "client_id": 1})
+        if not project:
+            raise HTTPException(404, "Project not found")
+        if project.get("client_id") and project.get("client_id") != next_doc.get("client_id"):
+            raise HTTPException(400, "Project does not belong to the selected client")
+
     _compute_invoice_fields(next_doc)
 
     await db.invoices.update_one({"id": invoice_id}, {"$set": next_doc})

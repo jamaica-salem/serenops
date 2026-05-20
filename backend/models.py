@@ -227,23 +227,26 @@ class OnboardingItemOut(BaseModel):
 
 # ---------- Invoice ----------
 InvoiceStatus = Literal["draft", "sent", "paid", "partially_paid", "overdue", "cancelled"]
+InvoiceCurrency = Literal["USD", "EUR", "GBP", "AUD", "CAD", "JPY", "PHP", "SGD", "NZD", "OTHER"]
 
 
 class InvoiceItemIn(BaseModel):
     description: str
-    quantity: float = 1
-    rate: float = 0
+    quantity: float = Field(default=1, ge=0)
+    rate: float = Field(default=0, ge=0)
 
 
 class InvoiceIn(BaseModel):
     invoice_number: str
     client_id: str
+    project_id: Optional[str] = None
     issue_date: str
     due_date: str
+    currency: InvoiceCurrency = "USD"
     line_items: List[InvoiceItemIn] = Field(default_factory=list)
-    discount: float = 0
-    tax_fees: float = 0
-    amount_paid: float = 0
+    discount: float = Field(default=0, ge=0)
+    tax_fees: float = Field(default=0, ge=0)
+    amount_paid: float = Field(default=0, ge=0)
     payment_method: Optional[str] = ""
     notes: Optional[str] = ""
     status: InvoiceStatus = "draft"
@@ -251,12 +254,14 @@ class InvoiceIn(BaseModel):
 
 class InvoiceUpdate(BaseModel):
     invoice_number: Optional[str] = None
+    project_id: Optional[str] = None
     issue_date: Optional[str] = None
     due_date: Optional[str] = None
+    currency: Optional[InvoiceCurrency] = None
     line_items: Optional[List[InvoiceItemIn]] = None
-    discount: Optional[float] = None
-    tax_fees: Optional[float] = None
-    amount_paid: Optional[float] = None
+    discount: Optional[float] = Field(default=None, ge=0)
+    tax_fees: Optional[float] = Field(default=None, ge=0)
+    amount_paid: Optional[float] = Field(default=None, ge=0)
     payment_method: Optional[str] = None
     notes: Optional[str] = None
     status: Optional[InvoiceStatus] = None
@@ -266,8 +271,10 @@ class InvoiceOut(BaseModel):
     id: str
     invoice_number: str
     client_id: str
+    project_id: Optional[str] = None
     issue_date: str
     due_date: str
+    currency: InvoiceCurrency = "USD"
     line_items: List[InvoiceItemIn] = Field(default_factory=list)
     subtotal: float = 0
     discount: float = 0
