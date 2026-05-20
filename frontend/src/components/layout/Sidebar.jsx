@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import {
-  LayoutDashboard, ListTodo, FolderKanban, Bell, Sparkles, Settings, LogOut, BriefcaseBusiness, ReceiptText, FileSignature, RefreshCcwDot, FilePenLine, LayoutTemplate,
+  LayoutDashboard, ListTodo, FolderKanban, Bell, Sparkles, Settings, LogOut, BriefcaseBusiness, ReceiptText, FileSignature, RefreshCcwDot, FilePenLine, LayoutTemplate, Landmark,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -12,6 +12,7 @@ const items = [
   { to: "/proposals", icon: FilePenLine, label: "Proposals", testid: "nav-proposals" },
   { to: "/revisions", icon: RefreshCcwDot, label: "Revisions", testid: "nav-revisions" },
   { to: "/invoices", icon: ReceiptText, label: "Invoices", testid: "nav-invoices" },
+  { to: "/payments", icon: Landmark, label: "Payments", testid: "nav-payments" },
   { to: "/contracts", icon: FileSignature, label: "Contracts", testid: "nav-contracts" },
   { to: "/templates", icon: LayoutTemplate, label: "Templates", testid: "nav-templates" },
   { to: "/notifications", icon: Bell, label: "Notifications", testid: "nav-notifications" },
