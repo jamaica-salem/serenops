@@ -1,4 +1,4 @@
-"""Backend regression tests for Panze (Jira-lite AI PM)."""
+"""Backend regression tests for SerenOps (Jira-lite AI PM)."""
 import os
 import time
 import uuid
@@ -8,9 +8,9 @@ import requests
 BASE_URL = os.environ.get("REACT_APP_BACKEND_URL", "http://localhost:8001").rstrip("/")
 API = f"{BASE_URL}/api"
 
-DEMO_EMAIL = "demo@panze.app"
+DEMO_EMAIL = "demo@serenops.app"
 DEMO_PASSWORD = "demo123"
-ADMIN_EMAIL = "admin@panze.app"
+ADMIN_EMAIL = "admin@serenops.app"
 ADMIN_PASSWORD = "admin123"
 
 
@@ -37,7 +37,7 @@ class TestHealth:
         assert r.status_code == 200
         data = r.json()
         assert data.get("status") == "ok"
-        assert data.get("app") == "panze"
+        assert data.get("app") == "serenops"
 
 
 # ---------- Auth ----------
@@ -76,7 +76,7 @@ class TestAuth:
 
     def test_register_and_logout(self):
         s = requests.Session()
-        email = f"test_{uuid.uuid4().hex[:8]}@panze.app"
+        email = f"test_{uuid.uuid4().hex[:8]}@serenops.app"
         r = s.post(f"{API}/auth/register", json={"email": email, "password": "pass1234", "name": "Test User"})
         assert r.status_code == 200, r.text
         assert r.json()["email"] == email

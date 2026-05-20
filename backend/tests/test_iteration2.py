@@ -8,7 +8,7 @@ import requests
 BASE_URL = os.environ.get("REACT_APP_BACKEND_URL", "http://localhost:8001").rstrip("/")
 API = f"{BASE_URL}/api"
 
-DEMO_EMAIL = "demo@panze.app"
+DEMO_EMAIL = "demo@serenops.app"
 DEMO_PASSWORD = "demo123"
 
 
@@ -124,7 +124,7 @@ class TestNotificationsPersistence:
 class TestBruteForceLockout:
     def test_lockout_after_5_fails(self, fresh_session):
         # Use a unique email so we don't lock the real demo account for other tests
-        bad_email = f"bf_{uuid.uuid4().hex[:8]}@panze.app"
+        bad_email = f"bf_{uuid.uuid4().hex[:8]}@serenops.app"
         # 5 fails - all should be 401 (user not found OR wrong pwd)
         for i in range(5):
             r = fresh_session.post(f"{API}/auth/login", json={"email": bad_email, "password": "wrong"})
