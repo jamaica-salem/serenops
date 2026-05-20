@@ -899,7 +899,7 @@ export default function ClientsPage() {
                     <Select value={contractForm.status} onValueChange={(v) => setContractForm({ ...contractForm, status: v })}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        {["draft", "sent", "signed", "expired"].map((s) => <SelectItem key={s} value={s}>{prettyStatus(s)}</SelectItem>)}
+                        {["draft", "sent", "signed", "expired", "cancelled"].map((s) => <SelectItem key={s} value={s}>{prettyStatus(s)}</SelectItem>)}
                       </SelectContent>
                     </Select>
                     <Textarea rows={2} placeholder="Scope of work" value={contractForm.scope_of_work} onChange={(e) => setContractForm({ ...contractForm, scope_of_work: e.target.value })} />

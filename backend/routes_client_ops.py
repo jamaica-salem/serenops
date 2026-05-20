@@ -461,6 +461,16 @@ async def list_contracts(client_id: Optional[str] = None, user=Depends(get_curre
     return await db.contracts.find(q, {"_id": 0}).sort("created_at", -1).to_list(500)
 
 
+@router.get("/contracts/{contract_id}", response_model=ContractOut)
+async def get_contract(contract_id: str, user=Depends(get_current_user)):
+    from server import db
+
+    contract = await db.contracts.find_one({"id": contract_id}, {"_id": 0})
+    if not contract:
+        raise HTTPException(404, "Contract not found")
+    return contract
+
+
 @router.post("/contracts", response_model=ContractOut)
 async def create_contract(payload: ContractIn, user=Depends(get_current_user)):
     from server import db
