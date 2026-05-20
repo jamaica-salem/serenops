@@ -24,20 +24,22 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="hidden md:flex w-60 shrink-0 border-r border-[#1F342E] bg-[#14211D] flex-col text-[#F3F7F5]"
+      className="hidden md:flex relative w-60 shrink-0 border-r border-[#1e3a31] bg-gradient-to-b from-[#0F2B24] to-[#123C31] flex-col text-[#F3F7F5] overflow-hidden"
       data-testid="sidebar"
     >
-      <div className="h-16 flex items-center gap-2 px-5 border-b border-[#1F342E]">
-        <div className="w-8 h-8 rounded-lg bg-[#1B2B25] border border-[#31443D] flex items-center justify-center text-[#7BC4A4] font-bold font-display">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_8%,rgba(123,196,164,0.26),transparent_38%),radial-gradient(circle_at_20%_85%,rgba(95,163,141,0.18),transparent_34%)]" />
+
+      <div className="relative h-20 flex items-center gap-3 px-5 border-b border-white/10">
+        <div className="w-10 h-10 rounded-full bg-white/10 border border-white/35 flex items-center justify-center text-white font-bold font-display shadow-sm">
           S
         </div>
         <div>
-          <div className="font-display font-bold text-[#F3F7F5] leading-none">SerenOps</div>
-          <div className="text-[10px] uppercase tracking-widest text-[#8EA39B]">client os</div>
+          <div className="font-display font-semibold text-lg text-[#F3F7F5] leading-none">SerenOps</div>
+          <div className="text-[10px] uppercase tracking-[0.18em] text-[#B8C8C1] mt-0.5">client os</div>
         </div>
       </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="relative flex-1 px-3 py-5 space-y-1.5">
         {items.map(({ to, icon: Icon, label, testid, end }) => (
           <NavLink
             key={to}
@@ -45,10 +47,10 @@ export default function Sidebar() {
             end={end}
             data-testid={testid}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+              `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors ${
                 isActive
-                  ? "bg-[#22352E] text-[#F3F7F5] font-medium"
-                  : "text-[#B8C8C1] hover:bg-[#1B2B25] hover:text-[#F3F7F5]"
+                  ? "bg-white/10 text-[#F3F7F5] font-medium"
+                  : "text-[#d6e1dc] hover:bg-white/5 hover:text-[#F3F7F5]"
               }`
             }
           >
@@ -58,8 +60,8 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="p-3 border-t border-[#1F342E]">
-        <div className="flex items-center gap-3 px-2 py-2">
+      <div className="relative p-3 border-t border-white/10">
+        <div className="flex items-center gap-3 px-2 py-2 rounded-xl bg-white/5">
           <img
             src={user?.avatar_url || "https://images.unsplash.com/photo-1758518729459-235dcaadc611?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwzfHxwcm9mZXNzaW9uYWwlMjBwb3J0cmFpdCUyMHNtaWxpbmclMjBmYWNlfGVufDB8fHx8MTc3NzQyNzEzMXww&ixlib=rb-4.1.0&q=85"}
             alt={user?.name}
@@ -73,7 +75,7 @@ export default function Sidebar() {
           <button
             onClick={logout}
             data-testid="sidebar-logout-btn"
-            className="p-1.5 rounded-md text-[#8EA39B] hover:text-[#F3F7F5] hover:bg-[#1B2B25]"
+            className="p-1.5 rounded-md text-[#B8C8C1] hover:text-[#F3F7F5] hover:bg-white/10"
             title="Logout"
           >
             <LogOut className="w-4 h-4" />

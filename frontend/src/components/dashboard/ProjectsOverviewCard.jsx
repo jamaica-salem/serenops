@@ -2,9 +2,9 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { ArrowUpRight } from "lucide-react";
 
 const COLORS = {
-  not_started: "#9CA3AF",
-  in_progress: "#EA580C",
-  completed: "#3B82F6",
+  not_started: "#C5D0CB",
+  in_progress: "#5FA38D",
+  completed: "#2F6F5A",
 };
 
 export default function ProjectsOverviewCard({ summary }) {
@@ -16,10 +16,10 @@ export default function ProjectsOverviewCard({ summary }) {
   const total = data.reduce((a, b) => a + b.value, 0) || 1;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-5 h-full flex flex-col" data-testid="card-projects-overview">
+    <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 h-full flex flex-col" data-testid="card-projects-overview">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="font-display text-lg font-semibold text-gray-900">Projects Overview</h3>
-        <button className="w-7 h-7 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-400">
+        <h3 className="font-display text-lg font-semibold text-[#1D2A25]">Projects Overview</h3>
+        <button className="w-7 h-7 rounded-full hover:bg-[#f1f5f3] flex items-center justify-center text-[#8EA39B]">
           <ArrowUpRight className="w-4 h-4" />
         </button>
       </div>
@@ -44,8 +44,8 @@ export default function ProjectsOverviewCard({ summary }) {
           </PieChart>
         </ResponsiveContainer>
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <div className="font-display text-2xl font-bold text-gray-900">{total}</div>
-          <div className="text-xs text-gray-500">total</div>
+          <div className="font-display text-2xl font-bold text-[#1D2A25]">{total}</div>
+          <div className="text-xs text-[#667C74]">total</div>
         </div>
       </div>
 
@@ -53,8 +53,8 @@ export default function ProjectsOverviewCard({ summary }) {
         {data.map((d) => (
           <div key={d.key} className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[d.key] }} />
-            <span className="text-gray-700 flex-1">{d.name}</span>
-            <span className="font-medium text-gray-900">{d.value}</span>
+            <span className="text-[#667C74] flex-1">{d.name}</span>
+            <span className="font-medium text-[#1D2A25]">{d.value}</span>
           </div>
         ))}
       </div>

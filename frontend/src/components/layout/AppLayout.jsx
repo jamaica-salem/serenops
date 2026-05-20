@@ -9,7 +9,7 @@ export default function AppLayout() {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-[#F3F7F5]">
+    <div className="flex h-screen w-full overflow-hidden bg-[#F7FAF8]">
       <Sidebar />
       <div className="flex-1 flex flex-col h-full overflow-hidden min-w-0">
         <TopBar
@@ -19,7 +19,7 @@ export default function AppLayout() {
           onSearch={setSearch}
         />
         <main className="flex-1 overflow-y-auto" data-testid="main-content">
-          <div className="px-4 md:px-8 py-6 md:py-8 max-w-[1500px] mx-auto">
+          <div className="px-4 md:px-10 py-6 md:py-8 max-w-[1520px] mx-auto">
             <Outlet context={{ filter, search }} />
           </div>
         </main>

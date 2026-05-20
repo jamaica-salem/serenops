@@ -19,19 +19,19 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6">
+    <div className="min-h-screen flex items-center justify-center bg-[#F7FAF8] px-6">
       <form
         onSubmit={submit}
-        className="w-full max-w-sm bg-white rounded-2xl p-8 shadow-sm border border-gray-100 space-y-5"
+        className="w-full max-w-sm bg-white rounded-2xl p-8 shadow-sm border border-[#E5ECE8] space-y-5"
         data-testid="register-form"
       >
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center text-white font-bold font-display">S</div>
-          <span className="font-display font-bold">SerenOps</span>
+          <div className="w-8 h-8 rounded-full bg-[#1B2B25] border border-[#31443D] flex items-center justify-center text-white font-bold font-display">S</div>
+          <span className="font-display font-bold text-[#1D2A25]">SerenOps</span>
         </div>
         <div>
-          <h2 className="font-display text-2xl font-bold text-gray-900">Create account</h2>
-          <p className="text-sm text-gray-500 mt-1">Start managing projects in minutes.</p>
+          <h2 className="font-display text-2xl font-bold text-[#1D2A25]">Create account</h2>
+          <p className="text-sm text-[#667C74] mt-1">Start managing projects in minutes.</p>
         </div>
 
         <div className="space-y-3">
@@ -41,7 +41,7 @@ export default function Register() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500"
+            className="w-full h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
           />
           <input
             data-testid="register-email"
@@ -50,7 +50,7 @@ export default function Register() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500"
+            className="w-full h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
           />
           <input
             data-testid="register-password"
@@ -60,7 +60,7 @@ export default function Register() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="w-full h-10 px-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500"
+            className="w-full h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
           />
         </div>
 
@@ -74,14 +74,14 @@ export default function Register() {
           data-testid="register-submit"
           type="submit"
           disabled={busy}
-          className="w-full h-10 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors disabled:opacity-60"
+          className="w-full h-10 rounded-lg bg-[#5FA38D] text-white font-medium hover:bg-[#4E8C79] transition-colors disabled:opacity-60"
         >
           {busy ? "Creating…" : "Create account"}
         </button>
 
-        <div className="text-sm text-gray-500 text-center">
+        <div className="text-sm text-[#667C74] text-center">
           Already have an account?{" "}
-          <Link to="/login" className="text-orange-700 font-medium hover:underline">
+          <Link to="/login" className="text-[#2f6f5a] font-medium hover:underline">
             Sign in
           </Link>
         </div>

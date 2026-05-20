@@ -21,55 +21,61 @@ export default function Login() {
   return (
     <div className="min-h-screen w-full flex">
       {/* Left brand panel */}
-      <div className="hidden md:flex w-1/2 relative overflow-hidden bg-gradient-to-br from-orange-50 via-white to-orange-100 p-12 flex-col justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-lg bg-orange-600 flex items-center justify-center text-white font-bold font-display">S</div>
-          <div className="font-display font-bold text-xl">SerenOps</div>
+      <div className="hidden md:flex w-1/2 relative overflow-hidden bg-gradient-to-b from-[#0F2B24] to-[#123C31] p-12 flex-col justify-between text-[#f3f7f5]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_15%,rgba(123,196,164,0.22),transparent_40%),radial-gradient(circle_at_10%_82%,rgba(95,163,141,0.18),transparent_35%)]" />
+
+        <div className="relative flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-white/10 border border-white/35 flex items-center justify-center text-white font-bold font-display">S</div>
+          <div>
+            <div className="font-display font-semibold text-2xl">SerenOps</div>
+            <div className="text-xs uppercase tracking-[0.2em] text-[#c8d7d1]">Client OS</div>
+          </div>
         </div>
-        <div className="space-y-6 max-w-md">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white rounded-full text-xs font-medium text-orange-700 border border-orange-100">
+
+        <div className="relative space-y-6 max-w-md">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full text-xs font-medium text-white border border-white/20">
             <Sparkles className="w-3.5 h-3.5" /> AI-first project management
           </div>
-          <h1 className="font-display text-4xl lg:text-5xl font-bold leading-tight text-gray-900">
-            Manage and track <br /> your projects.
+          <h1 className="font-display text-4xl lg:text-5xl font-bold leading-tight text-white">
+            Complex operations,<br />handled calmly.
           </h1>
-          <p className="text-gray-600 leading-relaxed">
-            A focused alternative to Jira. Crisp dashboards, smart insights, and an AI copilot
-            that knows your tasks.
+          <p className="text-[#d5e2dc] leading-relaxed">
+            Track the full client lifecycle from lead to maintenance in a clear, organized workspace.
           </p>
         </div>
-        <div className="text-xs text-gray-400">© 2026 SerenOps</div>
+
+        <div className="relative text-xs text-[#c8d7d1]">© 2026 SerenOps</div>
       </div>
 
       {/* Right form */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-white">
-        <form onSubmit={submit} className="w-full max-w-sm space-y-6" data-testid="login-form">
+      <div className="flex-1 flex items-center justify-center p-6 bg-[#F7FAF8]">
+        <form onSubmit={submit} className="w-full max-w-sm space-y-6 bg-white border border-[#E5ECE8] rounded-2xl p-7 shadow-sm" data-testid="login-form">
           <div>
-            <h2 className="font-display text-2xl font-bold text-gray-900">Welcome back</h2>
-            <p className="text-sm text-gray-500 mt-1">Sign in to continue to your dashboard.</p>
+            <h2 className="font-display text-2xl font-bold text-[#1D2A25]">Welcome back</h2>
+            <p className="text-sm text-[#667C74] mt-1">Sign in to continue to your dashboard.</p>
           </div>
 
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-medium text-gray-600">Email</label>
+              <label className="text-xs font-medium text-[#667C74]">Email</label>
               <input
                 data-testid="login-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm text-[#1D2A25] focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-gray-600">Password</label>
+              <label className="text-xs font-medium text-[#667C74]">Password</label>
               <input
                 data-testid="login-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="mt-1 w-full h-10 px-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500"
+                className="mt-1 w-full h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm text-[#1D2A25] focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
               />
             </div>
           </div>
@@ -84,19 +90,19 @@ export default function Login() {
             data-testid="login-submit"
             type="submit"
             disabled={busy}
-            className="w-full h-10 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors disabled:opacity-60"
+            className="w-full h-10 rounded-lg bg-[#5FA38D] text-white font-medium hover:bg-[#4E8C79] transition-colors disabled:opacity-60"
           >
             {busy ? "Signing in…" : "Sign in"}
           </button>
 
-          <div className="text-sm text-gray-500 text-center">
+          <div className="text-sm text-[#667C74] text-center">
             New here?{" "}
-            <Link to="/register" data-testid="login-register-link" className="text-orange-700 font-medium hover:underline">
+            <Link to="/register" data-testid="login-register-link" className="text-[#2f6f5a] font-medium hover:underline">
               Create an account
             </Link>
           </div>
 
-          <div className="text-xs text-gray-400 text-center pt-4 border-t border-gray-100">
+          <div className="text-xs text-[#8EA39B] text-center pt-4 border-t border-[#E5ECE8]">
             Demo: <span className="font-mono">demo@serenops.app / demo123</span>
             <br />
             Legacy demo also works: <span className="font-mono">demo@panze.app / demo123</span>
