@@ -30,6 +30,55 @@ def demo_session(session):
     return session
 
 
+def create_test_client(session, prefix):
+    payload = {
+        "name": f"{prefix} Client",
+        "company_name": f"{prefix} Co",
+        "email": f"{prefix.lower()}@example.com",
+        "status": "active",
+        "source": "manual",
+    }
+    r = session.post(f"{API}/clients", json=payload)
+    assert r.status_code == 200, r.text
+    return r.json()
+
+
+def create_test_project(session, client_id, prefix):
+    payload = {
+        "name": f"{prefix} Project",
+        "description": "Test project",
+        "client_id": client_id,
+        "color": "#EA580C",
+        "status": "planned",
+    }
+    r = session.post(f"{API}/projects", json=payload)
+    assert r.status_code == 200, r.text
+    return r.json()
+
+
+def create_test_invoice(session, client_id, project_id, prefix):
+    payload = {
+        "invoice_number": f"INV-{prefix}",
+        "client_id": client_id,
+        "project_id": project_id,
+        "issue_date": "2026-05-20",
+        "due_date": "2026-05-27",
+        "currency": "USD",
+        "line_items": [
+            {"description": "Service fee", "quantity": 1, "rate": 250},
+        ],
+        "discount": 0,
+        "tax_fees": 0,
+        "amount_paid": 0,
+        "payment_method": "",
+        "notes": "",
+        "status": "sent",
+    }
+    r = session.post(f"{API}/invoices", json=payload)
+    assert r.status_code == 200, r.text
+    return r.json()
+
+
 # ---------- Health ----------
 class TestHealth:
     def test_root(self, session):
@@ -182,6 +231,109 @@ class TestProjects:
         # Deleting non-existent
         r = demo_session.delete(f"{API}/projects/{pid}")
         assert r.status_code == 404
+
+
+# ---------- Contracts ----------
+class TestContracts:
+    def test_contract_round_trip_and_filter(self, demo_session):
+        prefix = f"contract_{uuid.uuid4().hex[:8]}"
+        client = create_test_client(demo_session, prefix)
+
+        try:
+            create_payload = {
+                "client_id": client["id"],
+                "title": f"{prefix} Agreement",
+                "service_provider_details": "Freelance operations support",
+                "scope_of_work": "Weekly client management and delivery coordination.",
+                "deliverables": ["Weekly reports", "Inbox management"],
+                "payment_terms": "Net 7",
+                "timeline": "4 weeks",
+                "revision_policy": "Two rounds",
+                "cancellation_policy": "7-day notice",
+                "late_payment_clause": "5% late fee",
+                "ownership_rights": "Client owns final assets",
+                "confidentiality_clause": "Standard NDA applies",
+                "signature_section": "Signed electronically",
+                "notes": "Test contract",
+                "status": "draft",
+            }
+            r = demo_session.post(f"{API}/contracts", json=create_payload)
+            assert r.status_code == 200, r.text
+            contract = r.json()
+            contract_id = contract["id"]
+
+            r = demo_session.get(f"{API}/contracts/{contract_id}")
+            assert r.status_code == 200, r.text
+            fetched = r.json()
+            assert fetched["title"] == create_payload["title"]
+            assert fetched["deliverables"] == create_payload["deliverables"]
+
+            r = demo_session.patch(f"{API}/contracts/{contract_id}", json={"status": "signed", "notes": "Updated"})
+            assert r.status_code == 200, r.text
+            updated = r.json()
+            assert updated["status"] == "signed"
+            assert updated["notes"] == "Updated"
+
+            r = demo_session.get(f"{API}/contracts", params={"client_id": client["id"]})
+            assert r.status_code == 200, r.text
+            ids = [item["id"] for item in r.json()]
+            assert contract_id in ids
+
+            r = demo_session.delete(f"{API}/contracts/{contract_id}")
+            assert r.status_code == 200, r.text
+
+            r = demo_session.get(f"{API}/contracts/{contract_id}")
+            assert r.status_code == 404
+        finally:
+            demo_session.delete(f"{API}/clients/{client['id']}")
+
+
+# ---------- Payments ----------
+class TestPayments:
+    def test_payment_records_invoice_context_and_filters(self, demo_session):
+        prefix = f"payment_{uuid.uuid4().hex[:8]}"
+        client = create_test_client(demo_session, prefix)
+        project = create_test_project(demo_session, client["id"], prefix)
+        invoice = create_test_invoice(demo_session, client["id"], project["id"], prefix)
+
+        try:
+            payment_payload = {
+                "client_id": client["id"],
+                "invoice_id": invoice["id"],
+                "payment_date": "2026-05-20",
+                "amount": 100,
+                "method": "Bank Transfer",
+                "reference_number": "REF-12345",
+                "notes": "Partial payment recorded",
+                "status": "recorded",
+            }
+            r = demo_session.post(f"{API}/payments", json=payment_payload)
+            assert r.status_code == 200, r.text
+            payment = r.json()
+            assert payment["project_id"] == project["id"]
+            assert payment["remaining_balance"] == 150
+            assert payment["reference_number"] == payment_payload["reference_number"]
+
+            r = demo_session.get(f"{API}/invoices/{invoice['id']}")
+            assert r.status_code == 200, r.text
+            refreshed_invoice = r.json()
+            assert refreshed_invoice["amount_paid"] == 100
+            assert refreshed_invoice["balance_due"] == 150
+
+            r = demo_session.get(f"{API}/payments", params={"client_id": client["id"]})
+            assert r.status_code == 200, r.text
+            assert any(item["id"] == payment["id"] for item in r.json())
+
+            r = demo_session.get(f"{API}/payments", params={"project_id": project["id"]})
+            assert r.status_code == 200, r.text
+            assert any(item["id"] == payment["id"] for item in r.json())
+
+            r = demo_session.get(f"{API}/payments", params={"status": "recorded"})
+            assert r.status_code == 200, r.text
+            assert any(item["id"] == payment["id"] for item in r.json())
+        finally:
+            demo_session.delete(f"{API}/clients/{client['id']}")
+            demo_session.delete(f"{API}/projects/{project['id']}")
 
 
 # ---------- Notifications ----------

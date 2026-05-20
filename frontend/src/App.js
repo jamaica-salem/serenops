@@ -20,6 +20,7 @@ import TemplatesPage from "./pages/TemplatesPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import SettingsPage from "./pages/SettingsPage";
 import AIAssistantPage from "./pages/AIAssistantPage";
+import ClientPortalPage from "./pages/ClientPortalPage";
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/portal/:token" element={<ClientPortalPage />} />
             <Route
               element={
                 <ProtectedRoute>

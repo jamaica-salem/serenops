@@ -1,0 +1,39 @@
+{
+  "summary": "Iteration 2 testing — all 5 new feature areas verified end-to-end. Backend: 30/30 pytest passing (21 regression + 9 new in /app/backend/tests/test_iteration2.py covering /api/users auth+shape, persisted notifications with stable IDs across calls, mark-single-read, mark-all-read, delete + 404, brute-force lockout 5→6th=429, and successful login resetting the counter). Frontend (Playwright on REACT_APP_BACKEND_URL): TopBar bell shows orange dot only when unread>0; Tasks list shows new Assignee column with avatar+first-name (13/13 rows); TaskFormDialog has data-testid=task-form-assignee Select that opens with 9 user options (matches /api/users); Kanban renders 4 columns with @dnd-kit, mouse-drag moves a card across columns and PATCH /api/tasks/{id} is fired (verified card moves visually); persistence test: status change persists after page reload; Notifications page renders unread badge ('1 new'), 'Mark all read' clears badge and all 3 items receive opacity-60, per-item dismiss removes the notification, and persisted notification IDs are identical across two GETs.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/backend/tests/test_iteration2.py",
+    "/app/test_reports/pytest/iteration2_results.xml",
+    "/app/test_reports/pytest/regression_iter2.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "TopBar.jsx fetches /api/notifications only in useEffect on mount — the bell dot will not auto-clear after marking all as read on /notifications page until the user navigates or reloads. Consider lifting unread count to a context (or using event/poll/SWR) so cross-page updates feel instant. Not a blocker, but minor UX polish.",
+    "routes_notifications._generate_for_user regenerates a deleted notification on the very next GET if the underlying task still meets the rule (overdue/due_soon). This means DELETE is effectively 'reset' for the rule-based ones — by design, but may surprise users. Consider tracking 'dismissed_at' on the task to suppress re-creation, or document the behaviour.",
+    "auth.py check_login_lockout stores ISO strings then parses with datetime.fromisoformat — works but slightly fragile across timezone-naive strings. Acceptable.",
+    "auth.check_login_lockout uses ip+email key — good for per-user/per-attacker; just remember to clear db.login_attempts when running repeated automated tests (which we now do explicitly before runs).",
+    "Code quality: routes split per resource, MongoDB _id excluded everywhere, async/await used throughout, env vars sourced from .env (COOKIE_SECURE/COOKIE_SAMESITE wired correctly to set_auth_cookies)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iteration2.py (new — 9 pytest tests)"
+  ],
+  "success_rate": {
+    "backend": "100% (30/30 — 21 regression + 9 new)",
+    "frontend": "100% (all 5 new feature areas pass UI+integration verification)"
+  },
+  "test_credentials": "demo@panze.app / demo123 ; admin@panze.app / admin123 (verified)",
+  "seed_data_creation": "Used existing seed (5 users, 4 projects, 12 tasks). Test cleanup: cleared db.login_attempts before & between runs via mongosh. Test-created data prefixed with TEST_ and deleted in-test.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Two pytest files now: backend_test.py (regression, 21) and test_iteration2.py (new features, 9). Run BOTH against REACT_APP_BACKEND_URL. ALWAYS clear db.login_attempts before pytest run (otherwise the brute-force test from a previous run may have locked the demo IP+email pair): `mongosh --quiet --eval 'db = db.getSiblingDB(\"jira_lite_db\"); db.login_attempts.deleteMany({})'`. For Kanban DnD via Playwright, use mouse.down → multiple mouse.move with steps (≥4px first move to satisfy PointerSensor activationConstraint) → mouse.up. Direct API PATCH and reload also confirms persistence. NotificationsPage badge correctly hides after mark-all-read. TopBar bell only refreshes its unread state on mount — reload to revalidate.",
+  "rca of the issue": "No issues found. One observation: after DELETE /api/notifications/{id} on a rule-based (overdue/due_soon) notification, the very next GET regenerates it because the underlying task still satisfies the rule. This is per-design (idempotent generator) and matches the playbook intent. If product wants 'sticky dismiss', track dismissed_at on the task or in a denylist; otherwise document."
+}

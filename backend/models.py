@@ -324,6 +324,7 @@ class PaymentOut(BaseModel):
 
 # ---------- Contract ----------
 ContractStatus = Literal["draft", "sent", "signed", "expired", "cancelled"]
+SignatureType = Literal["typed", "uploaded"]
 
 
 class ContractIn(BaseModel):
@@ -341,6 +342,10 @@ class ContractIn(BaseModel):
     confidentiality_clause: Optional[str] = ""
     signature_section: Optional[str] = ""
     notes: Optional[str] = ""
+    signed_by: Optional[str] = ""
+    signed_at: Optional[str] = None
+    signature_type: Optional[SignatureType] = None
+    signature_value: Optional[str] = ""
     status: ContractStatus = "draft"
 
 
@@ -358,6 +363,10 @@ class ContractUpdate(BaseModel):
     confidentiality_clause: Optional[str] = None
     signature_section: Optional[str] = None
     notes: Optional[str] = None
+    signed_by: Optional[str] = None
+    signed_at: Optional[str] = None
+    signature_type: Optional[SignatureType] = None
+    signature_value: Optional[str] = None
     status: Optional[ContractStatus] = None
 
 
@@ -380,6 +389,43 @@ class ContractOut(BaseModel):
     status: ContractStatus = "draft"
     created_at: str
     updated_at: str
+    owner_id: str
+    signed_by: str = ""
+    signed_at: Optional[str] = None
+    signature_type: Optional[SignatureType] = None
+    signature_value: str = ""
+
+
+# ---------- Portal Links ----------
+class PortalLinkIn(BaseModel):
+    client_id: str
+    label: Optional[str] = ""
+    contract_id: Optional[str] = None
+    proposal_id: Optional[str] = None
+    invoice_id: Optional[str] = None
+    expires_at: Optional[str] = None
+    allow_feedback: bool = True
+
+
+class PortalLinkUpdate(BaseModel):
+    label: Optional[str] = None
+    expires_at: Optional[str] = None
+    revoked: Optional[bool] = None
+    allow_feedback: Optional[bool] = None
+
+
+class PortalLinkOut(BaseModel):
+    id: str
+    token: str
+    client_id: str
+    label: str = ""
+    contract_id: Optional[str] = None
+    proposal_id: Optional[str] = None
+    invoice_id: Optional[str] = None
+    expires_at: Optional[str] = None
+    allow_feedback: bool = True
+    revoked: bool = False
+    created_at: str
     owner_id: str
 
 
@@ -521,6 +567,7 @@ TimelineType = Literal[
     "revision_completed",
     "project_handover",
     "maintenance_started",
+    "client_feedback",
     "manual",
 ]
 

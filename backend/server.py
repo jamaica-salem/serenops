@@ -22,6 +22,7 @@ import routes_notifications
 import routes_projects
 import routes_tasks
 import routes_users
+import routes_portal
 from seed import run_seed
 
 # ---------- Mongo ----------
@@ -50,6 +51,7 @@ api_router.include_router(routes_notifications.router)
 api_router.include_router(routes_dashboard.router)
 api_router.include_router(routes_llm.router)
 api_router.include_router(routes_chat.router)
+api_router.include_router(routes_portal.router)
 
 app.include_router(api_router)
 
@@ -104,6 +106,9 @@ async def on_startup():
     await db.timeline_events.create_index("occurred_at")
     await db.templates.create_index("template_type")
     await db.templates.create_index("is_default")
+    await db.portal_links.create_index("token", unique=True)
+    await db.portal_links.create_index("client_id")
+    await db.portal_links.create_index("revoked")
     await db.llm_configs.create_index("user_id", unique=True)
     await db.login_attempts.create_index("identifier", unique=True)
     await db.notifications.create_index([("user_id", 1), ("created_at", -1)])

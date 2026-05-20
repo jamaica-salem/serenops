@@ -30,7 +30,7 @@ COOKIE_SAMESITE=lax
 Run backend:
 ```bash
 cd backend
-uvicorn server:app --reload --port 8001
+uvicorn server:app --reload --port 8008
 ```
 
 ### 2. Frontend
@@ -42,7 +42,8 @@ npm install ajv@^8 --legacy-peer-deps
 
 Create `frontend/.env`:
 ```env
-REACT_APP_BACKEND_URL=http://localhost:8001
+REACT_APP_BACKEND_URL=http://localhost:8008
+REACT_APP_BYPASS_AUTH=true
 ```
 
 Run frontend:
@@ -53,4 +54,4 @@ npm start
 
 ## App URLs
 - Frontend: `http://localhost:3000`
-- Backend API: `http://localhost:8001/api`
+- Backend API: `http://localhost:8008/api`
