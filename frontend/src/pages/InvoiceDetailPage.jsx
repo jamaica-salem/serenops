@@ -1,25 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { Download, Plus, Trash2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft, Plus, Save, Trash2 } from "lucide-react";
 import api from "../lib/api";
-import { downloadInvoicePdf } from "../lib/invoicePdf";
+
+const CURRENCY_OPTIONS = ["USD", "EUR", "GBP", "AUD", "CAD", "JPY", "PHP", "SGD", "NZD", "OTHER"];
+const STATUS_OPTIONS = ["draft", "sent", "paid", "partially_paid", "overdue", "cancelled"];
+const EMPTY_ITEM = { description: "", quantity: 1, rate: 0 };
 
 function money(v) {
   const n = Number(v || 0);
   return Number.isFinite(n) ? n.toFixed(2) : "0.00";
-}
-
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function nextWeekISO() {
-  return new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
-}
-
-function nextInvoiceNumber() {
-  const stamp = Date.now().toString().slice(-6);
-  return `INV-${stamp}`;
 }
 
 function formatMoney(value, currency = "USD") {
@@ -36,78 +26,32 @@ function formatMoney(value, currency = "USD") {
   }
 }
 
-function statusLabel(status) {
-  return String(status || "draft").replace(/_/g, " ");
-}
-
-function statusBadgeClass(status) {
-  const val = String(status || "draft");
-  if (val === "paid") return "bg-[#6FCF97]/20 text-[#1f6a42] border-[#6FCF97]/30";
-  if (val === "partially_paid") return "bg-[#D4A373]/18 text-[#8A5A2B] border-[#D4A373]/35";
-  if (val === "overdue") return "bg-[#D97C7C]/15 text-[#9a3838] border-[#D97C7C]/30";
-  if (val === "cancelled") return "bg-[#E5ECE8] text-[#667C74] border-[#D7E0DB]";
-  if (val === "sent") return "bg-[#5FA38D]/16 text-[#2f6f5a] border-[#5FA38D]/30";
-  return "bg-[#E8F3EE] text-[#2F6F5A] border-[#D3E7DE]";
-}
-
-function summarizeAmountsByCurrency(invoices, field) {
-  const sums = invoices.reduce((acc, invoice) => {
-    const code = invoice?.currency || "USD";
-    const amount = Number(invoice?.[field] || 0);
-    if (!Number.isFinite(amount)) return acc;
-    acc[code] = (acc[code] || 0) + amount;
-    return acc;
-  }, {});
-
-  const entries = Object.entries(sums);
-  if (!entries.length) return "-";
-  return entries
-    .map(([code, value]) => `${code} ${money(value)}`)
-    .join(" | ");
-}
-
-const STATUS_OPTIONS = [
-  "draft",
-  "sent",
-  "paid",
-  "partially_paid",
-  "overdue",
-  "cancelled",
-];
-
-const CURRENCY_OPTIONS = ["USD", "EUR", "GBP", "AUD", "CAD", "JPY", "PHP", "SGD", "NZD", "OTHER"];
-
-const EMPTY_ITEM = { description: "", quantity: 1, rate: 0 };
-
-export default function InvoicesPage() {
-  const [invoices, setInvoices] = useState([]);
+export default function InvoiceDetailPage() {
+  const { invoiceId } = useParams();
+  const navigate = useNavigate();
+  const [invoice, setInvoice] = useState(null);
   const [clients, setClients] = useState([]);
   const [projects, setProjects] = useState([]);
-  const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const [form, setForm] = useState({
-    invoice_number: nextInvoiceNumber(),
+    invoice_number: "",
     client_id: "",
     project_id: "",
-    issue_date: todayISO(),
-    due_date: nextWeekISO(),
+    issue_date: "",
+    due_date: "",
     currency: "USD",
+    status: "draft",
     line_items: [{ ...EMPTY_ITEM }],
     discount: 0,
     tax_fees: 0,
     amount_paid: 0,
-    payment_method: "Bank Transfer",
+    payment_method: "",
     notes: "",
-    status: "draft",
-    provider_name: "SerenOps",
-    provider_email: "",
-    provider_phone: "",
   });
-
-  const selectedClient = useMemo(
-    () => clients.find((c) => c.id === form.client_id) || null,
-    [clients, form.client_id]
-  );
 
   const filteredProjects = useMemo(() => {
     if (!form.client_id) return projects;
@@ -128,30 +72,47 @@ export default function InvoicesPage() {
     return { subtotal, total, balance };
   }, [form]);
 
-  const load = async () => {
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    setSuccess("");
     try {
       const [{ data: inv }, { data: cl }, { data: pr }] = await Promise.all([
-        api.get("/invoices"),
+        api.get(`/invoices/${invoiceId}`),
         api.get("/clients"),
         api.get("/projects"),
       ]);
-      setInvoices(inv);
+      setInvoice(inv);
       setClients(cl);
       setProjects(pr);
-      setForm((prev) => ({
-        ...prev,
-        client_id: prev.client_id || cl?.[0]?.id || "",
-      }));
+      setForm({
+        invoice_number: inv.invoice_number || "",
+        client_id: inv.client_id || "",
+        project_id: inv.project_id || "",
+        issue_date: inv.issue_date || "",
+        due_date: inv.due_date || "",
+        currency: inv.currency || "USD",
+        status: inv.status || "draft",
+        line_items: inv.line_items?.length ? inv.line_items : [{ ...EMPTY_ITEM }],
+        discount: Number(inv.discount || 0),
+        tax_fees: Number(inv.tax_fees || 0),
+        amount_paid: Number(inv.amount_paid || 0),
+        payment_method: inv.payment_method || "",
+        notes: inv.notes || "",
+      });
     } catch (e) {
       if (e?.response?.status !== 401) {
-        console.error("Invoices load failed:", e);
+        console.error("Failed to load invoice:", e);
       }
+      setError(e?.response?.data?.detail || "Unable to load invoice.");
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [invoiceId]);
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
   const updateLineItem = (index, field, value) => {
     setForm((prev) => ({
@@ -179,37 +140,17 @@ export default function InvoicesPage() {
     }));
   };
 
-  const resetInvoiceFields = () => {
-    setForm((prev) => ({
-      ...prev,
-      invoice_number: nextInvoiceNumber(),
-      project_id: "",
-      issue_date: todayISO(),
-      due_date: nextWeekISO(),
-      currency: prev.currency || "USD",
-      line_items: [{ ...EMPTY_ITEM }],
-      discount: 0,
-      tax_fees: 0,
-      amount_paid: 0,
-      payment_method: "Bank Transfer",
-      notes: "",
-      status: "draft",
-    }));
-  };
-
-  const generateInvoice = async (e) => {
+  const save = async (e) => {
     e.preventDefault();
+    setSaving(true);
     setError("");
+    setSuccess("");
 
     const hasValidLine = (form.line_items || []).some(
       (item) => item.description.trim() && Number(item.quantity || 0) > 0
     );
-
-    if (!form.client_id) {
-      setError("Please select a client.");
-      return;
-    }
     if (!hasValidLine) {
+      setSaving(false);
       setError("Add at least one line item with description and quantity.");
       return;
     }
@@ -220,7 +161,8 @@ export default function InvoicesPage() {
       project_id: form.project_id || null,
       issue_date: form.issue_date,
       due_date: form.due_date,
-      currency: form.currency || "USD",
+      currency: form.currency,
+      status: form.status,
       line_items: form.line_items
         .filter((item) => item.description.trim())
         .map((item) => ({
@@ -233,114 +175,91 @@ export default function InvoicesPage() {
       amount_paid: Number(form.amount_paid || 0),
       payment_method: form.payment_method || "",
       notes: form.notes || "",
-      status: form.status,
     };
 
-    setBusy(true);
     try {
-      const { data: created } = await api.post("/invoices", payload);
-      downloadInvoicePdf({
-        invoice: created,
-        client: selectedClient,
-        provider: {
-          name: form.provider_name,
-          email: form.provider_email,
-          phone: form.provider_phone,
-        },
-      });
-      await load();
-      resetInvoiceFields();
-    } catch (err) {
-      if (err?.response?.status !== 401) {
-        console.error("Invoice create failed:", err);
+      const { data } = await api.patch(`/invoices/${invoiceId}`, payload);
+      setInvoice(data);
+      setSuccess("Invoice updated.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (e) {
+      if (e?.response?.status !== 401) {
+        console.error("Failed to update invoice:", e);
       }
-      setError(err?.response?.data?.detail || "Failed to generate invoice PDF.");
+      setError(e?.response?.data?.detail || "Failed to update invoice.");
     } finally {
-      setBusy(false);
+      setSaving(false);
     }
   };
 
-  const downloadExisting = (invoice) => {
-    const client = clients.find((c) => c.id === invoice.client_id) || null;
-    const project = projects.find((p) => p.id === invoice.project_id) || null;
-    downloadInvoicePdf({
-      invoice: {
-        ...invoice,
-        notes: invoice.notes || (project?.name ? `Project: ${project.name}` : ""),
-      },
-      client,
-      provider: {
-        name: form.provider_name || "SerenOps",
-        email: form.provider_email,
-        phone: form.provider_phone,
-      },
-    });
-  };
-
-  const removeInvoice = async (invoiceId) => {
-    if (!confirm("Delete this invoice? Related payment records will also be removed.")) return;
+  const remove = async () => {
+    if (!confirm("Delete this invoice? Related payments will also be removed.")) return;
     try {
       await api.delete(`/invoices/${invoiceId}`);
-      await load();
-    } catch (err) {
-      if (err?.response?.status !== 401) {
-        console.error("Invoice delete failed:", err);
+      navigate("/invoices");
+    } catch (e) {
+      if (e?.response?.status !== 401) {
+        console.error("Failed to delete invoice:", e);
       }
-      setError(err?.response?.data?.detail || "Failed to delete invoice.");
+      setError(e?.response?.data?.detail || "Failed to delete invoice.");
     }
   };
 
-  const summary = useMemo(() => {
-    const overdue = invoices.filter((i) => i.status === "overdue");
-    const unpaid = invoices.filter((i) => (Number(i.balance_due || 0) > 0) && i.status !== "cancelled");
-    const paid = invoices.filter((i) => i.status === "paid");
-    return {
-      totalCount: invoices.length,
-      overdueCount: overdue.length,
-      paidCount: paid.length,
-      unpaidCount: unpaid.length,
-      outstandingByCurrency: summarizeAmountsByCurrency(unpaid, "balance_due"),
-      collectedByCurrency: summarizeAmountsByCurrency(invoices, "amount_paid"),
-    };
-  }, [invoices]);
+  if (loading) {
+    return <div className="text-sm text-[#667C74]">Loading invoice...</div>;
+  }
+
+  if (!invoice && error) {
+    return (
+      <div className="space-y-3">
+        <Link to="/invoices" className="text-sm text-[#2f6f5a] hover:underline inline-flex items-center gap-2">
+          <ArrowLeft className="w-4 h-4" />
+          Back to invoices
+        </Link>
+        <div className="text-sm text-red-700 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6 animate-fade-up" data-testid="invoices-page">
-      <div>
-        <p className="text-sm text-[#667C74]">Track balances and payment status</p>
-        <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1D2A25]">Invoices</h1>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-        <SummaryCard title="Invoices" value={String(summary.totalCount)} hint={`${summary.paidCount} paid, ${summary.unpaidCount} open`} />
-        <SummaryCard title="Overdue" value={String(summary.overdueCount)} hint="Needs follow-up" tone="warning" />
-        <SummaryCard title="Outstanding" value={summary.outstandingByCurrency} hint="Open balances" />
-        <SummaryCard title="Collected" value={summary.collectedByCurrency} hint="Payments received" tone="success" />
-      </div>
-
-      <form
-        onSubmit={generateInvoice}
-        className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-5"
-        data-testid="invoice-generator-form"
-      >
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div>
-            <h2 className="font-display text-xl font-semibold text-[#1D2A25]">Invoice Generator</h2>
-            <p className="text-sm text-[#667C74]">
-              Fill the form once, then export a formatted PDF automatically.
-            </p>
-          </div>
-          <button
-            type="submit"
-            disabled={busy}
-            className="h-10 px-4 rounded-lg bg-[#5FA38D] text-white text-sm font-medium hover:bg-[#4E8C79] transition-colors disabled:opacity-60 inline-flex items-center gap-2"
-            data-testid="generate-invoice-pdf-btn"
-          >
-            <Download className="w-4 h-4" />
-            {busy ? "Generating..." : "Generate PDF"}
-          </button>
+    <div className="space-y-6 animate-fade-up" data-testid="invoice-detail-page">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div>
+          <Link to="/invoices" className="text-sm text-[#2f6f5a] hover:underline inline-flex items-center gap-2">
+            <ArrowLeft className="w-4 h-4" />
+            Back to invoices
+          </Link>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1D2A25] mt-1">
+            Invoice {invoice?.invoice_number}
+          </h1>
+          <p className="text-sm text-[#667C74]">Edit invoice details and balances safely.</p>
         </div>
+        <button
+          type="button"
+          onClick={remove}
+          className="h-10 px-4 rounded-lg border border-[#F0D9D9] text-[#9a3838] hover:bg-[#FFF6F6] text-sm inline-flex items-center gap-2"
+        >
+          <Trash2 className="w-4 h-4" />
+          Delete Invoice
+        </button>
+      </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="bg-white rounded-2xl border border-[#E5ECE8] p-4">
+          <p className="text-xs uppercase tracking-wide text-[#8EA39B]">Subtotal</p>
+          <p className="mt-1 text-lg font-semibold text-[#1D2A25]">{formatMoney(computed.subtotal, form.currency)}</p>
+        </div>
+        <div className="bg-white rounded-2xl border border-[#E5ECE8] p-4">
+          <p className="text-xs uppercase tracking-wide text-[#8EA39B]">Total</p>
+          <p className="mt-1 text-lg font-semibold text-[#1D2A25]">{formatMoney(computed.total, form.currency)}</p>
+        </div>
+        <div className="bg-white rounded-2xl border border-[#E5ECE8] p-4">
+          <p className="text-xs uppercase tracking-wide text-[#8EA39B]">Balance Due</p>
+          <p className="mt-1 text-lg font-semibold text-[#2f6f5a]">{formatMoney(computed.balance, form.currency)}</p>
+        </div>
+      </div>
+
+      <form onSubmit={save} className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-5">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <Field label="Invoice Number">
             <input
@@ -348,22 +267,19 @@ export default function InvoicesPage() {
               onChange={(e) => setForm((prev) => ({ ...prev, invoice_number: e.target.value }))}
               required
               className="h-10 w-full px-3 rounded-lg border border-[#E5ECE8] text-sm focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
-              data-testid="invoice-number-input"
             />
           </Field>
           <Field label="Client">
             <select
               value={form.client_id}
-              onChange={(e) => setForm((prev) => ({ ...prev, client_id: e.target.value }))}
+              onChange={(e) => setForm((prev) => ({ ...prev, client_id: e.target.value, project_id: "" }))}
               required
               className="h-10 w-full px-3 rounded-lg border border-[#E5ECE8] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
-              data-testid="invoice-client-select"
             >
               <option value="">Select client</option>
               {clients.map((client) => (
                 <option key={client.id} value={client.id}>
                   {client.name}
-                  {client.company_name ? ` (${client.company_name})` : ""}
                 </option>
               ))}
             </select>
@@ -373,11 +289,10 @@ export default function InvoicesPage() {
               value={form.status}
               onChange={(e) => setForm((prev) => ({ ...prev, status: e.target.value }))}
               className="h-10 w-full px-3 rounded-lg border border-[#E5ECE8] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
-              data-testid="invoice-status-select"
             >
               {STATUS_OPTIONS.map((status) => (
                 <option key={status} value={status}>
-                  {statusLabel(status)}
+                  {status.replace(/_/g, " ")}
                 </option>
               ))}
             </select>
@@ -390,7 +305,6 @@ export default function InvoicesPage() {
               value={form.project_id}
               onChange={(e) => setForm((prev) => ({ ...prev, project_id: e.target.value }))}
               className="h-10 w-full px-3 rounded-lg border border-[#E5ECE8] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
-              data-testid="invoice-project-select"
             >
               <option value="">No linked project</option>
               {filteredProjects.map((project) => (
@@ -405,7 +319,6 @@ export default function InvoicesPage() {
               value={form.currency}
               onChange={(e) => setForm((prev) => ({ ...prev, currency: e.target.value }))}
               className="h-10 w-full px-3 rounded-lg border border-[#E5ECE8] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
-              data-testid="invoice-currency-select"
             >
               {CURRENCY_OPTIONS.map((currency) => (
                 <option key={currency} value={currency}>
@@ -449,30 +362,6 @@ export default function InvoicesPage() {
               step="0.01"
               value={form.amount_paid}
               onChange={(e) => setForm((prev) => ({ ...prev, amount_paid: e.target.value }))}
-              className="h-10 w-full px-3 rounded-lg border border-[#E5ECE8] text-sm focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
-            />
-          </Field>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <Field label="Your Business Name (PDF)">
-            <input
-              value={form.provider_name}
-              onChange={(e) => setForm((prev) => ({ ...prev, provider_name: e.target.value }))}
-              className="h-10 w-full px-3 rounded-lg border border-[#E5ECE8] text-sm focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
-            />
-          </Field>
-          <Field label="Your Email (PDF)">
-            <input
-              value={form.provider_email}
-              onChange={(e) => setForm((prev) => ({ ...prev, provider_email: e.target.value }))}
-              className="h-10 w-full px-3 rounded-lg border border-[#E5ECE8] text-sm focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
-            />
-          </Field>
-          <Field label="Your Phone (PDF)">
-            <input
-              value={form.provider_phone}
-              onChange={(e) => setForm((prev) => ({ ...prev, provider_phone: e.target.value }))}
               className="h-10 w-full px-3 rounded-lg border border-[#E5ECE8] text-sm focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
             />
           </Field>
@@ -581,103 +470,23 @@ export default function InvoicesPage() {
         </div>
 
         {error && (
-          <div className="text-sm text-red-700 bg-red-50 border border-red-100 rounded-lg px-3 py-2" data-testid="invoice-form-error">
-            {error}
-          </div>
+          <div className="text-sm text-red-700 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</div>
         )}
+        {success && (
+          <div className="text-sm text-[#1f6a42] bg-[#EEF9F2] border border-[#D4EEDD] rounded-lg px-3 py-2">{success}</div>
+        )}
+
+        <div className="flex items-center justify-end gap-2">
+          <button
+            type="submit"
+            disabled={saving}
+            className="h-10 px-4 rounded-lg bg-[#5FA38D] text-white text-sm font-medium hover:bg-[#4E8C79] transition-colors disabled:opacity-60 inline-flex items-center gap-2"
+          >
+            <Save className="w-4 h-4" />
+            {saving ? "Saving..." : "Save Changes"}
+          </button>
+        </div>
       </form>
-
-      <div className="bg-white rounded-2xl border border-[#E5ECE8] overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="text-xs uppercase tracking-wider text-[#667C74] border-b border-[#E5ECE8] bg-[#F7FAF8]">
-            <tr>
-              <th className="text-left px-5 py-3">Invoice</th>
-              <th className="text-left px-3 py-3">Status</th>
-              <th className="text-left px-3 py-3">Project</th>
-              <th className="text-left px-3 py-3">Total</th>
-              <th className="text-left px-3 py-3">Paid</th>
-              <th className="text-left px-3 py-3">Balance</th>
-              <th className="text-left px-3 py-3">Due</th>
-              <th className="text-left px-3 py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoices.map((i) => (
-              <tr
-                key={i.id}
-                className={`border-b border-[#F1F5F3] ${i.status === "overdue" ? "bg-[#FFF6F6]" : ""}`}
-              >
-                <td className="px-5 py-3">
-                  <Link
-                    to={`/invoices/${i.id}`}
-                    className="font-medium text-[#1D2A25] hover:text-[#2f6f5a] hover:underline"
-                    data-testid={`invoice-detail-link-${i.id}`}
-                  >
-                    {i.invoice_number}
-                  </Link>
-                  <div className="text-xs text-[#8EA39B]">{i.issue_date}</div>
-                </td>
-                <td className="px-3 py-3">
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full border text-xs font-medium ${statusBadgeClass(i.status)}`}>
-                    {statusLabel(i.status)}
-                  </span>
-                </td>
-                <td className="px-3 py-3 text-[#42534d] text-xs">
-                  {projects.find((p) => p.id === i.project_id)?.name || "-"}
-                </td>
-                <td className="px-3 py-3 text-[#1D2A25]">{formatMoney(i.total, i.currency)}</td>
-                <td className="px-3 py-3 text-[#1D2A25]">{formatMoney(i.amount_paid, i.currency)}</td>
-                <td className="px-3 py-3 text-[#2f6f5a]">{formatMoney(i.balance_due, i.currency)}</td>
-                <td className={`px-3 py-3 ${i.status === "overdue" ? "text-[#9a3838] font-medium" : "text-[#42534d]"}`}>{i.due_date}</td>
-                <td className="px-3 py-3">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => downloadExisting(i)}
-                      className="h-8 px-2.5 rounded-md border border-[#E5ECE8] text-[#42534d] hover:bg-[#F7FAF8] inline-flex items-center gap-1 text-xs"
-                      data-testid={`invoice-download-${i.id}`}
-                    >
-                      <Download className="w-3.5 h-3.5" />
-                      PDF
-                    </button>
-                    <button
-                      onClick={() => removeInvoice(i.id)}
-                      className="h-8 px-2.5 rounded-md border border-[#F0D9D9] text-[#9a3838] hover:bg-[#FFF6F6] inline-flex items-center gap-1 text-xs"
-                      data-testid={`invoice-delete-${i.id}`}
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {invoices.length === 0 && (
-              <tr>
-                <td colSpan={8} className="text-center text-[#8EA39B] py-12 text-sm italic">
-                  No invoices yet.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-function SummaryCard({ title, value, hint, tone = "default" }) {
-  const toneClass =
-    tone === "warning"
-      ? "text-[#8A5A2B]"
-      : tone === "success"
-      ? "text-[#1f6a42]"
-      : "text-[#1D2A25]";
-
-  return (
-    <div className="bg-white rounded-2xl border border-[#E5ECE8] p-4">
-      <p className="text-xs uppercase tracking-wide text-[#8EA39B]">{title}</p>
-      <p className={`mt-1 text-lg font-semibold ${toneClass}`}>{value}</p>
-      <p className="text-xs text-[#667C74] mt-1">{hint}</p>
     </div>
   );
 }
@@ -690,4 +499,3 @@ function Field({ label, children }) {
     </label>
   );
 }
-

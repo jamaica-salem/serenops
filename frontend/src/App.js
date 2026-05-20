@@ -10,6 +10,7 @@ import TasksPage from "./pages/TasksPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ClientsPage from "./pages/ClientsPage";
 import InvoicesPage from "./pages/InvoicesPage";
+import InvoiceDetailPage from "./pages/InvoiceDetailPage";
 import ContractsPage from "./pages/ContractsPage";
 import RevisionsPage from "./pages/RevisionsPage";
 import ProposalsPage from "./pages/ProposalsPage";
@@ -40,6 +41,7 @@ export default function App() {
               <Route path="/proposals" element={<ProposalsPage />} />
               <Route path="/revisions" element={<RevisionsPage />} />
               <Route path="/invoices" element={<InvoicesPage />} />
+              <Route path="/invoices/:invoiceId" element={<InvoiceDetailPage />} />
               <Route path="/contracts" element={<ContractsPage />} />
               <Route path="/templates" element={<TemplatesPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />
