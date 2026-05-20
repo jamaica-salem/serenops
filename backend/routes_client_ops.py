@@ -375,12 +375,24 @@ async def delete_proposal(proposal_id: str, user=Depends(get_current_user)):
 
 # ---------- Payments ----------
 @router.get("/payments", response_model=List[PaymentOut])
-async def list_payments(client_id: Optional[str] = None, user=Depends(get_current_user)):
+async def list_payments(
+    client_id: Optional[str] = None,
+    project_id: Optional[str] = None,
+    invoice_id: Optional[str] = None,
+    status: Optional[str] = None,
+    user=Depends(get_current_user),
+):
     from server import db
 
     q = {}
     if client_id:
         q["client_id"] = client_id
+    if project_id:
+        q["project_id"] = project_id
+    if invoice_id:
+        q["invoice_id"] = invoice_id
+    if status:
+        q["status"] = status
     return await db.payments.find(q, {"_id": 0}).sort("payment_date", -1).to_list(500)
 
 
@@ -396,6 +408,13 @@ async def create_payment(payload: PaymentIn, user=Depends(get_current_user)):
         raise HTTPException(404, "Invoice not found")
     if inv["client_id"] != payload.client_id:
         raise HTTPException(400, "Invoice does not belong to the selected client")
+
+    if payload.project_id:
+        project = await db.projects.find_one({"id": payload.project_id}, {"_id": 0, "client_id": 1})
+        if not project:
+          raise HTTPException(404, "Project not found")
+        if project.get("client_id") != payload.client_id:
+            raise HTTPException(400, "Project does not belong to the selected client")
 
     new_amount_paid = round(float(inv.get("amount_paid") or 0) + float(payload.amount or 0), 2)
     inv["amount_paid"] = new_amount_paid
@@ -414,6 +433,8 @@ async def create_payment(payload: PaymentIn, user=Depends(get_current_user)):
             "owner_id": user["id"],
         }
     )
+    if not pay.get("project_id"):
+        pay["project_id"] = inv.get("project_id")
     await db.payments.insert_one(pay)
 
     await _add_timeline_event(

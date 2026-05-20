@@ -297,9 +297,11 @@ PaymentStatus = Literal["recorded", "pending", "failed", "refunded"]
 class PaymentIn(BaseModel):
     client_id: str
     invoice_id: str
+    project_id: Optional[str] = None
     payment_date: str
     amount: float
     method: str
+    reference_number: Optional[str] = ""
     notes: Optional[str] = ""
     status: PaymentStatus = "recorded"
 
@@ -308,9 +310,11 @@ class PaymentOut(BaseModel):
     id: str
     client_id: str
     invoice_id: str
+    project_id: Optional[str] = None
     payment_date: str
     amount: float
     method: str
+    reference_number: str = ""
     notes: str = ""
     status: PaymentStatus = "recorded"
     remaining_balance: float = 0

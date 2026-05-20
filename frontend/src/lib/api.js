@@ -409,6 +409,12 @@ function localRequest(method, url, payload = null, config = {}) {
     if (!invoice) return reject("Invoice not found", 404);
     if (invoice.client_id !== payload?.client_id) return reject("Invoice does not belong to selected client", 400);
 
+    if (payload?.project_id) {
+      const project = db.projects.find((p) => p.id === payload.project_id);
+      if (!project) return reject("Project not found", 404);
+      if (project.client_id !== payload?.client_id) return reject("Project does not belong to selected client", 400);
+    }
+
     invoice.amount_paid = Number(invoice.amount_paid || 0) + amount;
     invoice.updated_at = stamp;
     computeInvoiceFields(invoice);
@@ -421,6 +427,7 @@ function localRequest(method, url, payload = null, config = {}) {
       payment_date: payload.payment_date || todayIso(),
       amount,
       method: payload.method || "manual",
+      reference_number: payload.reference_number || "",
       notes: payload.notes || "",
       status: payload.status || "recorded",
       remaining_balance: invoice.balance_due,
