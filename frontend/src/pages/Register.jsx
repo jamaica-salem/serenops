@@ -26,8 +26,8 @@ export default function Register() {
         data-testid="register-form"
       >
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center text-white font-bold font-display">P</div>
-          <span className="font-display font-bold">panze</span>
+          <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center text-white font-bold font-display">S</div>
+          <span className="font-display font-bold">SerenOps</span>
         </div>
         <div>
           <h2 className="font-display text-2xl font-bold text-gray-900">Create account</h2>

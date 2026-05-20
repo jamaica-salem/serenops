@@ -31,7 +31,7 @@ export default function AIInsightsCard({ insights = [] }) {
       </div>
 
       <div className="text-[10px] uppercase tracking-widest text-orange-700/80 mt-3 font-semibold">
-        Powered by Panze AI
+        Powered by SerenOps AI
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ const QUICK_PROMPTS = [
 export default function AIChatPanel() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: "ai", text: "Hi! I'm your Panze AI. Ask me about your tasks." },
+    { role: "ai", text: "Hi! I'm your SerenOps AI. Ask me about your tasks." },
   ]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -49,7 +49,7 @@ export default function AIChatPanel() {
       >
         <Sparkles className="w-5 h-5 group-hover:scale-110 transition-transform" />
         <span className="absolute right-full mr-3 bg-gray-900 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none">
-          Ask Panze AI
+          Ask SerenOps AI
         </span>
       </button>
     );
@@ -66,7 +66,7 @@ export default function AIChatPanel() {
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-sm font-semibold font-display leading-none">Panze AI</div>
+            <div className="text-sm font-semibold font-display leading-none">SerenOps AI</div>
             <div className="text-[10px] opacity-80">Your project copilot</div>
           </div>
         </div>

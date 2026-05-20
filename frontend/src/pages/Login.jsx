@@ -5,7 +5,7 @@ import { Sparkles } from "lucide-react";
 
 export default function Login() {
   const { user, login, error } = useAuth();
-  const [email, setEmail] = useState("demo@panze.app");
+  const [email, setEmail] = useState("demo@serenops.app");
   const [password, setPassword] = useState("demo123");
   const [busy, setBusy] = useState(false);
 
@@ -23,8 +23,8 @@ export default function Login() {
       {/* Left brand panel */}
       <div className="hidden md:flex w-1/2 relative overflow-hidden bg-gradient-to-br from-orange-50 via-white to-orange-100 p-12 flex-col justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-lg bg-orange-600 flex items-center justify-center text-white font-bold font-display">P</div>
-          <div className="font-display font-bold text-xl">panze<span className="text-gray-400 text-sm font-normal ml-1">studio</span></div>
+          <div className="w-9 h-9 rounded-lg bg-orange-600 flex items-center justify-center text-white font-bold font-display">S</div>
+          <div className="font-display font-bold text-xl">SerenOps</div>
         </div>
         <div className="space-y-6 max-w-md">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white rounded-full text-xs font-medium text-orange-700 border border-orange-100">
@@ -38,7 +38,7 @@ export default function Login() {
             that knows your tasks.
           </p>
         </div>
-        <div className="text-xs text-gray-400">© 2026 Panze Studio</div>
+        <div className="text-xs text-gray-400">© 2026 SerenOps</div>
       </div>
 
       {/* Right form */}
@@ -97,7 +97,9 @@ export default function Login() {
           </div>
 
           <div className="text-xs text-gray-400 text-center pt-4 border-t border-gray-100">
-            Demo: <span className="font-mono">demo@panze.app / demo123</span>
+            Demo: <span className="font-mono">demo@serenops.app / demo123</span>
+            <br />
+            Legacy demo also works: <span className="font-mono">demo@panze.app / demo123</span>
           </div>
         </form>
       </div>

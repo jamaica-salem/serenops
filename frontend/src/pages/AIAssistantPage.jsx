@@ -11,7 +11,7 @@ const QUICK = [
 
 export default function AIAssistantPage() {
   const [messages, setMessages] = useState([
-    { role: "ai", text: "Hi! I'm Panze AI. I can help you plan your day, summarize tasks, and surface what's overdue." },
+    { role: "ai", text: "Hi! I'm SerenOps AI. I can help you plan your day, summarize tasks, and surface what's overdue." },
   ]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);

@@ -2,12 +2,24 @@ import { createContext, useContext, useEffect, useState, useCallback } from "rea
 import api, { formatApiError } from "../lib/api";
 
 const AuthContext = createContext(null);
+const AUTH_BYPASS = process.env.REACT_APP_BYPASS_AUTH === "true";
+const DEV_GUEST_USER = {
+  id: "dev-guest",
+  email: "guest@local.dev",
+  name: "Guest Viewer",
+  role: "admin",
+  avatar_url: null,
+};
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null); // null=loading, false=anon, obj=user
+  const [user, setUser] = useState(AUTH_BYPASS ? DEV_GUEST_USER : null); // null=loading, false=anon, obj=user
   const [error, setError] = useState("");
 
   const refresh = useCallback(async () => {
+    if (AUTH_BYPASS) {
+      setUser(DEV_GUEST_USER);
+      return;
+    }
     try {
       const { data } = await api.get("/auth/me");
       setUser(data);
@@ -21,6 +33,11 @@ export function AuthProvider({ children }) {
   }, [refresh]);
 
   const login = async (email, password) => {
+    if (AUTH_BYPASS) {
+      setError("");
+      setUser(DEV_GUEST_USER);
+      return true;
+    }
     setError("");
     try {
       const { data } = await api.post("/auth/login", { email, password });
@@ -33,6 +50,11 @@ export function AuthProvider({ children }) {
   };
 
   const register = async (email, password, name) => {
+    if (AUTH_BYPASS) {
+      setError("");
+      setUser(DEV_GUEST_USER);
+      return true;
+    }
     setError("");
     try {
       const { data } = await api.post("/auth/register", { email, password, name });
@@ -45,6 +67,10 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
+    if (AUTH_BYPASS) {
+      setUser(DEV_GUEST_USER);
+      return;
+    }
     try { await api.post("/auth/logout"); } catch { /* ignore */ }
     setUser(false);
   };

@@ -29,11 +29,11 @@ export default function Sidebar() {
     >
       <div className="h-16 flex items-center gap-2 px-5 border-b border-gray-100">
         <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center text-white font-bold font-display">
-          P
+          S
         </div>
         <div>
-          <div className="font-display font-bold text-gray-900 leading-none">panze</div>
-          <div className="text-[10px] uppercase tracking-widest text-gray-400">studio</div>
+          <div className="font-display font-bold text-gray-900 leading-none">SerenOps</div>
+          <div className="text-[10px] uppercase tracking-widest text-gray-400">client os</div>
         </div>
       </div>
 

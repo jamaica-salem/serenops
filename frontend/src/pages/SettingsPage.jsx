@@ -69,7 +69,7 @@ export default function SettingsPage() {
           </div>
           <div>
             <h2 className="font-display text-lg font-semibold text-gray-900">AI Provider</h2>
-            <p className="text-sm text-gray-500">Choose the LLM behind Panze AI and configure your own provider key.</p>
+            <p className="text-sm text-gray-500">Choose the LLM behind SerenOps AI and configure your own provider key.</p>
           </div>
         </div>
 
