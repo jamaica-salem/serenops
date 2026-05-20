@@ -1,0 +1,153 @@
+{
+  "theme": "LIGHT",
+  "archetype": "3 (Pastel & Soft) / 4 (Swiss) Hybrid - The 'Soft Utility' Linear Vibe",
+  "design_philosophy": {
+    "identity": "Minimalist, structural clarity over decoration. Clean soft UI with card-based, rounded components. A neutral light gray/white base paired with an energetic Orange accent. Uses purposeful negative space to reduce cognitive load.",
+    "emotion": "Professional, efficient, trustworthy, and calm.",
+    "rules": [
+      "Use optical alignment over geometrical alignment.",
+      "Never use Inter or generic sans for headings.",
+      "All interactive elements MUST include data-testid.",
+      "Use purely functional colors for charts and statuses.",
+      "Embrace 'Control Room' bento grid for the dashboard with tight gaps (gap-4/gap-6)."
+    ]
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Manrope",
+      "body": "Inter",
+      "mono": "JetBrains Mono"
+    },
+    "hierarchy": {
+      "h1": "text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900",
+      "h2": "text-xl sm:text-2xl font-medium tracking-tight text-gray-900",
+      "h3": "text-lg font-medium tracking-tight text-gray-900",
+      "h4": "text-sm font-semibold tracking-wider uppercase text-gray-500",
+      "body": "text-sm text-gray-600 leading-relaxed",
+      "small": "text-xs text-gray-500"
+    }
+  },
+  "colors": {
+    "background": {
+      "app": "#F9FAFB",
+      "card": "#FFFFFF",
+      "sidebar": "#F3F4F6",
+      "overlay": "bg-gray-900/40"
+    },
+    "primary_accent": {
+      "DEFAULT": "#EA580C",
+      "hover": "#C2410C",
+      "light": "#FFEDD5",
+      "text": "#FFFFFF"
+    },
+    "text": {
+      "primary": "#111827",
+      "secondary": "#6B7280",
+      "muted": "#9CA3AF"
+    },
+    "status": {
+      "not_started": "#9CA3AF",
+      "in_progress": "#3B82F6",
+      "completed": "#10B981",
+      "overdue": "#EF4444",
+      "warning": "#F59E0B"
+    },
+    "borders": {
+      "DEFAULT": "#E5E7EB",
+      "focus": "#EA580C"
+    }
+  },
+  "layout": {
+    "structure": {
+      "app_wrapper": "flex h-screen w-full bg-gray-50 overflow-hidden",
+      "sidebar": "w-64 border-r border-gray-200 bg-gray-50/50 flex flex-col",
+      "main_area": "flex-1 flex flex-col h-full overflow-hidden",
+      "topbar": "h-14 border-b border-gray-200 bg-white/80 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-40",
+      "content": "flex-1 overflow-y-auto p-6 md:p-8"
+    },
+    "dashboard_grid": {
+      "base": "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6",
+      "spans": {
+        "my_tasks": "col-span-1 md:col-span-2 lg:col-span-2 row-span-2",
+        "projects_overview": "col-span-1 md:col-span-1 lg:col-span-1",
+        "ai_insights": "col-span-1 lg:col-span-1 bg-gradient-to-br from-orange-50 to-white border-orange-100",
+        "task_progress": "col-span-1 md:col-span-2 lg:col-span-3",
+        "meetings": "col-span-1 md:col-span-1",
+        "open_tickets": "col-span-1 md:col-span-3 lg:col-span-4"
+      }
+    },
+    "spacing": {
+      "container_padding": "p-6",
+      "card_padding": "p-5",
+      "item_gap": "gap-3"
+    }
+  },
+  "components": {
+    "cards": {
+      "default": "bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden",
+      "interactive": "transition-all duration-200 hover:border-gray-300 hover:shadow-md cursor-pointer",
+      "header": "flex items-center justify-between mb-4 border-b border-gray-100 pb-3"
+    },
+    "buttons": {
+      "primary": "bg-orange-600 text-white hover:bg-orange-700 rounded-lg px-4 py-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-orange-500 focus:ring-offset-1",
+      "secondary": "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 rounded-lg px-4 py-2 text-sm font-medium transition-colors",
+      "ghost": "text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg px-3 py-1.5 text-sm transition-colors"
+    },
+    "inputs": {
+      "default": "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all",
+      "search": "pl-9 rounded-full bg-gray-100 border-transparent focus:bg-white focus:border-orange-500"
+    },
+    "badges": {
+      "base": "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+      "completed": "bg-green-100 text-green-800",
+      "in_progress": "bg-blue-100 text-blue-800",
+      "overdue": "bg-red-100 text-red-800",
+      "backlog": "bg-gray-100 text-gray-800"
+    },
+    "ai_assistant": {
+      "floating_panel": "fixed bottom-6 right-6 w-80 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-200 overflow-hidden z-50 flex flex-col",
+      "header": "bg-orange-50 px-4 py-3 border-b border-orange-100 flex justify-between items-center",
+      "message_user": "bg-gray-100 text-gray-800 rounded-2xl rounded-tr-sm px-4 py-2 text-sm max-w-[85%] self-end",
+      "message_ai": "bg-orange-50 text-orange-900 rounded-2xl rounded-tl-sm px-4 py-2 text-sm max-w-[85%] self-start"
+    }
+  },
+  "media": {
+    "image_urls": [
+      {
+        "url": "https://images.unsplash.com/photo-1758518729459-235dcaadc611?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwzfHxwcm9mZXNzaW9uYWwlMjBwb3J0cmFpdCUyMHNtaWxpbmclMjBmYWNlfGVufDB8fHx8MTc3NzQyNzEzMXww&ixlib=rb-4.1.0&q=85",
+        "category": "avatar",
+        "description": "User Avatar 1"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1651684215020-f7a5b6610f23?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBwb3J0cmFpdCUyMHNtaWxpbmclMjBmYWNlfGVufDB8fHx8MTc3NzQyNzEzMXww&ixlib=rb-4.1.0&q=85",
+        "category": "avatar",
+        "description": "User Avatar 2"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1770058428154-9eee8a6a1fbb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBwb3J0cmFpdCUyMHNtaWxpbmclMjBmYWNlfGVufDB8fHx8MTc3NzQyNzEzMXww&ixlib=rb-4.1.0&q=85",
+        "category": "avatar",
+        "description": "User Avatar 3"
+      },
+      {
+        "url": "https://images.pexels.com/photos/5308640/pexels-photo-5308640.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "category": "avatar",
+        "description": "User Avatar 4"
+      }
+    ]
+  },
+  "libraries": {
+    "icons": "lucide-react",
+    "charts": "recharts (wrapped in Shadcn components)",
+    "ui_components": "shadcn/ui",
+    "animation": "framer-motion (for micro-interactions)"
+  },
+  "instructions_to_main_agent": {
+    "1": "Strictly implement a fixed Sidebar + Topbar layout. The main content should scroll within its container, avoiding whole-page window scrolls if possible.",
+    "2": "For the Donut Chart (Projects Overview), use Shadcn chart components with subtle colors.",
+    "3": "The 'AI Insights' card MUST stand out slightly from standard cards using a very faint orange gradient background (bg-gradient-to-br from-orange-50 to-white) and an orange-tinted border.",
+    "4": "Avatars for the 'Open Tickets' list MUST utilize the URLs provided in the media object. DO NOT USE placeholder text.",
+    "5": "Horizontal Progress Bars for the 'Task Progress Overview' should stack or list clearly, using Tailwind classes like h-2, rounded-full, and the respective status colors defined in the guideline.",
+    "6": "Install the required fonts: Google Fonts 'Manrope' and 'Inter'. Apply Manrope strictly for headings, Inter for body text.",
+    "7": "All core interactive elements (buttons, nav links, tabs) must have data-testid attributes for testing."
+  }
+}
