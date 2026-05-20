@@ -1,4 +1,4 @@
-"""Panze — AI-first Project Management API (Jira-lite)."""
+"""SerenOps — AI-first Project Management API (Jira-lite)."""
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -30,13 +30,13 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ["DB_NAME"]]
 
 # ---------- App ----------
-app = FastAPI(title="Panze API", version="1.0.0")
+app = FastAPI(title="SerenOps API", version="1.0.0")
 api_router = APIRouter(prefix="/api")
 
 
 @api_router.get("/")
 async def root():
-    return {"app": "panze", "status": "ok"}
+    return {"app": "serenops", "status": "ok"}
 
 
 # Mount sub-routers
@@ -53,9 +53,19 @@ api_router.include_router(routes_chat.router)
 
 app.include_router(api_router)
 
+# CORS for local development + cookie auth.
+cors_origins_raw = os.environ.get(
+    "CORS_ORIGINS",
+    "http://localhost:3000,http://127.0.0.1:3000",
+)
+cors_origins = [x.strip() for x in cors_origins_raw.split(",") if x.strip()]
+if "*" in cors_origins:
+    # Credentials + wildcard origin do not work in browsers.
+    cors_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.environ.get("CORS_ORIGINS", "*").split(","),
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

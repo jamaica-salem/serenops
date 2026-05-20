@@ -102,7 +102,7 @@ async def _llm_reply(message: str, context: str, cfg: dict) -> str:
         raise ValueError(f"Missing API key for provider '{provider}'")
 
     system = (
-        "You are Panze AI, a concise, friendly project management assistant. "
+        "You are SerenOps AI, a concise, friendly project management assistant. "
         "Use the user's task list (provided below) to answer questions about priorities, "
         "deadlines, and progress. Keep replies under 120 words.\n\n"
         f"User's tasks:\n{context}"

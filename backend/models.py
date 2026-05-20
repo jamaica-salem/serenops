@@ -1,4 +1,4 @@
-"""Pydantic models for the Panze project management app."""
+"""Pydantic models for the SerenOps project management app."""
 from datetime import datetime, timezone
 from typing import List, Optional, Literal
 from pydantic import BaseModel, EmailStr, Field

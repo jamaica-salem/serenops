@@ -14,6 +14,20 @@ from models import LoginIn, RegisterIn, UserOut
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
+def _email_candidates(email: str):
+    """Allow seamless login during brand/domain transition."""
+    candidates = [email]
+    if "@" not in email:
+        return candidates
+
+    local, domain = email.split("@", 1)
+    if domain == "serenops.app":
+        candidates.append(f"{local}@panze.app")
+    elif domain == "panze.app":
+        candidates.append(f"{local}@serenops.app")
+    return candidates
+
+
 def _user_to_out(u: dict) -> dict:
     return {
         "id": u["id"],
@@ -56,7 +70,11 @@ async def login(payload: LoginIn, request: Request, response: Response):
     email = payload.email.lower()
     await check_login_lockout(db, request, email)
 
-    user = await db.users.find_one({"email": email})
+    user = None
+    for candidate in _email_candidates(email):
+        user = await db.users.find_one({"email": candidate})
+        if user:
+            break
     if not user or not verify_password(payload.password, user.get("password_hash", "")):
         await record_failed_login(db, request, email)
         raise HTTPException(401, "Invalid email or password")

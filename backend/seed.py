@@ -13,9 +13,9 @@ def _iso(dt: datetime) -> str:
 async def seed_users(db):
     now = datetime.now(timezone.utc)
 
-    admin_email = os.environ.get("ADMIN_EMAIL", "admin@panze.app")
+    admin_email = os.environ.get("ADMIN_EMAIL", "admin@serenops.app")
     admin_password = os.environ.get("ADMIN_PASSWORD", "admin123")
-    demo_email = os.environ.get("DEMO_USER_EMAIL", "demo@panze.app")
+    demo_email = os.environ.get("DEMO_USER_EMAIL", "demo@serenops.app")
     demo_password = os.environ.get("DEMO_USER_PASSWORD", "demo123")
 
     avatars = [
@@ -49,11 +49,17 @@ async def seed_users(db):
     admin = await upsert_user(admin_email, admin_password, "Alex Morgan", "admin", avatars[0])
     demo = await upsert_user(demo_email, demo_password, "Jamie Rivera", "user", avatars[1])
 
+    # Backward-compatibility: keep legacy Panze demo/admin accounts available.
+    if admin_email.endswith("@serenops.app"):
+        await upsert_user("admin@panze.app", admin_password, "Alex Morgan", "admin", avatars[0])
+    if demo_email.endswith("@serenops.app"):
+        await upsert_user("demo@panze.app", demo_password, "Jamie Rivera", "user", avatars[1])
+
     # Extra teammates for assignees / tickets
     teammates = [
-        ("jacob.martinez@panze.app", "Jacob Martinez", avatars[2]),
-        ("luke.bell@panze.app", "Luke Bell", avatars[3]),
-        ("connor.mitchell@panze.app", "Connor Mitchell", avatars[0]),
+        ("jacob.martinez@serenops.app", "Jacob Martinez", avatars[2]),
+        ("luke.bell@serenops.app", "Luke Bell", avatars[3]),
+        ("connor.mitchell@serenops.app", "Connor Mitchell", avatars[0]),
     ]
     teammate_users = []
     for email, name, av in teammates:
