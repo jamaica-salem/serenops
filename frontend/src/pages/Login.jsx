@@ -34,13 +34,13 @@ export default function Login() {
 
         <div className="relative space-y-6 max-w-md">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full text-xs font-medium text-white border border-white/20">
-            <Sparkles className="w-3.5 h-3.5" /> AI-first project management
+            <Sparkles className="w-3.5 h-3.5" /> Client operations OS
           </div>
           <h1 className="font-display text-4xl lg:text-5xl font-bold leading-tight text-white">
             Complex operations,<br />handled calmly.
           </h1>
           <p className="text-[#d5e2dc] leading-relaxed">
-            Track the full client lifecycle from lead to maintenance in a clear, organized workspace.
+            Manage clients, projects, invoices, contracts, payments, and tasks in one organized workspace.
           </p>
         </div>
 

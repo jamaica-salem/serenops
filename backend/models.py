@@ -323,7 +323,7 @@ class PaymentOut(BaseModel):
 
 
 # ---------- Contract ----------
-ContractStatus = Literal["draft", "sent", "signed", "expired"]
+ContractStatus = Literal["draft", "sent", "signed", "expired", "cancelled"]
 
 
 class ContractIn(BaseModel):

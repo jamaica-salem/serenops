@@ -402,6 +402,12 @@ function localRequest(method, url, payload = null, config = {}) {
     return response(invoice);
   }
 
+  if (parts[0] === "contracts" && parts[1] && method === "get") {
+    const contract = db.contracts.find((x) => x.id === parts[1]);
+    if (!contract) return reject("Contract not found", 404);
+    return response(contract);
+  }
+
   if (parts[0] === "payments" && method === "post") {
     const amount = Number(payload?.amount || 0);
     if (amount <= 0) return reject("Payment amount must be greater than 0", 400);
