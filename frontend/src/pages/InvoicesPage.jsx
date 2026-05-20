@@ -3,11 +3,14 @@ import { Link } from "react-router-dom";
 import { Download, Plus, Trash2 } from "lucide-react";
 import api from "../lib/api";
 import { downloadInvoicePdf } from "../lib/invoicePdf";
-
-function money(v) {
-  const n = Number(v || 0);
-  return Number.isFinite(n) ? n.toFixed(2) : "0.00";
-}
+import {
+  INVOICE_CURRENCY_OPTIONS,
+  INVOICE_STATUS_OPTIONS,
+  formatMoney,
+  invoiceStatusBadgeClass,
+  invoiceStatusLabel,
+  summarizeAmountsByCurrency,
+} from "../lib/invoiceUtils";
 
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
@@ -21,61 +24,6 @@ function nextInvoiceNumber() {
   const stamp = Date.now().toString().slice(-6);
   return `INV-${stamp}`;
 }
-
-function formatMoney(value, currency = "USD") {
-  const amount = Number(value || 0);
-  if (!Number.isFinite(amount)) return "0.00";
-  try {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency || "USD",
-      maximumFractionDigits: 2,
-    }).format(amount);
-  } catch {
-    return `$${money(amount)}`;
-  }
-}
-
-function statusLabel(status) {
-  return String(status || "draft").replace(/_/g, " ");
-}
-
-function statusBadgeClass(status) {
-  const val = String(status || "draft");
-  if (val === "paid") return "bg-[#6FCF97]/20 text-[#1f6a42] border-[#6FCF97]/30";
-  if (val === "partially_paid") return "bg-[#D4A373]/18 text-[#8A5A2B] border-[#D4A373]/35";
-  if (val === "overdue") return "bg-[#D97C7C]/15 text-[#9a3838] border-[#D97C7C]/30";
-  if (val === "cancelled") return "bg-[#E5ECE8] text-[#667C74] border-[#D7E0DB]";
-  if (val === "sent") return "bg-[#5FA38D]/16 text-[#2f6f5a] border-[#5FA38D]/30";
-  return "bg-[#E8F3EE] text-[#2F6F5A] border-[#D3E7DE]";
-}
-
-function summarizeAmountsByCurrency(invoices, field) {
-  const sums = invoices.reduce((acc, invoice) => {
-    const code = invoice?.currency || "USD";
-    const amount = Number(invoice?.[field] || 0);
-    if (!Number.isFinite(amount)) return acc;
-    acc[code] = (acc[code] || 0) + amount;
-    return acc;
-  }, {});
-
-  const entries = Object.entries(sums);
-  if (!entries.length) return "-";
-  return entries
-    .map(([code, value]) => `${code} ${money(value)}`)
-    .join(" | ");
-}
-
-const STATUS_OPTIONS = [
-  "draft",
-  "sent",
-  "paid",
-  "partially_paid",
-  "overdue",
-  "cancelled",
-];
-
-const CURRENCY_OPTIONS = ["USD", "EUR", "GBP", "AUD", "CAD", "JPY", "PHP", "SGD", "NZD", "OTHER"];
 
 const EMPTY_ITEM = { description: "", quantity: 1, rate: 0 };
 
@@ -375,9 +323,9 @@ export default function InvoicesPage() {
               className="h-10 w-full px-3 rounded-lg border border-[#E5ECE8] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
               data-testid="invoice-status-select"
             >
-              {STATUS_OPTIONS.map((status) => (
+              {INVOICE_STATUS_OPTIONS.map((status) => (
                 <option key={status} value={status}>
-                  {statusLabel(status)}
+                  {invoiceStatusLabel(status)}
                 </option>
               ))}
             </select>
@@ -407,7 +355,7 @@ export default function InvoicesPage() {
               className="h-10 w-full px-3 rounded-lg border border-[#E5ECE8] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
               data-testid="invoice-currency-select"
             >
-              {CURRENCY_OPTIONS.map((currency) => (
+              {INVOICE_CURRENCY_OPTIONS.map((currency) => (
                 <option key={currency} value={currency}>
                   {currency}
                 </option>
@@ -618,8 +566,8 @@ export default function InvoicesPage() {
                   <div className="text-xs text-[#8EA39B]">{i.issue_date}</div>
                 </td>
                 <td className="px-3 py-3">
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full border text-xs font-medium ${statusBadgeClass(i.status)}`}>
-                    {statusLabel(i.status)}
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full border text-xs font-medium ${invoiceStatusBadgeClass(i.status)}`}>
+                    {invoiceStatusLabel(i.status)}
                   </span>
                 </td>
                 <td className="px-3 py-3 text-[#42534d] text-xs">

@@ -1,17 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-
-function money(v) {
-  const n = Number(v || 0);
-  return Number.isFinite(n) ? n.toFixed(2) : "0.00";
-}
-
-function formatDate(value) {
-  if (!value) return "-";
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return value;
-  return d.toLocaleDateString();
-}
+import { formatDate, formatMoney, invoiceStatusLabel } from "./invoiceUtils";
 
 export function downloadInvoicePdf({ invoice, client, provider }) {
   const doc = new jsPDF({ unit: "pt", format: "a4" });
@@ -62,7 +51,7 @@ export function downloadInvoicePdf({ invoice, client, provider }) {
   doc.text(invoice.invoice_number || "-", metaX + 78, metaY);
   doc.text(formatDate(invoice.issue_date), metaX + 78, metaY + 18);
   doc.text(formatDate(invoice.due_date), metaX + 78, metaY + 36);
-  doc.text(String(invoice.status || "draft").replace(/_/g, " "), metaX + 78, metaY + 54);
+  doc.text(invoiceStatusLabel(invoice.status), metaX + 78, metaY + 54);
 
   autoTable(doc, {
     startY: 220,
@@ -86,8 +75,8 @@ export function downloadInvoicePdf({ invoice, client, provider }) {
       return [
         item.description || "-",
         String(qty),
-        `$${money(rate)}`,
-        `$${money(qty * rate)}`,
+        formatMoney(rate, invoice.currency),
+        formatMoney(qty * rate, invoice.currency),
       ];
     }),
     columnStyles: {
@@ -103,12 +92,12 @@ export function downloadInvoicePdf({ invoice, client, provider }) {
   let totalsY = finalY + 28;
 
   const totals = [
-    ["Subtotal", `$${money(invoice.subtotal)}`],
-    ["Discount", `-$${money(invoice.discount)}`],
-    ["Tax / Fees", `$${money(invoice.tax_fees)}`],
-    ["Total", `$${money(invoice.total)}`],
-    ["Amount Paid", `$${money(invoice.amount_paid)}`],
-    ["Balance Due", `$${money(invoice.balance_due)}`],
+    ["Subtotal", formatMoney(invoice.subtotal, invoice.currency)],
+    ["Discount", `-${formatMoney(invoice.discount, invoice.currency)}`],
+    ["Tax / Fees", formatMoney(invoice.tax_fees, invoice.currency)],
+    ["Total", formatMoney(invoice.total, invoice.currency)],
+    ["Amount Paid", formatMoney(invoice.amount_paid, invoice.currency)],
+    ["Balance Due", formatMoney(invoice.balance_due, invoice.currency)],
   ];
 
   totals.forEach(([label, value], idx) => {

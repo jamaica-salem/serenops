@@ -2,29 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Plus, Save, Trash2 } from "lucide-react";
 import api from "../lib/api";
-
-const CURRENCY_OPTIONS = ["USD", "EUR", "GBP", "AUD", "CAD", "JPY", "PHP", "SGD", "NZD", "OTHER"];
-const STATUS_OPTIONS = ["draft", "sent", "paid", "partially_paid", "overdue", "cancelled"];
+import InvoicePreview from "../components/invoices/InvoicePreview";
+import {
+  calculateInvoiceTotals,
+  INVOICE_CURRENCY_OPTIONS,
+  INVOICE_STATUS_OPTIONS,
+  formatMoney,
+} from "../lib/invoiceUtils";
 const EMPTY_ITEM = { description: "", quantity: 1, rate: 0 };
-
-function money(v) {
-  const n = Number(v || 0);
-  return Number.isFinite(n) ? n.toFixed(2) : "0.00";
-}
-
-function formatMoney(value, currency = "USD") {
-  const amount = Number(value || 0);
-  if (!Number.isFinite(amount)) return "0.00";
-  try {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency || "USD",
-      maximumFractionDigits: 2,
-    }).format(amount);
-  } catch {
-    return `$${money(amount)}`;
-  }
-}
 
 export default function InvoiceDetailPage() {
   const { invoiceId } = useParams();
@@ -59,18 +44,31 @@ export default function InvoiceDetailPage() {
   }, [projects, form.client_id]);
 
   const computed = useMemo(() => {
-    const subtotal = (form.line_items || []).reduce((sum, item) => {
-      const qty = Number(item.quantity || 0);
-      const rate = Number(item.rate || 0);
-      return sum + qty * rate;
-    }, 0);
-    const discount = Number(form.discount || 0);
-    const tax = Number(form.tax_fees || 0);
-    const amountPaid = Number(form.amount_paid || 0);
-    const total = Math.max(0, subtotal - discount + tax);
-    const balance = Math.max(0, total - amountPaid);
-    return { subtotal, total, balance };
+    return calculateInvoiceTotals(form);
   }, [form]);
+
+  const selectedClient = useMemo(
+    () => clients.find((client) => client.id === form.client_id) || null,
+    [clients, form.client_id]
+  );
+
+  const selectedProject = useMemo(
+    () => projects.find((project) => project.id === form.project_id) || null,
+    [projects, form.project_id]
+  );
+
+  const previewInvoice = useMemo(
+    () => ({
+      ...form,
+      subtotal: computed.subtotal,
+      discount: computed.discount,
+      tax_fees: computed.taxFees,
+      total: computed.total,
+      amount_paid: computed.amountPaid,
+      balance_due: computed.balanceDue,
+    }),
+    [computed, form]
+  );
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -255,9 +253,16 @@ export default function InvoiceDetailPage() {
         </div>
         <div className="bg-white rounded-2xl border border-[#E5ECE8] p-4">
           <p className="text-xs uppercase tracking-wide text-[#8EA39B]">Balance Due</p>
-          <p className="mt-1 text-lg font-semibold text-[#2f6f5a]">{formatMoney(computed.balance, form.currency)}</p>
+          <p className="mt-1 text-lg font-semibold text-[#2f6f5a]">{formatMoney(computed.balanceDue, form.currency)}</p>
         </div>
       </div>
+
+      <InvoicePreview
+        invoice={previewInvoice}
+        client={selectedClient}
+        project={selectedProject}
+        provider={{ name: "SerenOps" }}
+      />
 
       <form onSubmit={save} className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-5">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -290,7 +295,7 @@ export default function InvoiceDetailPage() {
               onChange={(e) => setForm((prev) => ({ ...prev, status: e.target.value }))}
               className="h-10 w-full px-3 rounded-lg border border-[#E5ECE8] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
             >
-              {STATUS_OPTIONS.map((status) => (
+              {INVOICE_STATUS_OPTIONS.map((status) => (
                 <option key={status} value={status}>
                   {status.replace(/_/g, " ")}
                 </option>
@@ -320,7 +325,7 @@ export default function InvoiceDetailPage() {
               onChange={(e) => setForm((prev) => ({ ...prev, currency: e.target.value }))}
               className="h-10 w-full px-3 rounded-lg border border-[#E5ECE8] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
             >
-              {CURRENCY_OPTIONS.map((currency) => (
+              {INVOICE_CURRENCY_OPTIONS.map((currency) => (
                 <option key={currency} value={currency}>
                   {currency}
                 </option>
@@ -464,7 +469,7 @@ export default function InvoiceDetailPage() {
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-[#667C74]">Balance Due</span>
-              <span className="font-semibold text-[#2f6f5a]">{formatMoney(computed.balance, form.currency)}</span>
+              <span className="font-semibold text-[#2f6f5a]">{formatMoney(computed.balanceDue, form.currency)}</span>
             </div>
           </div>
         </div>
