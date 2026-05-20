@@ -44,7 +44,7 @@ export default function AIChatPanel() {
       <button
         data-testid="ai-chat-fab"
         onClick={() => setOpen(true)}
-        className="fixed bottom-24 right-6 w-14 h-14 rounded-full bg-[#5FA38D] text-white shadow-lg hover:shadow-xl hover:bg-[#4E8C79] transition-all flex items-center justify-center z-[60] group"
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#5FA38D] text-white shadow-lg hover:shadow-xl hover:bg-[#4E8C79] transition-all flex items-center justify-center z-[60] group"
         aria-label="Open AI assistant"
       >
         <Sparkles className="w-5 h-5 group-hover:scale-110 transition-transform" />
@@ -57,7 +57,7 @@ export default function AIChatPanel() {
 
   return (
     <div
-      className="fixed bottom-24 right-6 w-[360px] max-w-[calc(100vw-2rem)] h-[520px] bg-white rounded-2xl shadow-2xl border border-[#E5ECE8] z-[60] flex flex-col overflow-hidden animate-fade-up"
+      className="fixed bottom-6 right-6 w-[360px] max-w-[calc(100vw-2rem)] h-[520px] bg-card text-foreground rounded-2xl shadow-2xl border border-border z-[60] flex flex-col overflow-hidden animate-fade-up"
       data-testid="ai-chat-panel"
     >
       <div className="bg-gradient-to-r from-[#0F2B24] to-[#123C31] px-4 py-3 flex items-center justify-between text-white">
@@ -79,7 +79,7 @@ export default function AIChatPanel() {
         </button>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#f7faf8]">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-background">
         {messages.map((m, i) => (
           <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
             <div
@@ -87,7 +87,7 @@ export default function AIChatPanel() {
               className={`max-w-[85%] px-3.5 py-2 text-sm leading-snug whitespace-pre-line ${
                 m.role === "user"
                   ? "bg-[#1f332d] text-white rounded-2xl rounded-tr-sm"
-                  : "bg-white text-[#31443d] border border-[#E5ECE8] rounded-2xl rounded-tl-sm"
+                  : "bg-card text-foreground border border-border rounded-2xl rounded-tl-sm"
               }`}
             >
               {m.text}
@@ -96,7 +96,7 @@ export default function AIChatPanel() {
         ))}
         {busy && (
           <div className="flex justify-start">
-            <div className="bg-white border border-[#E5ECE8] rounded-2xl rounded-tl-sm px-3.5 py-2 text-sm text-[#667C74] flex gap-1">
+            <div className="bg-card border border-border rounded-2xl rounded-tl-sm px-3.5 py-2 text-sm text-muted-foreground flex gap-1">
               <span className="w-1.5 h-1.5 bg-[#5FA38D] rounded-full pulse-dot" />
               <span className="w-1.5 h-1.5 bg-[#5FA38D] rounded-full pulse-dot" style={{ animationDelay: "0.2s" }} />
               <span className="w-1.5 h-1.5 bg-[#5FA38D] rounded-full pulse-dot" style={{ animationDelay: "0.4s" }} />
@@ -106,13 +106,13 @@ export default function AIChatPanel() {
       </div>
 
       {messages.length <= 1 && (
-        <div className="px-4 py-2 border-t border-[#E5ECE8] flex flex-wrap gap-1.5 bg-white">
+        <div className="px-4 py-2 border-t border-border flex flex-wrap gap-1.5 bg-card">
           {QUICK_PROMPTS.map((p) => (
             <button
               key={p}
               data-testid={`chat-quick-${p.slice(0, 8)}`}
               onClick={() => send(p)}
-              className="text-[11px] px-2.5 py-1 bg-[#eef6f1] text-[#2f6f5a] border border-[#dbe9e2] rounded-full hover:bg-[#e4f1ea]"
+              className="text-[11px] px-2.5 py-1 bg-secondary text-secondary-foreground border border-border rounded-full hover:bg-muted"
             >
               {p}
             </button>
@@ -122,9 +122,9 @@ export default function AIChatPanel() {
 
       <form
         onSubmit={(e) => { e.preventDefault(); send(); }}
-        className="p-3 border-t border-[#E5ECE8] flex items-center gap-2 bg-white"
+        className="p-3 border-t border-border flex items-center gap-2 bg-card"
       >
-        <MessageSquare className="w-4 h-4 text-[#8EA39B]" />
+        <MessageSquare className="w-4 h-4 text-muted-foreground" />
         <input
           data-testid="chat-input"
           value={input}
