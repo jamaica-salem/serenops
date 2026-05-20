@@ -20,7 +20,7 @@ pip install -r requirements.txt
 Create `backend/.env`:
 ```env
 MONGO_URL=mongodb://localhost:27017
-DB_NAME=panze
+DB_NAME=serenops
 JWT_SECRET=change-this-secret
 CORS_ORIGINS=http://localhost:3000
 COOKIE_SECURE=false

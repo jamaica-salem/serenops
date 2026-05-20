@@ -24,7 +24,7 @@ export default function TopBar({ filter, onFilterChange, search, onSearch }) {
 
   return (
     <header
-      className="h-16 border-b border-gray-200 bg-white/80 backdrop-blur-md px-4 md:px-6 flex items-center gap-4 sticky top-0 z-30"
+      className="h-16 border-b border-[#E1EAE6] bg-white/90 backdrop-blur-md px-4 md:px-6 flex items-center gap-4 sticky top-0 z-30"
       data-testid="topbar"
     >
       <div className="flex-1 max-w-xl relative">
@@ -34,11 +34,11 @@ export default function TopBar({ filter, onFilterChange, search, onSearch }) {
           value={search || ""}
           onChange={(e) => onSearch?.(e.target.value)}
           placeholder="Search tasks, projects, meetings…"
-          className="w-full h-10 pl-9 pr-4 rounded-full bg-gray-100 border border-transparent text-sm focus:outline-none focus:bg-white focus:border-orange-500 transition-colors"
+          className="w-full h-10 pl-9 pr-4 rounded-full bg-[#F3F7F5] border border-[#E1EAE6] text-sm focus:outline-none focus:bg-white focus:border-[#5FA38D] transition-colors"
         />
       </div>
 
-      <div className="hidden lg:flex items-center bg-gray-100 rounded-full p-1">
+      <div className="hidden lg:flex items-center bg-[#F3F7F5] rounded-full p-1 border border-[#E1EAE6]">
         {FILTERS.map((f) => (
           <button
             key={f.key}
@@ -46,7 +46,7 @@ export default function TopBar({ filter, onFilterChange, search, onSearch }) {
             onClick={() => onFilterChange?.(f.key)}
             className={`px-4 py-1.5 text-sm rounded-full transition-colors ${
               filter === f.key
-                ? "bg-gray-900 text-white"
+                ? "bg-[#E6F1EC] text-[#1C4035]"
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >

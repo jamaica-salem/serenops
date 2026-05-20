@@ -9,7 +9,7 @@ export default function AppLayout() {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-gray-50">
+    <div className="flex h-screen w-full overflow-hidden bg-[#F3F7F5]">
       <Sidebar />
       <div className="flex-1 flex flex-col h-full overflow-hidden min-w-0">
         <TopBar
