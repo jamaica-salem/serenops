@@ -10,10 +10,10 @@ export default function TaskProgressCard({ summary }) {
   const total = Math.max(summary.total_tasks || 1, 1);
 
   return (
-    <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 h-full" data-testid="card-task-progress">
+    <div className="bg-white dark:bg-[#112b23] rounded-2xl border border-[#E5ECE8] dark:border-[#2b473e] p-5 h-full" data-testid="card-task-progress">
       <div className="flex items-center justify-between mb-5">
         <h3 className="font-display text-lg font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Task Progress Overview</h3>
-        <span className="text-xs text-[#667C74]">Across all projects</span>
+        <span className="text-xs text-[#667C74] dark:text-[#9cb3a9]">Across all projects</span>
       </div>
 
       <div className="space-y-4">
@@ -23,12 +23,12 @@ export default function TaskProgressCard({ summary }) {
           return (
             <div key={r.key} data-testid={`progress-${r.key}`} className="space-y-1.5">
               <div className="flex items-center justify-between text-sm">
-                <span className="font-medium text-[#42534d]">{r.label}</span>
-                <span className="text-[#667C74] text-xs">
-                  <span className="text-[#1D2A25] font-semibold">{v}</span> · {pct}%
+                <span className="font-medium text-[#42534d] dark:text-[#c8d9d1]">{r.label}</span>
+                <span className="text-[#667C74] dark:text-[#9cb3a9] text-xs">
+                  <span className="text-[#1D2A25] dark:text-[#d7e6b6] font-semibold">{v}</span> · {pct}%
                 </span>
               </div>
-              <div className="h-2 rounded-full bg-[#edf3ef] overflow-hidden">
+              <div className="h-2 rounded-full bg-[#edf3ef] dark:bg-[#28463c] overflow-hidden">
                 <div
                   className={`h-full ${r.color} rounded-full transition-all duration-700`}
                   style={{ width: `${pct}%` }}

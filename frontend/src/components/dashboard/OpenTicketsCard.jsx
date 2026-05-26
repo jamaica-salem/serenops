@@ -14,10 +14,10 @@ export default function OpenTicketsCard({ tasks = [], users = [] }) {
   const userById = Object.fromEntries(users.map((u) => [u.id, u]));
 
   return (
-    <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5" data-testid="card-open-tickets">
+    <div className="bg-white dark:bg-[#112b23] rounded-2xl border border-[#E5ECE8] dark:border-[#2b473e] p-5" data-testid="card-open-tickets">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-display text-lg font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Open Tickets</h3>
-        <span className="text-xs text-[#667C74]">{open.length} open</span>
+        <span className="text-xs text-[#667C74] dark:text-[#9cb3a9]">{open.length} open</span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
@@ -27,7 +27,7 @@ export default function OpenTicketsCard({ tasks = [], users = [] }) {
             <div
               key={t.id}
               data-testid={`ticket-${t.id}`}
-              className="p-4 rounded-xl border border-[#E5ECE8] hover:border-[#d2e0d9] hover:shadow-sm transition-all bg-[#f8fbf9]"
+              className="p-4 rounded-xl border border-[#E5ECE8] dark:border-[#2b473e] hover:border-[#d2e0d9] dark:hover:border-[#44675b] hover:shadow-sm transition-all bg-[#f8fbf9] dark:bg-[#0f261f]"
             >
               <div className="flex items-center gap-3 mb-3">
                 <img
@@ -36,14 +36,14 @@ export default function OpenTicketsCard({ tasks = [], users = [] }) {
                   className="w-9 h-9 rounded-full object-cover"
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-[#1D2A25] truncate">{u?.name || "Unassigned"}</div>
+                  <div className="text-sm font-medium text-[#1D2A25] dark:text-[#d7e6b6] truncate">{u?.name || "Unassigned"}</div>
                   <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${STATUS_CHIP[t.status] || STATUS_CHIP.todo}`}>
                     {t.status.replace("_", " ")}
                   </span>
                 </div>
               </div>
-              <div className="text-sm text-[#2b3a35] line-clamp-2 mb-3 min-h-[40px]">{t.title}</div>
-              <button className="inline-flex items-center gap-1 text-xs font-medium text-[#2f6f5a] hover:text-[#255342]">
+              <div className="text-sm text-[#2b3a35] dark:text-[#c8d9d1] line-clamp-2 mb-3 min-h-[40px]">{t.title}</div>
+              <button className="inline-flex items-center gap-1 text-xs font-medium text-[#2f6f5a] dark:text-[#a4ceb8] hover:text-[#255342] dark:hover:text-[#d7e6b6]">
                 View <ArrowRight className="w-3 h-3" />
               </button>
             </div>

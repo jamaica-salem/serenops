@@ -1,15 +1,6 @@
-import { Plus, Circle, CheckCircle2, Clock } from "lucide-react";
+import { Plus, Circle, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
-const STATUS_ICONS = {
-  todo: { Icon: Circle, color: "text-gray-400" },
-  in_progress: { Icon: Clock, color: "text-blue-500" },
-  waiting_for_client: { Icon: Clock, color: "text-amber-500" },
-  for_review: { Icon: Clock, color: "text-orange-500" },
-  done: { Icon: CheckCircle2, color: "text-green-500" },
-  backlog: { Icon: Circle, color: "text-gray-300" },
-};
 
 const PROJECT_TINTS = ["#3E6E60", "#2C5568", "#566A4F", "#5C4D66", "#4E6A5E"];
 
@@ -20,7 +11,7 @@ function tintFor(id) {
   return PROJECT_TINTS[s];
 }
 
-export default function MyTasksCard({ tasks, onAdd }) {
+export default function MyTasksCard({ tasks, onAdd, onToggleDone }) {
   const [tab, setTab] = useState("today");
 
   const todayStr = new Date().toISOString().slice(0, 10);
@@ -30,7 +21,7 @@ export default function MyTasksCard({ tasks, onAdd }) {
     if (tab === "today") return !t.due_date || t.due_date <= todayStr || t.status === "in_progress";
     if (tab === "tomorrow") return t.due_date === tomorrowStr;
     return t.due_date && t.due_date < todayStr && t.status !== "done";
-  });
+  }).sort((a, b) => Number(a.status === "done") - Number(b.status === "done"));
 
   const ongoing = tasks.filter((t) => t.status === "in_progress").length;
 
@@ -91,7 +82,7 @@ export default function MyTasksCard({ tasks, onAdd }) {
           </div>
         )}
         {filtered.slice(0, 5).map((t) => {
-          const { Icon, color } = STATUS_ICONS[t.status] || STATUS_ICONS.todo;
+          const isDone = t.status === "done";
           return (
             <div
               key={t.id}
@@ -100,11 +91,21 @@ export default function MyTasksCard({ tasks, onAdd }) {
               style={{ backgroundColor: tintFor(t.project_id) + "55" }}
             >
               <div className="flex items-start gap-2">
-                <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${color}`} />
+                <button
+                  type="button"
+                  onClick={() => onToggleDone?.(t)}
+                  className="mt-0.5 shrink-0 text-[#d7e6df] hover:text-white"
+                  aria-label={isDone ? `Mark ${t.title} not done` : `Mark ${t.title} done`}
+                  data-testid={`my-task-toggle-${t.id}`}
+                >
+                  {isDone ? <CheckCircle2 className="w-4 h-4 text-[#6FCF97]" /> : <Circle className="w-4 h-4" />}
+                </button>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-white leading-snug">{t.title}</div>
+                  <div className={`text-sm font-medium leading-snug ${isDone ? "text-[#b6cdc3] line-through" : "text-white"}`}>
+                    {t.title}
+                  </div>
                   {t.description && (
-                    <div className="text-xs text-[#d6e3dd] mt-0.5 line-clamp-2">{t.description}</div>
+                    <div className={`text-xs mt-0.5 line-clamp-2 ${isDone ? "text-[#a7bcb4]" : "text-[#d6e3dd]"}`}>{t.description}</div>
                   )}
                 </div>
               </div>

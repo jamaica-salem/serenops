@@ -126,6 +126,11 @@ code, pre, .font-mono {
     border: 1px solid #dbeae2;
 }
 
+.dark .ai-glow {
+    background: linear-gradient(145deg, #112b23 0%, #0f261f 100%);
+    border-color: #2b473e;
+}
+
 /* Serene Forest Slate accent remap (kept minimal for legacy classes) */
 @layer utilities {
     .bg-orange-50 { background-color: #f3fbf7 !important; }
