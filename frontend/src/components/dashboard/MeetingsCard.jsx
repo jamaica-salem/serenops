@@ -19,7 +19,7 @@ export default function MeetingsCard({ meetings = [] }) {
   return (
     <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 h-full flex flex-col" data-testid="card-meetings">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-display text-lg font-semibold text-[#1D2A25]">My Meetings</h3>
+        <h3 className="font-display text-lg font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">My Meetings</h3>
         <button className="w-7 h-7 rounded-full hover:bg-[#f1f5f3] flex items-center justify-center text-[#8EA39B]">
           <Calendar className="w-4 h-4" />
         </button>

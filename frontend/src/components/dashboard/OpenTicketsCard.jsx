@@ -16,7 +16,7 @@ export default function OpenTicketsCard({ tasks = [], users = [] }) {
   return (
     <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5" data-testid="card-open-tickets">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-display text-lg font-semibold text-[#1D2A25]">Open Tickets</h3>
+        <h3 className="font-display text-lg font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Open Tickets</h3>
         <span className="text-xs text-[#667C74]">{open.length} open</span>
       </div>
 

@@ -80,7 +80,7 @@ export default function TemplatesPage() {
       <div className="flex items-end justify-between gap-3 flex-wrap">
         <div>
           <p className="text-sm text-gray-500">Reusable client operations templates</p>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-gray-900">Templates</h1>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Templates</h1>
         </div>
         <button
           onClick={loadTemplates}
@@ -134,7 +134,7 @@ export default function TemplatesPage() {
           <div key={t.id} className="bg-white rounded-xl border border-gray-200 p-4">
             <div className="flex items-center justify-between gap-2">
               <div>
-                <h3 className="font-medium text-gray-900">{t.name}</h3>
+                <h3 className="font-medium text-[#1C4B3E] dark:text-[#d7e6b6]">{t.name}</h3>
                 <div className="text-xs text-gray-500">{pretty(t.template_type)}{t.is_default ? " · Default" : ""}</div>
               </div>
               <button

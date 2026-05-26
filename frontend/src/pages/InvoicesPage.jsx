@@ -256,7 +256,7 @@ export default function InvoicesPage() {
     <div className="space-y-6 animate-fade-up" data-testid="invoices-page">
       <div>
         <p className="text-sm text-[#667C74]">Track balances and payment status</p>
-        <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1D2A25]">Invoices</h1>
+        <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Invoices</h1>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
@@ -273,7 +273,7 @@ export default function InvoicesPage() {
       >
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h2 className="font-display text-xl font-semibold text-[#1D2A25]">Invoice Generator</h2>
+            <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Invoice Generator</h2>
             <p className="text-sm text-[#667C74]">
               Fill the form once, then export a formatted PDF automatically.
             </p>
@@ -428,7 +428,7 @@ export default function InvoicesPage() {
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-[#1D2A25]">Line Items</h3>
+            <h3 className="text-sm font-medium text-[#1C4B3E] dark:text-[#d7e6b6]">Line Items</h3>
             <button
               type="button"
               onClick={addLineItem}

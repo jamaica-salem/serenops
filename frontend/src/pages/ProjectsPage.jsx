@@ -47,7 +47,7 @@ export default function ProjectsPage() {
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
           <p className="text-sm text-gray-500">Group tasks by initiative</p>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-gray-900">Projects</h1>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Projects</h1>
         </div>
         <button
           data-testid="projects-add-btn"
@@ -82,7 +82,7 @@ export default function ProjectsPage() {
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
-              <h3 className="font-display font-semibold text-gray-900 mb-1">{p.name}</h3>
+              <h3 className="font-display font-semibold text-[#1C4B3E] dark:text-[#d7e6b6] mb-1">{p.name}</h3>
               <p className="text-xs text-gray-500 mb-1">
                 Client: {client?.name || "Unlinked"}
               </p>

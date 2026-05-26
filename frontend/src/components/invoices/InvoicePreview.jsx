@@ -17,7 +17,7 @@ export default function InvoicePreview({ invoice, client, project, provider }) {
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-[#B8C8C1]">Invoice preview</p>
-            <h3 className="mt-1 text-xl font-display font-semibold">{invoice?.invoice_number || "Invoice"}</h3>
+            <h3 className="mt-1 text-xl font-display font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">{invoice?.invoice_number || "Invoice"}</h3>
             <p className="text-sm text-[#DCE7E2] mt-1">Export-ready summary for client-facing review.</p>
           </div>
           <span className={`inline-flex items-center px-2.5 py-1 rounded-full border text-xs font-medium ${invoiceStatusBadgeClass(invoice?.status)}`}>

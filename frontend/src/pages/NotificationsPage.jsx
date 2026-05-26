@@ -53,7 +53,7 @@ export default function NotificationsPage() {
       <div className="flex items-end justify-between flex-wrap gap-3">
         <div>
           <p className="text-sm text-gray-500">Stay on top of deadlines</p>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-gray-900 flex items-center gap-3">
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6] flex items-center gap-3">
             Notifications
             {unread > 0 && (
               <span className="text-xs px-2.5 py-1 rounded-full bg-orange-100 text-orange-700 font-medium" data-testid="notif-unread-count">

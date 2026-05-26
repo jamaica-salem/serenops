@@ -148,7 +148,7 @@ export default function ContractsPage() {
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
           <p className="text-sm text-[#667C74]">Generate and track client agreements</p>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1D2A25]">Contracts</h1>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Contracts</h1>
         </div>
         <button
           type="button"
@@ -170,7 +170,7 @@ export default function ContractsPage() {
         <section className="bg-white rounded-2xl border border-[#E5ECE8] p-5">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div>
-              <h2 className="font-display text-xl font-semibold text-[#1D2A25]">Create contract</h2>
+              <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Create contract</h2>
               <p className="text-sm text-[#667C74]">Start with a template or build from scratch.</p>
             </div>
             <div className="inline-flex items-center gap-2 text-xs text-[#667C74]">
@@ -358,7 +358,7 @@ export default function ContractsPage() {
         <section className="bg-white rounded-2xl border border-[#E5ECE8] p-5">
           <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
             <div>
-              <h2 className="font-display text-xl font-semibold text-[#1D2A25]">Contracts list</h2>
+              <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Contracts list</h2>
               <p className="text-sm text-[#667C74]">Open a contract to edit or preview it.</p>
             </div>
             <div className="text-xs text-[#667C74]">{contracts.length} contracts</div>

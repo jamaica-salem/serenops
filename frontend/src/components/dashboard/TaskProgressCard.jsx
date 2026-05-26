@@ -12,7 +12,7 @@ export default function TaskProgressCard({ summary }) {
   return (
     <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 h-full" data-testid="card-task-progress">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="font-display text-lg font-semibold text-[#1D2A25]">Task Progress Overview</h3>
+        <h3 className="font-display text-lg font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Task Progress Overview</h3>
         <span className="text-xs text-[#667C74]">Across all projects</span>
       </div>
 

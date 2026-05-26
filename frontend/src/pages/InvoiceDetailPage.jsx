@@ -227,7 +227,7 @@ export default function InvoiceDetailPage() {
             <ArrowLeft className="w-4 h-4" />
             Back to invoices
           </Link>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1D2A25] mt-1">
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6] mt-1">
             Invoice {invoice?.invoice_number}
           </h1>
           <p className="text-sm text-[#667C74]">Edit invoice details and balances safely.</p>
@@ -374,7 +374,7 @@ export default function InvoiceDetailPage() {
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-[#1D2A25]">Line Items</h3>
+            <h3 className="text-sm font-medium text-[#1C4B3E] dark:text-[#d7e6b6]">Line Items</h3>
             <button
               type="button"
               onClick={addLineItem}

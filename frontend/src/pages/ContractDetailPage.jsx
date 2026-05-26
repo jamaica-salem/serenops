@@ -171,7 +171,7 @@ export default function ContractDetailPage() {
             <ArrowLeft className="w-4 h-4" />
             Back to contracts
           </Link>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1D2A25] mt-1">
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6] mt-1">
             {contract?.title || "Contract"}
           </h1>
           <p className="text-sm text-[#667C74]">Edit contract details and keep the preview updated.</p>

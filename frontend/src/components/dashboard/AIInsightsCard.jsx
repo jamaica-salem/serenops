@@ -10,7 +10,7 @@ export default function AIInsightsCard({ insights = [] }) {
         <div className="w-8 h-8 rounded-lg bg-[#e6f4ec] text-[#2f6f5a] flex items-center justify-center">
           <Sparkles className="w-4 h-4" />
         </div>
-        <h3 className="font-display text-lg font-semibold text-[#1D2A25]">AI Insights</h3>
+        <h3 className="font-display text-lg font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">AI Insights</h3>
       </div>
 
       <div className="space-y-3 flex-1">

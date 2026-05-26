@@ -37,7 +37,7 @@ export default function MyTasksCard({ tasks, onAdd }) {
   return (
     <div className="rounded-2xl border border-[#1a4136] p-5 h-full flex flex-col bg-[radial-gradient(circle_at_10%_15%,rgba(123,196,164,0.24),transparent_44%),linear-gradient(150deg,#0f2b24_0%,#123c31_100%)] text-[#edf4f1]" data-testid="card-my-tasks">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-display text-lg font-semibold text-white">My Tasks</h3>
+        <h3 className="font-display text-lg font-semibold text-[#d7e6b6]">My Tasks</h3>
         <button
           onClick={onAdd}
           data-testid="add-task-btn"

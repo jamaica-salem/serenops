@@ -201,7 +201,7 @@ export default function ClientPortalPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F7FAF8] p-6">
         <div className="max-w-md w-full bg-white border border-[#E5ECE8] rounded-2xl p-6 text-center">
-          <h1 className="font-display text-2xl font-bold text-[#1D2A25]">Portal unavailable</h1>
+          <h1 className="font-display text-2xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Portal unavailable</h1>
           <p className="text-sm text-[#667C74] mt-2">{error}</p>
         </div>
       </div>
@@ -219,7 +219,7 @@ export default function ClientPortalPage() {
               <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[#C5D7D0]">
                 <ShieldCheck className="w-4 h-4" /> SerenOps Client Portal
               </div>
-              <h1 className="mt-3 font-display text-3xl sm:text-4xl font-bold">{client.name}</h1>
+              <h1 className="mt-3 font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">{client.name}</h1>
               <div className="mt-2 text-sm text-[#D5E2DC] flex flex-wrap gap-3">
                 <span className="inline-flex items-center gap-2"><Building2 className="w-4 h-4" /> {client.company_name || "Independent"}</span>
                 {client.email && <span className="inline-flex items-center gap-2"><Mail className="w-4 h-4" /> {client.email}</span>}
@@ -243,7 +243,7 @@ export default function ClientPortalPage() {
           <section className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-4">
             <header className="flex items-center justify-between">
               <div>
-                <h2 className="font-display text-xl font-semibold">Approvals</h2>
+                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Approvals</h2>
                 <p className="text-sm text-[#667C74]">Review proposals and sign contracts.</p>
               </div>
               <Badge icon={BadgeCheck} label="Action required" />
@@ -389,7 +389,7 @@ export default function ClientPortalPage() {
           <section className="space-y-6">
             <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
               <div>
-                <h2 className="font-display text-xl font-semibold">Invoices & Payments</h2>
+                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Invoices & Payments</h2>
                 <p className="text-sm text-[#667C74]">Record payments and see outstanding balances.</p>
               </div>
 
@@ -477,7 +477,7 @@ export default function ClientPortalPage() {
 
             <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
               <div>
-                <h2 className="font-display text-xl font-semibold">Progress snapshot</h2>
+                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Progress snapshot</h2>
                 <p className="text-sm text-[#667C74]">Recent tasks and activity for this engagement.</p>
               </div>
               <div className="space-y-2">
@@ -495,7 +495,7 @@ export default function ClientPortalPage() {
 
             <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
               <div>
-                <h2 className="font-display text-xl font-semibold">Projects</h2>
+                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Projects</h2>
                 <p className="text-sm text-[#667C74]">Delivery status across your active workstreams.</p>
               </div>
               <div className="space-y-3">
@@ -522,7 +522,7 @@ export default function ClientPortalPage() {
 
             <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
               <div>
-                <h2 className="font-display text-xl font-semibold">Recent activity</h2>
+                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Recent activity</h2>
                 <p className="text-sm text-[#667C74]">A timeline of updates shared with you.</p>
               </div>
               <div className="space-y-3">
@@ -548,7 +548,7 @@ export default function ClientPortalPage() {
             {data?.portal?.allow_feedback ? (
               <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
               <div>
-                <h2 className="font-display text-xl font-semibold">Leave feedback</h2>
+                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Leave feedback</h2>
                 <p className="text-sm text-[#667C74]">Share notes or questions with the delivery team.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

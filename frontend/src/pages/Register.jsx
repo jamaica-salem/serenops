@@ -30,7 +30,7 @@ export default function Register() {
           <BrandLogo className="h-9 w-auto select-none" alt="SerenOps" />
         </div>
         <div>
-          <h2 className="font-display text-2xl font-bold text-[#1D2A25]">Create account</h2>
+          <h2 className="font-display text-2xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Create account</h2>
           <p className="text-sm text-[#667C74] mt-1">Start managing projects in minutes.</p>
         </div>
 

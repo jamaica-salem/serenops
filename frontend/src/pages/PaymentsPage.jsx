@@ -197,7 +197,7 @@ export default function PaymentsPage() {
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
           <p className="text-sm text-[#667C74]">Track collections, history, and unpaid balances</p>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1D2A25]">Payments</h1>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Payments</h1>
         </div>
         <div className="inline-flex items-center gap-2 text-xs px-3 h-9 rounded-lg border border-[#E5ECE8] bg-white text-[#42534d]">
           <CircleDollarSign className="w-3.5 h-3.5 text-[#5FA38D]" />
@@ -217,7 +217,7 @@ export default function PaymentsPage() {
           <section className="bg-white rounded-2xl border border-[#E5ECE8] p-5">
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <div>
-                <h2 className="font-display text-xl font-semibold text-[#1D2A25]">Record payment</h2>
+                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Record payment</h2>
                 <p className="text-sm text-[#667C74]">Apply payments to invoices and keep balances in sync.</p>
               </div>
               <button type="button" onClick={load} className="h-9 px-3 rounded-lg border border-[#E5ECE8] text-sm text-[#42534d] hover:bg-[#F7FAF8] inline-flex items-center gap-2">
@@ -306,7 +306,7 @@ export default function PaymentsPage() {
           <section className="bg-white rounded-2xl border border-[#E5ECE8] p-5">
             <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
               <div>
-                <h2 className="font-display text-xl font-semibold text-[#1D2A25]">Payment history</h2>
+                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Payment history</h2>
                 <p className="text-sm text-[#667C74]">Filter by client and status to review collections.</p>
               </div>
               <div className="flex items-center gap-2 text-xs text-[#667C74]">
@@ -387,7 +387,7 @@ export default function PaymentsPage() {
 
         <aside className="space-y-4">
           <section className="bg-white rounded-2xl border border-[#E5ECE8] p-5">
-            <h2 className="font-display text-lg font-semibold text-[#1D2A25]">Client balance snapshot</h2>
+            <h2 className="font-display text-lg font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Client balance snapshot</h2>
             <div className="mt-3 space-y-3">
               {clients.slice(0, 8).map((client) => {
                 const clientInvoices = invoices.filter((invoice) => invoice.client_id === client.id && invoice.status !== "cancelled");

@@ -48,7 +48,7 @@ export default function Login() {
       <div className="flex-1 flex items-center justify-center p-6 bg-[#F7FAF8]">
         <form onSubmit={submit} className="w-full max-w-sm space-y-6 bg-white border border-[#E5ECE8] rounded-2xl p-7 shadow-sm" data-testid="login-form">
           <div>
-            <h2 className="font-display text-2xl font-bold text-[#1D2A25]">Welcome back</h2>
+            <h2 className="font-display text-2xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Welcome back</h2>
             <p className="text-sm text-[#667C74] mt-1">Sign in to continue to your dashboard.</p>
           </div>
 

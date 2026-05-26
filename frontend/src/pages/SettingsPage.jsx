@@ -59,7 +59,7 @@ export default function SettingsPage() {
     <div className="space-y-6 animate-fade-up max-w-3xl" data-testid="settings-page">
       <div>
         <p className="text-sm text-gray-500">Configure your AI assistant</p>
-        <h1 className="font-display text-3xl sm:text-4xl font-bold text-gray-900">Settings</h1>
+        <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Settings</h1>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
@@ -68,7 +68,7 @@ export default function SettingsPage() {
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="font-display text-lg font-semibold text-gray-900">AI Provider</h2>
+            <h2 className="font-display text-lg font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">AI Provider</h2>
             <p className="text-sm text-gray-500">Choose the LLM behind SerenOps AI and configure your own provider key.</p>
           </div>
         </div>
