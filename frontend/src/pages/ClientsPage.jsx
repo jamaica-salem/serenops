@@ -168,6 +168,7 @@ export default function ClientsPage() {
     status: "active",
     notes: "",
   });
+  const [activeWorkspaceTab, setActiveWorkspaceTab] = useState("overview");
 
   const [form, setForm] = useState({
     name: "",
@@ -185,6 +186,10 @@ export default function ClientsPage() {
     () => clients.find((c) => c.id === selectedId) || null,
     [clients, selectedId]
   );
+
+  useEffect(() => {
+    setActiveWorkspaceTab("overview");
+  }, [selectedId]);
 
   const loadClients = async () => {
     try {
@@ -589,7 +594,7 @@ export default function ClientsPage() {
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
           <p className="text-sm text-gray-500">Track the full lifecycle of every client</p>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-gray-900">Clients</h1>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Clients</h1>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -642,7 +647,7 @@ export default function ClientsPage() {
             <>
               <div className="flex flex-wrap gap-4 items-start justify-between mb-5">
                 <div className="space-y-1">
-                  <h2 className="font-display text-2xl font-bold text-gray-900">{selectedClient.name}</h2>
+                  <h2 className="font-display text-2xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">{selectedClient.name}</h2>
                   <div className="text-sm text-gray-500">
                     {selectedClient.company_name || "No company"} · {selectedClient.client_type}
                   </div>
@@ -665,14 +670,44 @@ export default function ClientsPage() {
                 </div>
               </div>
 
-              <Tabs defaultValue="overview">
-                <TabsList className="w-full flex-wrap h-auto">
-                  {WORKSPACE_TABS.map((tab) => (
-                    <TabsTrigger key={tab} value={tab} className="capitalize text-xs">
-                      {tab.replace("-", " ")}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
+              <Tabs value={activeWorkspaceTab} onValueChange={setActiveWorkspaceTab}>
+                <div className="md:hidden mb-3">
+                  <div className="text-[11px] text-gray-500 mb-1">Workspace section</div>
+                  <Select value={activeWorkspaceTab} onValueChange={setActiveWorkspaceTab}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {WORKSPACE_TABS.map((tab) => (
+                        <SelectItem key={tab} value={tab} className="capitalize">
+                          {tab.replace("-", " ")}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-4">
+                  <div className="hidden md:block">
+                    <div className="rounded-xl border border-[#E5ECE8] bg-[#F7FAF8] p-2">
+                      <div className="px-2 pt-1 pb-2 text-[11px] font-medium uppercase tracking-wide text-[#6f847c]">
+                        Workspace
+                      </div>
+                      <TabsList className="flex h-auto w-full flex-col items-stretch justify-start gap-1 rounded-none bg-transparent p-0 text-inherit">
+                        {WORKSPACE_TABS.map((tab) => (
+                          <TabsTrigger
+                            key={tab}
+                            value={tab}
+                            className="w-full justify-start capitalize rounded-lg px-3 py-2 text-xs font-medium text-[#5f736b] hover:bg-white hover:text-[#1C4B3E] data-[state=active]:bg-[#1C4B3E] data-[state=active]:text-white data-[state=active]:shadow-none"
+                          >
+                            {tab.replace("-", " ")}
+                          </TabsTrigger>
+                        ))}
+                      </TabsList>
+                    </div>
+                  </div>
+
+                  <div className="min-w-0">
 
                 <TabsContent value="overview" className="space-y-4 pt-3">
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -1237,6 +1272,8 @@ export default function ClientsPage() {
                   />
                   <Button onClick={() => saveClientNotes((clients.find((c) => c.id === selectedClient.id) || {}).notes || "")}>Save notes</Button>
                 </TabsContent>
+                  </div>
+                </div>
               </Tabs>
 
               {busy && <div className="text-xs text-gray-500 mt-3">Updating workspace data...</div>}
