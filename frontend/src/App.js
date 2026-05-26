@@ -17,7 +17,6 @@ import ContractDetailPage from "./pages/ContractDetailPage";
 import RevisionsPage from "./pages/RevisionsPage";
 import ProposalsPage from "./pages/ProposalsPage";
 import TemplatesPage from "./pages/TemplatesPage";
-import NotificationsPage from "./pages/NotificationsPage";
 import SettingsPage from "./pages/SettingsPage";
 import AIAssistantPage from "./pages/AIAssistantPage";
 import ClientPortalPage from "./pages/ClientPortalPage";
@@ -50,7 +49,6 @@ export default function App() {
               <Route path="/contracts" element={<ContractsPage />} />
               <Route path="/contracts/:contractId" element={<ContractDetailPage />} />
               <Route path="/templates" element={<TemplatesPage />} />
-              <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/assistant" element={<AIAssistantPage />} />
               <Route path="/settings" element={<SettingsPage />} />
             </Route>
