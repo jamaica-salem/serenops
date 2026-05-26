@@ -440,7 +440,7 @@ export default function Dashboard() {
           <button
             type="button"
             onClick={() => setCustomizing((prev) => !prev)}
-            className={`h-10 px-4 rounded-xl border text-sm inline-flex items-center gap-2 transition-colors ${
+            className={`h-10 px-4 rounded-xl border text-sm inline-flex items-center gap-2 whitespace-nowrap shrink-0 transition-colors ${
               customizing
                 ? "border-[#1C4B3E] bg-[#1C4B3E] text-white"
                 : "border-[#E5ECE8] bg-white text-[#42534d] hover:bg-[#f7faf8] dark:border-[#29433a] dark:bg-[#102821] dark:text-[#d7e6b6] dark:hover:bg-[#15342a]"
