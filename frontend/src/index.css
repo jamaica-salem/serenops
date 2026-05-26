@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 body {
     margin: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: #F7FAF8;
@@ -15,7 +15,7 @@ body {
 
 h1, h2, h3, h4, h5, .font-display {
     font-family: 'Instrument Serif', 'Sora', 'Inter', serif;
-    font-size-adjust: 0.60;
+    font-size-adjust: 0.65;
     font-optical-sizing: auto;
     letter-spacing: -0.01em;
 }
@@ -32,7 +32,7 @@ code, pre, .font-mono {
         --card-foreground: 156 18% 14%; /* #1D2A25 */
         --popover: 0 0% 100%; /* #FFFFFF */
         --popover-foreground: 156 18% 14%; /* #1D2A25 */
-        --primary: 161 27% 51%; /* #5FA38D */
+        --primary: 165 45% 20%; /* #1C4B3E */
         --primary-foreground: 0 0% 100%;
         --secondary: 157 22% 92%; /* soft sage tint */
         --secondary-foreground: 156 18% 14%; /* #1D2A25 */
@@ -44,8 +44,8 @@ code, pre, .font-mono {
         --destructive-foreground: 0 0% 100%;
         --border: 153 23% 91%; /* #E5ECE8 */
         --input: 153 23% 91%;
-        --ring: 161 27% 51%; /* #5FA38D */
-        --chart-1: 161 27% 51%; /* #5FA38D */
+        --ring: 165 45% 20%; /* #1C4B3E */
+        --chart-1: 165 45% 20%; /* #1C4B3E */
         --chart-2: 154 30% 44%; /* deeper sage */
         --chart-3: 200 8% 73%; /* soft neutral */
         --chart-4: 30 53% 64%; /* #D4A373 */
@@ -55,19 +55,19 @@ code, pre, .font-mono {
 
     .dark {
         --background: 157 26% 9%;
-        --foreground: 150 20% 94%;
+        --foreground: 79 49% 81%; /* #d7e6b6 */
         --card: 157 22% 12%;
-        --card-foreground: 150 20% 94%;
+        --card-foreground: 79 49% 81%; /* #d7e6b6 */
         --popover: 157 22% 12%;
-        --popover-foreground: 150 20% 94%;
+        --popover-foreground: 79 49% 81%; /* #d7e6b6 */
         --primary: 158 34% 56%;
         --primary-foreground: 157 26% 9%;
         --secondary: 157 20% 18%;
-        --secondary-foreground: 150 20% 94%;
+        --secondary-foreground: 79 49% 81%; /* #d7e6b6 */
         --muted: 157 18% 16%;
         --muted-foreground: 155 10% 70%;
         --accent: 154 30% 40%;
-        --accent-foreground: 150 20% 94%;
+        --accent-foreground: 79 49% 81%; /* #d7e6b6 */
         --destructive: 0 62% 58%;
         --destructive-foreground: 0 0% 100%;
         --border: 157 14% 22%;
@@ -87,6 +87,7 @@ code, pre, .font-mono {
 }
 
 @layer utilities {
+    .dark .text-white { color: #d7e6b6 !important; }
     .dark .bg-white { background-color: hsl(var(--card)) !important; }
     .dark .bg-\[\#F7FAF8\],
     .dark .bg-\[\#F6FAF8\],
@@ -130,22 +131,25 @@ code, pre, .font-mono {
     .bg-orange-50 { background-color: #f3fbf7 !important; }
     .bg-orange-50\/40 { background-color: rgba(95, 163, 141, 0.12) !important; }
     .bg-orange-100 { background-color: #e6f4ec !important; }
-    .bg-orange-500, .bg-orange-600 { background-color: #5FA38D !important; }
-    .hover\:bg-orange-700:hover { background-color: #4E8C79 !important; }
+    .bg-orange-500, .bg-orange-600 { background-color: #1C4B3E !important; }
+    .hover\:bg-orange-700:hover { background-color: #163A30 !important; }
     .border-orange-100, .border-orange-300, .border-orange-400 { border-color: #d6e7de !important; }
-    .text-orange-500, .text-orange-600 { color: #3d7f69 !important; }
-    .text-orange-700 { color: #2f6f5a !important; }
-    .text-orange-800 { color: #275b4a !important; }
-    .text-orange-900 { color: #1e4639 !important; }
-    .hover\:text-orange-700:hover, .hover\:text-orange-800:hover { color: #23503f !important; }
-    .focus\:border-orange-500:focus { border-color: #5FA38D !important; }
+    .text-orange-500, .text-orange-600 { color: #1C4B3E !important; }
+    .text-orange-700 { color: #163A30 !important; }
+    .text-orange-800 { color: #123127 !important; }
+    .text-orange-900 { color: #0f2b24 !important; }
+    .hover\:text-orange-700:hover, .hover\:text-orange-800:hover { color: #0f2b24 !important; }
+    .focus\:border-orange-500:focus { border-color: #1C4B3E !important; }
     .focus\:ring-orange-500\/20:focus,
-    .focus\:ring-orange-500\/30:focus { --tw-ring-color: rgba(95, 163, 141, 0.28) !important; }
+    .focus\:ring-orange-500\/30:focus { --tw-ring-color: rgba(28, 75, 62, 0.3) !important; }
 
     .from-orange-50 { --tw-gradient-from: #eff9f3 var(--tw-gradient-from-position) !important; --tw-gradient-to: rgba(239, 249, 243, 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
     .to-orange-100 { --tw-gradient-to: #e6f4ec var(--tw-gradient-to-position) !important; }
-    .from-orange-500 { --tw-gradient-from: #5FA38D var(--tw-gradient-from-position) !important; --tw-gradient-to: rgba(95, 163, 141, 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
-    .to-orange-600 { --tw-gradient-to: #4E8C79 var(--tw-gradient-to-position) !important; }
+    .from-orange-500 { --tw-gradient-from: #1C4B3E var(--tw-gradient-from-position) !important; --tw-gradient-to: rgba(28, 75, 62, 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+    .to-orange-600 { --tw-gradient-to: #163A30 var(--tw-gradient-to-position) !important; }
+
+    .bg-\[\#5FA38D\], .bg-\[\#5fa38d\] { background-color: #1C4B3E !important; }
+    .hover\:bg-\[\#4E8C79\]:hover, .hover\:bg-\[\#4e8c79\]:hover { background-color: #163A30 !important; }
 
     .bg-amber-50 { background-color: rgba(212, 163, 115, 0.16) !important; }
     .text-amber-700 { color: #9f6f46 !important; }
@@ -165,6 +169,19 @@ code, pre, .font-mono {
     .border-red-100 { border-color: rgba(217, 124, 124, 0.45) !important; }
     .hover\:bg-red-50:hover { background-color: rgba(217, 124, 124, 0.24) !important; }
     .hover\:text-red-600:hover { color: #964a4a !important; }
+
+    /* Keep modal primary actions dark green even when disabled */
+    [role="dialog"] button.bg-primary:disabled,
+    [role="dialog"] button.bg-orange-500:disabled,
+    [role="dialog"] button.bg-orange-600:disabled,
+    [role="dialog"] button.bg-\[\#5FA38D\]:disabled,
+    [role="dialog"] button.bg-\[\#5fa38d\]:disabled,
+    [role="dialog"] button.bg-\[\#1C4B3E\]:disabled,
+    [role="dialog"] button.bg-\[\#1c4b3e\]:disabled {
+        background-color: #163A30 !important;
+        color: #ffffff !important;
+        opacity: 1 !important;
+    }
 }
 
 @layer base {
