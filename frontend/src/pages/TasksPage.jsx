@@ -200,8 +200,8 @@ export default function TasksPage() {
     <div className="space-y-5 animate-fade-up" data-testid="tasks-page">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <p className="text-sm text-gray-500">Plan and track every task</p>
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Tasks</h1>
+          <p className="text-sm text-gray-500 mt-1">Plan and track every task</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex bg-gray-100 rounded-full p-1">

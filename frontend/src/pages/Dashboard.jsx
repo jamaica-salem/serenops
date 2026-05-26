@@ -419,7 +419,7 @@ export default function Dashboard() {
       <div className="flex items-end justify-between flex-wrap gap-3">
         <div>
           <p className="text-sm text-[#667C74] dark:text-[#9bb2a8]">Welcome back, {user?.name?.split(" ")[0] || "there"}!</p>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6] tracking-tight mt-1">
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6] tracking-tight">
             Client Operations Dashboard
           </h1>
           <p className="text-sm text-[#667C74] dark:text-[#9bb2a8] mt-2">Manage every client, project, and deliverable in one calm, organized space.</p>

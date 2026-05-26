@@ -42,10 +42,10 @@ export default function AIAssistantPage() {
   return (
     <div className="space-y-5 animate-fade-up" data-testid="assistant-page">
       <div>
-        <p className="text-sm text-gray-500">Ask anything about your tasks</p>
         <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6] flex items-center gap-2">
           AI Assistant <Sparkles className="w-7 h-7 text-orange-500" />
         </h1>
+        <p className="text-sm text-gray-500 mt-1">Ask anything about your tasks</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-200 flex flex-col h-[calc(100vh-15rem)] min-h-[460px]">

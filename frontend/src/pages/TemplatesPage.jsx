@@ -96,8 +96,8 @@ export default function TemplatesPage() {
     <div className="space-y-5 animate-fade-up" data-testid="templates-page">
       <div className="flex items-end justify-between gap-3 flex-wrap">
         <div>
-          <p className="text-sm text-gray-500">Reusable client operations templates</p>
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Templates</h1>
+          <p className="text-sm text-gray-500 mt-1">Reusable client operations templates</p>
         </div>
         <button
           onClick={loadTemplates}

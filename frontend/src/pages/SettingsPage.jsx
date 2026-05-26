@@ -58,8 +58,8 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6 animate-fade-up max-w-3xl" data-testid="settings-page">
       <div>
-        <p className="text-sm text-gray-500">Configure your AI assistant</p>
         <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Settings</h1>
+        <p className="text-sm text-gray-500 mt-1">Configure your AI assistant</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-200 p-6">

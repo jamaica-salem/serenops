@@ -652,8 +652,8 @@ export default function ClientsPage() {
     <div className="space-y-6 animate-fade-up" data-testid="clients-page">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <p className="text-sm text-gray-500">Track the full lifecycle of every client</p>
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Clients</h1>
+          <p className="text-sm text-gray-500 mt-1">Track the full lifecycle of every client</p>
         </div>
         <div className="flex items-center gap-2">
           <button

@@ -147,8 +147,8 @@ export default function ContractsPage() {
     <div className="space-y-6 animate-fade-up" data-testid="contracts-page">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <p className="text-sm text-[#667C74]">Generate and track client agreements</p>
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Contracts</h1>
+          <p className="text-sm text-[#667C74] mt-1">Generate and track client agreements</p>
         </div>
         <button
           type="button"

@@ -60,8 +60,8 @@ export default function RevisionsPage() {
   return (
     <div className="space-y-5 animate-fade-up" data-testid="revisions-page">
       <div>
-        <p className="text-sm text-gray-500">Track client revision requests and approvals</p>
         <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Revisions</h1>
+        <p className="text-sm text-gray-500 mt-1">Track client revision requests and approvals</p>
       </div>
 
       <div className="space-y-3">

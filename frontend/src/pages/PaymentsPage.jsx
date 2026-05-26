@@ -196,8 +196,8 @@ export default function PaymentsPage() {
     <div className="space-y-6 animate-fade-up" data-testid="payments-page">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <p className="text-sm text-[#667C74]">Track collections, history, and unpaid balances</p>
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Payments</h1>
+          <p className="text-sm text-[#667C74] mt-1">Track collections, history, and unpaid balances</p>
         </div>
         <div className="inline-flex items-center gap-2 text-xs px-3 h-9 rounded-lg border border-[#E5ECE8] bg-white text-[#42534d]">
           <CircleDollarSign className="w-3.5 h-3.5 text-[#5FA38D]" />

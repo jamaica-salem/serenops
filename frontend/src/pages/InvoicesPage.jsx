@@ -255,8 +255,8 @@ export default function InvoicesPage() {
   return (
     <div className="space-y-6 animate-fade-up" data-testid="invoices-page">
       <div>
-        <p className="text-sm text-[#667C74]">Track balances and payment status</p>
         <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Invoices</h1>
+        <p className="text-sm text-[#667C74] mt-1">Track balances and payment status</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
@@ -638,4 +638,3 @@ function Field({ label, children }) {
     </label>
   );
 }
-

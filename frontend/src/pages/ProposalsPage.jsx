@@ -72,8 +72,8 @@ export default function ProposalsPage() {
   return (
     <div className="space-y-5 animate-fade-up" data-testid="proposals-page">
       <div>
-        <p className="text-sm text-gray-500">Track draft and sent proposals</p>
         <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Proposals</h1>
+        <p className="text-sm text-gray-500 mt-1">Track draft and sent proposals</p>
       </div>
 
       <div className="space-y-3">
