@@ -18,10 +18,10 @@ function monthStartISO() {
 }
 
 const fieldBaseClass =
-  "h-10 w-full px-3 rounded-lg border border-[#E5ECE8] bg-white text-sm text-[#1D2A25] focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]";
+  "h-10 w-full px-3 rounded-lg border border-border bg-card text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/25 focus:border-ring";
 
 const fieldTextareaClass =
-  "w-full px-3 py-2 rounded-lg border border-[#E5ECE8] bg-white text-sm text-[#1D2A25] resize-y focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]";
+  "w-full px-3 py-2 rounded-lg border border-border bg-card text-sm text-foreground resize-y focus:outline-none focus:ring-2 focus:ring-ring/25 focus:border-ring";
 
 export default function PaymentsPage() {
   const [payments, setPayments] = useState([]);
@@ -189,18 +189,18 @@ export default function PaymentsPage() {
   };
 
   if (loading) {
-    return <div className="text-sm text-[#667C74]">Loading payments...</div>;
+    return <div className="text-sm text-muted-foreground">Loading payments...</div>;
   }
 
   return (
     <div className="space-y-6 animate-fade-up" data-testid="payments-page">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Payments</h1>
-          <p className="text-sm text-[#667C74] mt-1">Track collections, history, and unpaid balances</p>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground">Payments</h1>
+          <p className="text-sm text-muted-foreground mt-1">Track collections, history, and unpaid balances</p>
         </div>
-        <div className="inline-flex items-center gap-2 text-xs px-3 h-9 rounded-lg border border-[#E5ECE8] bg-white text-[#42534d]">
-          <CircleDollarSign className="w-3.5 h-3.5 text-[#5FA38D]" />
+        <div className="inline-flex items-center gap-2 text-xs px-3 h-9 rounded-lg border border-border bg-card text-muted-foreground">
+          <CircleDollarSign className="w-3.5 h-3.5 text-primary" />
           {summary.totalPayments} recorded payments
         </div>
       </div>
@@ -214,13 +214,13 @@ export default function PaymentsPage() {
 
       <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] gap-5 items-start">
         <div className="space-y-4">
-          <section className="bg-white rounded-2xl border border-[#E5ECE8] p-5">
+          <section className="bg-card rounded-2xl border border-border p-5">
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <div>
-                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Record payment</h2>
-                <p className="text-sm text-[#667C74]">Apply payments to invoices and keep balances in sync.</p>
+                <h2 className="font-display text-xl font-semibold text-foreground">Record payment</h2>
+                <p className="text-sm text-muted-foreground">Apply payments to invoices and keep balances in sync.</p>
               </div>
-              <button type="button" onClick={load} className="h-9 px-3 rounded-lg border border-[#E5ECE8] text-sm text-[#42534d] hover:bg-[#F7FAF8] inline-flex items-center gap-2">
+              <button type="button" onClick={load} className="h-9 px-3 rounded-lg border border-border text-sm text-muted-foreground hover:bg-muted/40 inline-flex items-center gap-2">
                 <RefreshCw className="w-4 h-4" /> Refresh data
               </button>
             </div>
@@ -285,17 +285,17 @@ export default function PaymentsPage() {
               </Field>
 
               {selectedClient && selectedInvoice && (
-                <div className="rounded-xl border border-[#E5ECE8] bg-[#F7FAF8] p-4 text-sm text-[#42534d] space-y-1">
-                  <div className="flex items-center justify-between gap-3"><span>Selected client</span><span className="font-medium text-[#1D2A25]">{selectedClient.name}</span></div>
-                  <div className="flex items-center justify-between gap-3"><span>Selected invoice</span><span className="font-medium text-[#1D2A25]">{selectedInvoice.invoice_number}</span></div>
-                  <div className="flex items-center justify-between gap-3"><span>Invoice balance</span><span className="font-semibold text-[#2f6f5a]">{formatMoney(selectedInvoice.balance_due, selectedInvoice.currency)}</span></div>
+                <div className="rounded-xl border border-border bg-muted/40 p-4 text-sm text-muted-foreground space-y-1">
+                  <div className="flex items-center justify-between gap-3"><span>Selected client</span><span className="font-medium text-foreground">{selectedClient.name}</span></div>
+                  <div className="flex items-center justify-between gap-3"><span>Selected invoice</span><span className="font-medium text-foreground">{selectedInvoice.invoice_number}</span></div>
+                  <div className="flex items-center justify-between gap-3"><span>Invoice balance</span><span className="font-semibold text-primary">{formatMoney(selectedInvoice.balance_due, selectedInvoice.currency)}</span></div>
                 </div>
               )}
 
-              {error && <div className="text-sm text-red-700 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</div>}
+              {error && <div className="text-sm text-destructive bg-destructive/10 border border-destructive/30 rounded-lg px-3 py-2">{error}</div>}
 
               <div className="flex items-center justify-end">
-                <button type="submit" disabled={saving} className="h-10 px-4 rounded-lg bg-[#5FA38D] text-white text-sm font-medium hover:bg-[#4E8C79] transition-colors disabled:opacity-60 inline-flex items-center gap-2">
+                <button type="submit" disabled={saving} className="h-10 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-60 inline-flex items-center gap-2">
                   <Landmark className="w-4 h-4" />
                   {saving ? "Recording..." : "Record payment"}
                 </button>
@@ -303,13 +303,13 @@ export default function PaymentsPage() {
             </form>
           </section>
 
-          <section className="bg-white rounded-2xl border border-[#E5ECE8] p-5">
+          <section className="bg-card rounded-2xl border border-border p-5">
             <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
               <div>
-                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Payment history</h2>
-                <p className="text-sm text-[#667C74]">Filter by client and status to review collections.</p>
+                <h2 className="font-display text-xl font-semibold text-foreground">Payment history</h2>
+                <p className="text-sm text-muted-foreground">Filter by client and status to review collections.</p>
               </div>
-              <div className="flex items-center gap-2 text-xs text-[#667C74]">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Filter className="w-3.5 h-3.5" />
                 {filteredPayments.length} results
               </div>
@@ -334,9 +334,9 @@ export default function PaymentsPage() {
               </Field>
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-[#E5ECE8]">
+            <div className="overflow-hidden rounded-xl border border-border">
               <table className="w-full text-sm">
-                <thead className="bg-[#F7FAF8] text-xs uppercase tracking-wider text-[#8EA39B] border-b border-[#E5ECE8]">
+                <thead className="bg-muted/40 text-xs uppercase tracking-wider text-muted-foreground border-b border-border">
                   <tr>
                     <th className="text-left px-4 py-3 font-medium">Date</th>
                     <th className="text-left px-3 py-3 font-medium">Client</th>
@@ -352,31 +352,31 @@ export default function PaymentsPage() {
                     const invoice = invoices.find((item) => item.id === payment.invoice_id);
                     const project = projects.find((item) => item.id === payment.project_id);
                     return (
-                      <tr key={payment.id} className="border-b border-[#F1F5F3] last:border-b-0">
-                        <td className="px-4 py-3 text-[#42534d]">{payment.payment_date}</td>
+                      <tr key={payment.id} className="border-b border-border/60 last:border-b-0">
+                        <td className="px-4 py-3 text-muted-foreground">{payment.payment_date}</td>
                         <td className="px-3 py-3">
-                          <div className="font-medium text-[#1D2A25]">{client?.name || "Unknown client"}</div>
-                          <div className="text-xs text-[#8EA39B]">{project?.name || "No project"}</div>
+                          <div className="font-medium text-foreground">{client?.name || "Unknown client"}</div>
+                          <div className="text-xs text-muted-foreground">{project?.name || "No project"}</div>
                         </td>
                         <td className="px-3 py-3">
-                          <Link to={invoice ? `/invoices/${invoice.id}` : "/invoices"} className="font-medium text-[#2f6f5a] hover:underline">
+                          <Link to={invoice ? `/invoices/${invoice.id}` : "/invoices"} className="font-medium text-primary hover:underline">
                             {invoice?.invoice_number || payment.invoice_id}
                           </Link>
-                          <div className="text-xs text-[#8EA39B]">{payment.reference_number || "No reference"}</div>
+                          <div className="text-xs text-muted-foreground">{payment.reference_number || "No reference"}</div>
                         </td>
-                        <td className="px-3 py-3 font-medium text-[#1D2A25]">{formatMoney(payment.amount, invoice?.currency || "USD")}</td>
+                        <td className="px-3 py-3 font-medium text-foreground">{formatMoney(payment.amount, invoice?.currency || "USD")}</td>
                         <td className="px-3 py-3">
                           <span className={`inline-flex items-center px-2 py-1 rounded-full border text-xs font-medium ${paymentStatusBadgeClass(payment.status)}`}>
                             {paymentStatusLabel(payment.status)}
                           </span>
                         </td>
-                        <td className="px-3 py-3 text-[#2f6f5a]">{formatMoney(payment.remaining_balance, invoice?.currency || "USD")}</td>
+                        <td className="px-3 py-3 text-primary">{formatMoney(payment.remaining_balance, invoice?.currency || "USD")}</td>
                       </tr>
                     );
                   })}
                   {filteredPayments.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="px-4 py-12 text-center text-[#8EA39B] italic">No payments match the current filters.</td>
+                      <td colSpan={6} className="px-4 py-12 text-center text-muted-foreground italic">No payments match the current filters.</td>
                     </tr>
                   )}
                 </tbody>
@@ -386,35 +386,35 @@ export default function PaymentsPage() {
         </div>
 
         <aside className="space-y-4">
-          <section className="bg-white rounded-2xl border border-[#E5ECE8] p-5">
-            <h2 className="font-display text-lg font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Client balance snapshot</h2>
+          <section className="bg-card rounded-2xl border border-border p-5">
+            <h2 className="font-display text-lg font-semibold text-foreground">Client balance snapshot</h2>
             <div className="mt-3 space-y-3">
               {clients.slice(0, 8).map((client) => {
                 const clientInvoices = invoices.filter((invoice) => invoice.client_id === client.id && invoice.status !== "cancelled");
                 const clientPayments = payments.filter((payment) => payment.client_id === client.id);
                 const balance = clientInvoices.reduce((sum, invoice) => sum + Number(invoice.balance_due || 0), 0);
                 return (
-                  <button key={client.id} type="button" onClick={() => setSelectedClientId(client.id)} className={`w-full text-left rounded-xl border px-3 py-3 transition ${selectedClientId === client.id ? "border-[#5FA38D] bg-[#F0F8F4]" : "border-[#E5ECE8] hover:bg-[#F7FAF8]"}`}>
+                  <button key={client.id} type="button" onClick={() => setSelectedClientId(client.id)} className={`w-full text-left rounded-xl border px-3 py-3 transition ${selectedClientId === client.id ? "border-primary bg-primary/10" : "border-border hover:bg-muted/40"}`}>
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <div className="font-medium text-[#1D2A25]">{client.name}</div>
-                        <div className="text-xs text-[#8EA39B]">{clientPayments.length} payments</div>
+                        <div className="font-medium text-foreground">{client.name}</div>
+                        <div className="text-xs text-muted-foreground">{clientPayments.length} payments</div>
                       </div>
-                      <div className={`font-semibold ${balance > 0 ? "text-[#9a3838]" : "text-[#1f6a42]"}`}>{formatMoney(balance, clientInvoices[0]?.currency || "USD")}</div>
+                      <div className={`font-semibold ${balance > 0 ? "text-destructive" : "text-emerald-700 dark:text-emerald-400"}`}>{formatMoney(balance, clientInvoices[0]?.currency || "USD")}</div>
                     </div>
                   </button>
                 );
               })}
-              {clients.length === 0 && <div className="text-sm text-[#8EA39B] italic text-center py-6">No clients available.</div>}
+              {clients.length === 0 && <div className="text-sm text-muted-foreground italic text-center py-6">No clients available.</div>}
             </div>
           </section>
 
-          <section className="rounded-2xl border border-[#E5ECE8] bg-[#FFF9F3] p-5 text-sm text-[#8A5A2B]">
-            <div className="flex items-center gap-2 font-medium text-[#8A5A2B]">
+          <section className="rounded-2xl border border-border bg-amber-500/10 dark:bg-amber-950/20 p-5 text-sm text-amber-700 dark:text-amber-400">
+            <div className="flex items-center gap-2 font-medium text-amber-700 dark:text-amber-400">
               <AlertTriangle className="w-4 h-4" />
               Operational note
             </div>
-            <p className="mt-2 text-[#8A5A2B]/90">
+            <p className="mt-2 text-amber-700 dark:text-amber-400/90">
               Payments automatically reduce invoice balances and can mark an invoice as paid when the balance reaches zero.
             </p>
           </section>
@@ -427,18 +427,18 @@ export default function PaymentsPage() {
 function SummaryCard({ title, value, hint, tone = "default" }) {
   const toneClass =
     tone === "success"
-      ? "text-[#1f6a42]"
+      ? "text-emerald-700 dark:text-emerald-400"
       : tone === "warning"
-      ? "text-[#8A5A2B]"
+      ? "text-amber-700 dark:text-amber-400"
       : tone === "danger"
-      ? "text-[#9a3838]"
-      : "text-[#1D2A25]";
+      ? "text-destructive"
+      : "text-foreground";
 
   return (
-    <div className="bg-white rounded-2xl border border-[#E5ECE8] p-4">
-      <p className="text-xs uppercase tracking-wide text-[#8EA39B]">{title}</p>
+    <div className="bg-card rounded-2xl border border-border p-4">
+      <p className="text-xs uppercase tracking-wide text-muted-foreground">{title}</p>
       <p className={`mt-1 text-lg font-semibold ${toneClass}`}>{value}</p>
-      <p className="text-xs text-[#667C74] mt-1">{hint}</p>
+      <p className="text-xs text-muted-foreground mt-1">{hint}</p>
     </div>
   );
 }
@@ -446,7 +446,7 @@ function SummaryCard({ title, value, hint, tone = "default" }) {
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="text-xs font-medium text-[#667C74]">{label}</span>
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
       <div className="mt-1">{children}</div>
     </label>
   );

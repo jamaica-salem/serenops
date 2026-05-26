@@ -75,7 +75,7 @@ export default function TaskFormDialog({ open, onOpenChange, projects = [], user
 
         <div className="space-y-4">
           <div>
-            <label className="text-xs font-medium text-gray-600">Title</label>
+            <label className="text-xs font-medium text-muted-foreground">Title</label>
             <Input
               data-testid="task-form-title"
               value={form.title}
@@ -85,7 +85,7 @@ export default function TaskFormDialog({ open, onOpenChange, projects = [], user
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-600">Description</label>
+            <label className="text-xs font-medium text-muted-foreground">Description</label>
             <Textarea
               data-testid="task-form-description"
               value={form.description}
@@ -97,7 +97,7 @@ export default function TaskFormDialog({ open, onOpenChange, projects = [], user
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-medium text-gray-600">Status</label>
+              <label className="text-xs font-medium text-muted-foreground">Status</label>
               <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
                 <SelectTrigger data-testid="task-form-status" className="mt-1"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -106,7 +106,7 @@ export default function TaskFormDialog({ open, onOpenChange, projects = [], user
               </Select>
             </div>
             <div>
-              <label className="text-xs font-medium text-gray-600">Priority</label>
+              <label className="text-xs font-medium text-muted-foreground">Priority</label>
               <Select value={form.priority} onValueChange={(v) => setForm({ ...form, priority: v })}>
                 <SelectTrigger data-testid="task-form-priority" className="mt-1"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -118,7 +118,7 @@ export default function TaskFormDialog({ open, onOpenChange, projects = [], user
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-medium text-gray-600">Due date</label>
+              <label className="text-xs font-medium text-muted-foreground">Due date</label>
               <Input
                 data-testid="task-form-due"
                 type="date"
@@ -128,7 +128,7 @@ export default function TaskFormDialog({ open, onOpenChange, projects = [], user
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-gray-600">Project</label>
+              <label className="text-xs font-medium text-muted-foreground">Project</label>
               <Select
                 value={form.project_id || "none"}
                 onValueChange={(v) => {
@@ -154,7 +154,7 @@ export default function TaskFormDialog({ open, onOpenChange, projects = [], user
           </div>
 
           <div>
-            <label className="text-xs font-medium text-gray-600">Client</label>
+            <label className="text-xs font-medium text-muted-foreground">Client</label>
             <Select value={form.client_id || "none"} onValueChange={(v) => setForm({ ...form, client_id: v === "none" ? "" : v })}>
               <SelectTrigger className="mt-1"><SelectValue placeholder="Link to client..." /></SelectTrigger>
               <SelectContent>
@@ -165,7 +165,7 @@ export default function TaskFormDialog({ open, onOpenChange, projects = [], user
           </div>
 
           <div>
-            <label className="text-xs font-medium text-gray-600">Assignee</label>
+            <label className="text-xs font-medium text-muted-foreground">Assignee</label>
             <Select value={form.assignee_id || "none"} onValueChange={(v) => setForm({ ...form, assignee_id: v === "none" ? "" : v })}>
               <SelectTrigger data-testid="task-form-assignee" className="mt-1"><SelectValue placeholder="Assign to…" /></SelectTrigger>
               <SelectContent>
@@ -181,7 +181,7 @@ export default function TaskFormDialog({ open, onOpenChange, projects = [], user
           <Button
             onClick={submit}
             disabled={busy || !form.title.trim()}
-            className="bg-orange-600 hover:bg-orange-700 text-white"
+            className="bg-primary hover:bg-primary/90 text-white"
             data-testid="task-form-save"
           >
             {busy ? "Saving…" : task ? "Save changes" : "Create task"}

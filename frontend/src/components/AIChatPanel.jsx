@@ -44,11 +44,11 @@ export default function AIChatPanel() {
       <button
         data-testid="ai-chat-fab"
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#5FA38D] text-white shadow-lg hover:shadow-xl hover:bg-[#4E8C79] transition-all flex items-center justify-center z-[60] group"
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:bg-primary/90 transition-all flex items-center justify-center z-[60] group"
         aria-label="Open AI assistant"
       >
         <Sparkles className="w-5 h-5 group-hover:scale-110 transition-transform" />
-        <span className="absolute right-full mr-3 bg-gray-900 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none">
+        <span className="absolute right-full mr-3 bg-foreground text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none">
           Ask SerenOps AI
         </span>
       </button>
@@ -60,9 +60,9 @@ export default function AIChatPanel() {
       className="fixed bottom-6 right-6 w-[360px] max-w-[calc(100vw-2rem)] h-[520px] bg-card text-foreground rounded-2xl shadow-2xl border border-border z-[60] flex flex-col overflow-hidden animate-fade-up"
       data-testid="ai-chat-panel"
     >
-      <div className="bg-gradient-to-r from-[#0F2B24] to-[#123C31] px-4 py-3 flex items-center justify-between text-white">
+      <div className="bg-gradient-to-r from-primary to-primary/80 px-4 py-3 flex items-center justify-between text-white">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center">
+          <div className="w-7 h-7 rounded-full bg-card/20 flex items-center justify-center">
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
@@ -73,7 +73,7 @@ export default function AIChatPanel() {
         <button
           data-testid="ai-chat-close"
           onClick={() => setOpen(false)}
-          className="w-7 h-7 rounded-full hover:bg-white/20 flex items-center justify-center"
+          className="w-7 h-7 rounded-full hover:bg-card/20 flex items-center justify-center"
         >
           <X className="w-4 h-4" />
         </button>
@@ -86,7 +86,7 @@ export default function AIChatPanel() {
               data-testid={`chat-msg-${m.role}-${i}`}
               className={`max-w-[85%] px-3.5 py-2 text-sm leading-snug whitespace-pre-line ${
                 m.role === "user"
-                  ? "bg-[#1f332d] text-white rounded-2xl rounded-tr-sm"
+                  ? "bg-primary text-primary-foreground rounded-2xl rounded-tr-sm"
                   : "bg-card text-foreground border border-border rounded-2xl rounded-tl-sm"
               }`}
             >
@@ -97,9 +97,9 @@ export default function AIChatPanel() {
         {busy && (
           <div className="flex justify-start">
             <div className="bg-card border border-border rounded-2xl rounded-tl-sm px-3.5 py-2 text-sm text-muted-foreground flex gap-1">
-              <span className="w-1.5 h-1.5 bg-[#5FA38D] rounded-full pulse-dot" />
-              <span className="w-1.5 h-1.5 bg-[#5FA38D] rounded-full pulse-dot" style={{ animationDelay: "0.2s" }} />
-              <span className="w-1.5 h-1.5 bg-[#5FA38D] rounded-full pulse-dot" style={{ animationDelay: "0.4s" }} />
+              <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot" />
+              <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot" style={{ animationDelay: "0.2s" }} />
+              <span className="w-1.5 h-1.5 bg-primary rounded-full pulse-dot" style={{ animationDelay: "0.4s" }} />
             </div>
           </div>
         )}
@@ -136,7 +136,7 @@ export default function AIChatPanel() {
           type="submit"
           data-testid="chat-send"
           disabled={busy || !input.trim()}
-          className="w-8 h-8 rounded-full bg-[#5FA38D] text-white flex items-center justify-center hover:bg-[#4E8C79] disabled:opacity-50"
+          className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 disabled:opacity-50"
         >
           <Send className="w-3.5 h-3.5" />
         </button>

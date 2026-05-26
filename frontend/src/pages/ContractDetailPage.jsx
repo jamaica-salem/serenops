@@ -9,10 +9,10 @@ import {
 } from "../lib/contractUtils";
 
 const fieldBaseClass =
-  "h-10 w-full px-3 rounded-lg border border-[#E5ECE8] bg-white text-sm text-[#1D2A25] focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]";
+  "h-10 w-full px-3 rounded-lg border border-border bg-card text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/25 focus:border-ring";
 
 const fieldTextareaClass =
-  "w-full px-3 py-2 rounded-lg border border-[#E5ECE8] bg-white text-sm text-[#1D2A25] resize-y focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]";
+  "w-full px-3 py-2 rounded-lg border border-border bg-card text-sm text-foreground resize-y focus:outline-none focus:ring-2 focus:ring-ring/25 focus:border-ring";
 
 export default function ContractDetailPage() {
   const { contractId } = useParams();
@@ -148,17 +148,17 @@ export default function ContractDetailPage() {
   };
 
   if (loading) {
-    return <div className="text-sm text-[#667C74]">Loading contract...</div>;
+    return <div className="text-sm text-muted-foreground">Loading contract...</div>;
   }
 
   if (!contract && error) {
     return (
       <div className="space-y-3">
-        <Link to="/contracts" className="text-sm text-[#2f6f5a] hover:underline inline-flex items-center gap-2">
+        <Link to="/contracts" className="text-sm text-primary hover:underline inline-flex items-center gap-2">
           <ArrowLeft className="w-4 h-4" />
           Back to contracts
         </Link>
-        <div className="text-sm text-red-700 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</div>
+        <div className="text-sm text-destructive bg-destructive/10 border border-destructive/30 rounded-lg px-3 py-2">{error}</div>
       </div>
     );
   }
@@ -167,19 +167,19 @@ export default function ContractDetailPage() {
     <div className="space-y-6 animate-fade-up" data-testid="contract-detail-page">
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <Link to="/contracts" className="text-sm text-[#2f6f5a] hover:underline inline-flex items-center gap-2">
+          <Link to="/contracts" className="text-sm text-primary hover:underline inline-flex items-center gap-2">
             <ArrowLeft className="w-4 h-4" />
             Back to contracts
           </Link>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6] mt-1">
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground mt-1">
             {contract?.title || "Contract"}
           </h1>
-          <p className="text-sm text-[#667C74]">Edit contract details and keep the preview updated.</p>
+          <p className="text-sm text-muted-foreground">Edit contract details and keep the preview updated.</p>
         </div>
         <button
           type="button"
           onClick={remove}
-          className="h-10 px-4 rounded-lg border border-[#F0D9D9] text-[#9a3838] hover:bg-[#FFF6F6] text-sm inline-flex items-center gap-2"
+          className="h-10 px-4 rounded-lg border border-destructive/30 text-destructive hover:bg-destructive/10 text-sm inline-flex items-center gap-2"
         >
           <Trash2 className="w-4 h-4" /> Delete Contract
         </button>
@@ -187,7 +187,7 @@ export default function ContractDetailPage() {
 
       <ContractPreview contract={previewContract} client={selectedClient} />
 
-      <form onSubmit={save} className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-5">
+      <form onSubmit={save} className="bg-card rounded-2xl border border-border p-5 space-y-5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Field label="Contract title">
             <input
@@ -328,14 +328,14 @@ export default function ContractDetailPage() {
           />
         </Field>
 
-        {error && <div className="text-sm text-red-700 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</div>}
-        {success && <div className="text-sm text-[#1f6a42] bg-[#EEF9F2] border border-[#D4EEDD] rounded-lg px-3 py-2">{success}</div>}
+        {error && <div className="text-sm text-destructive bg-destructive/10 border border-destructive/30 rounded-lg px-3 py-2">{error}</div>}
+        {success && <div className="text-sm text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 rounded-lg px-3 py-2">{success}</div>}
 
         <div className="flex items-center justify-end">
           <button
             type="submit"
             disabled={saving}
-            className="h-10 px-4 rounded-lg bg-[#5FA38D] text-white text-sm font-medium hover:bg-[#4E8C79] transition-colors disabled:opacity-60 inline-flex items-center gap-2"
+            className="h-10 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-60 inline-flex items-center gap-2"
           >
             <Save className="w-4 h-4" />
             {saving ? "Saving..." : "Save Changes"}
@@ -349,7 +349,7 @@ export default function ContractDetailPage() {
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="text-xs font-medium text-[#667C74]">{label}</span>
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
       <div className="mt-1">{children}</div>
     </label>
   );

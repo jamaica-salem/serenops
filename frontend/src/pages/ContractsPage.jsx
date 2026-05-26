@@ -9,10 +9,10 @@ import {
 } from "../lib/contractUtils";
 
 const fieldBaseClass =
-  "h-10 w-full px-3 rounded-lg border border-[#E5ECE8] bg-white text-sm text-[#1D2A25] focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]";
+  "h-10 w-full px-3 rounded-lg border border-border bg-card text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/25 focus:border-ring";
 
 const fieldTextareaClass =
-  "w-full px-3 py-2 rounded-lg border border-[#E5ECE8] bg-white text-sm text-[#1D2A25] resize-y focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]";
+  "w-full px-3 py-2 rounded-lg border border-border bg-card text-sm text-foreground resize-y focus:outline-none focus:ring-2 focus:ring-ring/25 focus:border-ring";
 
 export default function ContractsPage() {
   const [contracts, setContracts] = useState([]);
@@ -147,13 +147,13 @@ export default function ContractsPage() {
     <div className="space-y-6 animate-fade-up" data-testid="contracts-page">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Contracts</h1>
-          <p className="text-sm text-[#667C74] mt-1">Generate and track client agreements</p>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground">Contracts</h1>
+          <p className="text-sm text-muted-foreground mt-1">Generate and track client agreements</p>
         </div>
         <button
           type="button"
           onClick={load}
-          className="h-9 px-3 rounded-lg border border-[#E5ECE8] text-sm text-[#42534d] hover:bg-[#F7FAF8] inline-flex items-center gap-2"
+          className="h-9 px-3 rounded-lg border border-border text-sm text-muted-foreground hover:bg-muted/40 inline-flex items-center gap-2"
         >
           <RefreshCw className="w-4 h-4" /> Refresh
         </button>
@@ -167,13 +167,13 @@ export default function ContractsPage() {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] gap-5 items-start">
-        <section className="bg-white rounded-2xl border border-[#E5ECE8] p-5">
+        <section className="bg-card rounded-2xl border border-border p-5">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div>
-              <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Create contract</h2>
-              <p className="text-sm text-[#667C74]">Start with a template or build from scratch.</p>
+              <h2 className="font-display text-xl font-semibold text-foreground">Create contract</h2>
+              <p className="text-sm text-muted-foreground">Start with a template or build from scratch.</p>
             </div>
-            <div className="inline-flex items-center gap-2 text-xs text-[#667C74]">
+            <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
               <Sparkles className="w-3.5 h-3.5" /> {contractTemplates.length} contract templates
             </div>
           </div>
@@ -231,7 +231,7 @@ export default function ContractsPage() {
                   type="button"
                   onClick={applyTemplate}
                   disabled={!selectedTemplateId}
-                  className="h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm text-[#42534d] hover:bg-[#F7FAF8] disabled:opacity-60"
+                  className="h-10 px-3 rounded-lg border border-border text-sm text-muted-foreground hover:bg-muted/40 disabled:opacity-60"
                 >
                   Insert template
                 </button>
@@ -342,12 +342,12 @@ export default function ContractsPage() {
               />
             </Field>
 
-            {error && <div className="text-sm text-red-700 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</div>}
+            {error && <div className="text-sm text-destructive bg-destructive/10 border border-destructive/30 rounded-lg px-3 py-2">{error}</div>}
 
             <div className="flex items-center justify-end">
               <button
                 type="submit"
-                className="h-10 px-4 rounded-lg bg-[#5FA38D] text-white text-sm font-medium hover:bg-[#4E8C79] transition-colors"
+                className="h-10 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
               >
                 <FileSignature className="w-4 h-4" /> Create contract
               </button>
@@ -355,36 +355,36 @@ export default function ContractsPage() {
           </form>
         </section>
 
-        <section className="bg-white rounded-2xl border border-[#E5ECE8] p-5">
+        <section className="bg-card rounded-2xl border border-border p-5">
           <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
             <div>
-              <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Contracts list</h2>
-              <p className="text-sm text-[#667C74]">Open a contract to edit or preview it.</p>
+              <h2 className="font-display text-xl font-semibold text-foreground">Contracts list</h2>
+              <p className="text-sm text-muted-foreground">Open a contract to edit or preview it.</p>
             </div>
-            <div className="text-xs text-[#667C74]">{contracts.length} contracts</div>
+            <div className="text-xs text-muted-foreground">{contracts.length} contracts</div>
           </div>
 
           <div className="space-y-3">
             {contracts.map((contract) => {
               const client = clients.find((item) => item.id === contract.client_id);
               return (
-                <div key={contract.id} className="rounded-xl border border-[#E5ECE8] p-4">
+                <div key={contract.id} className="rounded-xl border border-border p-4">
                   <div className="flex items-start justify-between gap-3 flex-wrap">
                     <div>
-                      <div className="font-medium text-[#1D2A25]">{contract.title}</div>
-                      <div className="text-xs text-[#8EA39B]">{client?.name || "Unknown client"}</div>
+                      <div className="font-medium text-foreground">{contract.title}</div>
+                      <div className="text-xs text-muted-foreground">{client?.name || "Unknown client"}</div>
                     </div>
                     <span className={`inline-flex items-center px-2 py-1 rounded-full border text-xs font-medium ${contractStatusBadgeClass(contract.status)}`}>
                       {contractStatusLabel(contract.status)}
                     </span>
                   </div>
-                  <div className="mt-3 text-sm text-[#42534d] line-clamp-2">
+                  <div className="mt-3 text-sm text-muted-foreground line-clamp-2">
                     {contract.scope_of_work || "No scope details"}
                   </div>
-                  <div className="mt-3 flex items-center justify-between gap-3 flex-wrap text-xs text-[#8EA39B]">
+                  <div className="mt-3 flex items-center justify-between gap-3 flex-wrap text-xs text-muted-foreground">
                     <span>{contract.timeline || "No timeline"}</span>
                     <span>{contract.payment_terms || "No payment terms"}</span>
-                    <Link to={`/contracts/${contract.id}`} className="text-[#2f6f5a] font-medium hover:underline">
+                    <Link to={`/contracts/${contract.id}`} className="text-primary font-medium hover:underline">
                       View details
                     </Link>
                   </div>
@@ -392,13 +392,13 @@ export default function ContractsPage() {
               );
             })}
             {contracts.length === 0 && (
-              <div className="text-sm text-[#8EA39B] italic text-center py-10">No contracts yet.</div>
+              <div className="text-sm text-muted-foreground italic text-center py-10">No contracts yet.</div>
             )}
           </div>
         </section>
       </div>
 
-      {busy && <div className="text-xs text-[#667C74]">Refreshing contracts...</div>}
+      {busy && <div className="text-xs text-muted-foreground">Refreshing contracts...</div>}
     </div>
   );
 }
@@ -406,16 +406,16 @@ export default function ContractsPage() {
 function SummaryCard({ title, value, hint, tone = "default" }) {
   const toneClass =
     tone === "success"
-      ? "text-[#1f6a42]"
+      ? "text-emerald-700 dark:text-emerald-400"
       : tone === "warning"
-      ? "text-[#8A5A2B]"
-      : "text-[#1D2A25]";
+      ? "text-amber-700 dark:text-amber-400"
+      : "text-foreground";
 
   return (
-    <div className="bg-white rounded-2xl border border-[#E5ECE8] p-4">
-      <p className="text-xs uppercase tracking-wide text-[#8EA39B]">{title}</p>
+    <div className="bg-card rounded-2xl border border-border p-4">
+      <p className="text-xs uppercase tracking-wide text-muted-foreground">{title}</p>
       <p className={`mt-1 text-lg font-semibold ${toneClass}`}>{value}</p>
-      <p className="text-xs text-[#667C74] mt-1">{hint}</p>
+      <p className="text-xs text-muted-foreground mt-1">{hint}</p>
     </div>
   );
 }
@@ -423,7 +423,7 @@ function SummaryCard({ title, value, hint, tone = "default" }) {
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="text-xs font-medium text-[#667C74]">{label}</span>
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
       <div className="mt-1">{children}</div>
     </label>
   );

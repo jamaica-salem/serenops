@@ -194,15 +194,15 @@ export default function ClientPortalPage() {
   };
 
   if (loading) {
-    return <div className="p-6 text-sm text-[#667C74]">Loading client portal...</div>;
+    return <div className="p-6 text-sm text-muted-foreground">Loading client portal...</div>;
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F7FAF8] p-6">
-        <div className="max-w-md w-full bg-white border border-[#E5ECE8] rounded-2xl p-6 text-center">
-          <h1 className="font-display text-2xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Portal unavailable</h1>
-          <p className="text-sm text-[#667C74] mt-2">{error}</p>
+      <div className="min-h-screen flex items-center justify-center bg-muted/40 p-6">
+        <div className="max-w-md w-full bg-card border border-border rounded-2xl p-6 text-center">
+          <h1 className="font-display text-2xl font-bold text-foreground">Portal unavailable</h1>
+          <p className="text-sm text-muted-foreground mt-2">{error}</p>
         </div>
       </div>
     );
@@ -211,16 +211,16 @@ export default function ClientPortalPage() {
   const client = data?.client || {};
 
   return (
-    <div className="min-h-screen bg-[#F6FAF8] text-[#1D2A25]">
-      <div className="bg-gradient-to-r from-[#0F2B24] via-[#123C31] to-[#1C4B3E] text-white">
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-white">
         <div className="max-w-6xl mx-auto px-6 py-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[#C5D7D0]">
+              <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-primary-foreground/75">
                 <ShieldCheck className="w-4 h-4" /> SerenOps Client Portal
               </div>
-              <h1 className="mt-3 font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">{client.name}</h1>
-              <div className="mt-2 text-sm text-[#D5E2DC] flex flex-wrap gap-3">
+              <h1 className="mt-3 font-display text-3xl sm:text-4xl font-bold text-foreground">{client.name}</h1>
+              <div className="mt-2 text-sm text-primary-foreground/80 flex flex-wrap gap-3">
                 <span className="inline-flex items-center gap-2"><Building2 className="w-4 h-4" /> {client.company_name || "Independent"}</span>
                 {client.email && <span className="inline-flex items-center gap-2"><Mail className="w-4 h-4" /> {client.email}</span>}
               </div>
@@ -240,27 +240,27 @@ export default function ClientPortalPage() {
         {actionSuccess && <Alert tone="success" text={actionSuccess} />}
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6">
-          <section className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-4">
+          <section className="bg-card rounded-2xl border border-border p-5 space-y-4">
             <header className="flex items-center justify-between">
               <div>
-                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Approvals</h2>
-                <p className="text-sm text-[#667C74]">Review proposals and sign contracts.</p>
+                <h2 className="font-display text-xl font-semibold text-foreground">Approvals</h2>
+                <p className="text-sm text-muted-foreground">Review proposals and sign contracts.</p>
               </div>
               <Badge icon={BadgeCheck} label="Action required" />
             </header>
 
             <div className="space-y-4">
               {(data?.proposals || []).map((proposal) => (
-                <div key={proposal.id} className="rounded-xl border border-[#E5ECE8] p-4">
+                <div key={proposal.id} className="rounded-xl border border-border p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="text-sm text-[#667C74]">Proposal</div>
+                      <div className="text-sm text-muted-foreground">Proposal</div>
                       <div className="font-medium">{proposal.project_title}</div>
-                      <div className="text-xs text-[#8EA39B] mt-1">Status: {proposal.status}</div>
+                      <div className="text-xs text-muted-foreground mt-1">Status: {proposal.status}</div>
                     </div>
                     <div className="flex gap-2">
                       {["approved", "rejected"].includes(proposal.status) && (
-                        <span className="inline-flex items-center px-2.5 h-9 rounded-lg bg-[#F4F8F6] text-[#51645D] text-xs">
+                        <span className="inline-flex items-center px-2.5 h-9 rounded-lg bg-muted/40 text-muted-foreground text-xs">
                           Finalized
                         </span>
                       )}
@@ -268,7 +268,7 @@ export default function ClientPortalPage() {
                         type="button"
                         onClick={() => decideProposal(proposal.id, "approved")}
                         disabled={busy[proposal.id] || ["approved", "rejected"].includes(proposal.status)}
-                        className="h-9 px-3 rounded-lg bg-[#5FA38D] text-white text-xs font-medium hover:bg-[#4E8C79] disabled:opacity-60"
+                        className="h-9 px-3 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 disabled:opacity-60"
                       >
                         Approve
                       </button>
@@ -276,7 +276,7 @@ export default function ClientPortalPage() {
                         type="button"
                         onClick={() => decideProposal(proposal.id, "rejected")}
                         disabled={busy[proposal.id] || ["approved", "rejected"].includes(proposal.status)}
-                        className="h-9 px-3 rounded-lg border border-[#F0D9D9] text-[#9A3838] text-xs font-medium hover:bg-[#FFF6F6] disabled:opacity-60"
+                        className="h-9 px-3 rounded-lg border border-destructive/30 text-destructive text-xs font-medium hover:bg-destructive/10 disabled:opacity-60"
                       >
                         Reject
                       </button>
@@ -287,17 +287,17 @@ export default function ClientPortalPage() {
                       rows={2}
                       value={proposalNotes[proposal.id] || ""}
                       onChange={(e) => setProposalNotes((prev) => ({ ...prev, [proposal.id]: e.target.value }))}
-                      className="mt-3 w-full px-3 py-2 rounded-lg border border-[#E5ECE8] text-sm"
+                      className="mt-3 w-full px-3 py-2 rounded-lg border border-border text-sm"
                       placeholder="Optional note for your decision"
                     />
                   )}
                   {proposal.scope_of_work && (
-                    <p className="text-sm text-[#42534d] mt-3 whitespace-pre-wrap">{proposal.scope_of_work}</p>
+                    <p className="text-sm text-muted-foreground mt-3 whitespace-pre-wrap">{proposal.scope_of_work}</p>
                   )}
                 </div>
               ))}
               {(data?.proposals || []).length === 0 && (data?.contracts || []).length === 0 && (
-                <div className="rounded-xl border border-dashed border-[#D6E4DE] p-5 text-sm text-[#667C74]">
+                <div className="rounded-xl border border-dashed border-border p-5 text-sm text-muted-foreground">
                   No approvals pending right now.
                 </div>
               )}
@@ -306,17 +306,17 @@ export default function ClientPortalPage() {
                 const signature = signatures[contract.id] || {};
                 const isSigned = contract.status === "signed";
                 return (
-                  <div key={contract.id} className="rounded-xl border border-[#E5ECE8] p-4 space-y-3">
+                  <div key={contract.id} className="rounded-xl border border-border p-4 space-y-3">
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <div className="text-sm text-[#667C74]">Contract</div>
+                        <div className="text-sm text-muted-foreground">Contract</div>
                         <div className="font-medium">{contract.title}</div>
                         <span className={`mt-2 inline-flex items-center px-2.5 py-1 rounded-full border text-xs font-medium ${contractStatusBadgeClass(contract.status)}`}>
                           {contractStatusLabel(contract.status)}
                         </span>
                       </div>
                       {isSigned && (
-                        <span className="inline-flex items-center gap-2 text-xs text-[#1f6a42]">
+                        <span className="inline-flex items-center gap-2 text-xs text-emerald-700 dark:text-emerald-400">
                           <CheckCircle2 className="w-4 h-4" /> Signed
                         </span>
                       )}
@@ -325,11 +325,11 @@ export default function ClientPortalPage() {
                     {!isSigned && (
                       <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-3">
                         <div>
-                          <label className="text-xs font-medium text-[#667C74]">Signer name</label>
+                          <label className="text-xs font-medium text-muted-foreground">Signer name</label>
                           <input
                             value={signature.signer_name || ""}
                             onChange={(e) => handleSignatureChange(contract.id, "signer_name", e.target.value)}
-                            className="mt-1 w-full h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm"
+                            className="mt-1 w-full h-10 px-3 rounded-lg border border-border text-sm"
                             placeholder="Full name"
                           />
                         </div>
@@ -337,7 +337,7 @@ export default function ClientPortalPage() {
                           type="button"
                           onClick={() => signContract(contract.id)}
                           disabled={busy[contract.id]}
-                          className="h-10 px-4 rounded-lg bg-[#1C4B3E] text-white text-sm font-medium hover:bg-[#163A30] disabled:opacity-60"
+                          className="h-10 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 disabled:opacity-60"
                         >
                           {busy[contract.id] ? "Submitting..." : "Sign contract"}
                         </button>
@@ -347,38 +347,38 @@ export default function ClientPortalPage() {
                     {!isSigned && (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
-                          <label className="text-xs font-medium text-[#667C74]">Typed signature</label>
+                          <label className="text-xs font-medium text-muted-foreground">Typed signature</label>
                           <input
                             value={signature.signature_type === "uploaded" ? "" : (signature.signature_value || "")}
                             onChange={(e) => {
                               handleSignatureChange(contract.id, "signature_type", "typed");
                               handleSignatureChange(contract.id, "signature_value", e.target.value);
                             }}
-                            className="mt-1 w-full h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm"
+                            className="mt-1 w-full h-10 px-3 rounded-lg border border-border text-sm"
                             placeholder="Type your signature"
                           />
                         </div>
                         <div>
-                          <label className="text-xs font-medium text-[#667C74]">Upload signature</label>
+                          <label className="text-xs font-medium text-muted-foreground">Upload signature</label>
                           <input
                             type="file"
                             accept="image/*"
                             onChange={(e) => handleSignatureFile(contract.id, e.target.files?.[0])}
-                            className="mt-1 w-full h-10 px-3 py-2 rounded-lg border border-[#E5ECE8] text-xs"
+                            className="mt-1 w-full h-10 px-3 py-2 rounded-lg border border-border text-xs"
                           />
                         </div>
                       </div>
                     )}
 
                     {signature.signature_type === "uploaded" && signature.signature_value && (
-                      <div className="rounded-lg border border-dashed border-[#CFE0D9] p-3 bg-[#F7FAF8]">
-                        <div className="text-xs text-[#667C74]">Signature preview</div>
+                      <div className="rounded-lg border border-dashed border-border p-3 bg-muted/40">
+                        <div className="text-xs text-muted-foreground">Signature preview</div>
                         <img src={signature.signature_value} alt="Signature preview" className="mt-2 max-h-24" />
                       </div>
                     )}
 
                     {contract.signed_by && contract.signed_at && (
-                      <div className="text-xs text-[#667C74]">Signed by {contract.signed_by} on {new Date(contract.signed_at).toLocaleDateString()}.</div>
+                      <div className="text-xs text-muted-foreground">Signed by {contract.signed_by} on {new Date(contract.signed_at).toLocaleDateString()}.</div>
                     )}
                   </div>
                 );
@@ -387,22 +387,22 @@ export default function ClientPortalPage() {
           </section>
 
           <section className="space-y-6">
-            <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
+            <div className="bg-card rounded-2xl border border-border p-5 space-y-3">
               <div>
-                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Invoices & Payments</h2>
-                <p className="text-sm text-[#667C74]">Record payments and see outstanding balances.</p>
+                <h2 className="font-display text-xl font-semibold text-foreground">Invoices & Payments</h2>
+                <p className="text-sm text-muted-foreground">Record payments and see outstanding balances.</p>
               </div>
 
               {(data?.invoices || []).map((invoice) => (
-                <div key={invoice.id} className="rounded-xl border border-[#E5ECE8] p-4 space-y-3">
+                <div key={invoice.id} className="rounded-xl border border-border p-4 space-y-3">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="text-sm text-[#667C74]">Invoice {invoice.invoice_number}</div>
-                      <div className="text-xs text-[#8EA39B]">Due {invoice.due_date}</div>
+                      <div className="text-sm text-muted-foreground">Invoice {invoice.invoice_number}</div>
+                      <div className="text-xs text-muted-foreground">Due {invoice.due_date}</div>
                     </div>
                     <div className="text-right">
                       <div className="text-sm font-semibold">{formatMoney(invoice.balance_due, invoice.currency)}</div>
-                      <div className="text-xs text-[#8EA39B]">Status: {invoice.status}</div>
+                      <div className="text-xs text-muted-foreground">Status: {invoice.status}</div>
                     </div>
                   </div>
 
@@ -416,7 +416,7 @@ export default function ClientPortalPage() {
                         ...prev,
                         [invoice.id]: { ...prev[invoice.id], amount: e.target.value },
                       }))}
-                      className="h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm"
+                      className="h-10 px-3 rounded-lg border border-border text-sm"
                       placeholder="Payment amount"
                     />
                     <input
@@ -425,7 +425,7 @@ export default function ClientPortalPage() {
                         ...prev,
                         [invoice.id]: { ...prev[invoice.id], method: e.target.value },
                       }))}
-                      className="h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm"
+                      className="h-10 px-3 rounded-lg border border-border text-sm"
                       placeholder="Payment method"
                     />
                     <input
@@ -435,7 +435,7 @@ export default function ClientPortalPage() {
                         ...prev,
                         [invoice.id]: { ...prev[invoice.id], payment_date: e.target.value },
                       }))}
-                      className="h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm"
+                      className="h-10 px-3 rounded-lg border border-border text-sm"
                     />
                     <input
                       value={payments[invoice.id]?.reference_number ?? ""}
@@ -443,7 +443,7 @@ export default function ClientPortalPage() {
                         ...prev,
                         [invoice.id]: { ...prev[invoice.id], reference_number: e.target.value },
                       }))}
-                      className="h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm"
+                      className="h-10 px-3 rounded-lg border border-border text-sm"
                       placeholder="Reference"
                     />
                   </div>
@@ -454,7 +454,7 @@ export default function ClientPortalPage() {
                       ...prev,
                       [invoice.id]: { ...prev[invoice.id], notes: e.target.value },
                     }))}
-                    className="w-full px-3 py-2 rounded-lg border border-[#E5ECE8] text-sm"
+                    className="w-full px-3 py-2 rounded-lg border border-border text-sm"
                     placeholder="Payment notes"
                   />
 
@@ -462,94 +462,94 @@ export default function ClientPortalPage() {
                     type="button"
                     onClick={() => recordPayment(invoice.id)}
                     disabled={busy[invoice.id] || Number(invoice.balance_due || 0) <= 0 || invoice.status === "cancelled"}
-                    className="h-10 px-4 rounded-lg bg-[#5FA38D] text-white text-sm font-medium hover:bg-[#4E8C79] disabled:opacity-60 inline-flex items-center gap-2"
+                    className="h-10 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 disabled:opacity-60 inline-flex items-center gap-2"
                   >
                     <Landmark className="w-4 h-4" /> {busy[invoice.id] ? "Submitting..." : "Record payment"}
                   </button>
                 </div>
               ))}
               {(data?.invoices || []).length === 0 && (
-                <div className="rounded-xl border border-dashed border-[#D6E4DE] p-5 text-sm text-[#667C74]">
+                <div className="rounded-xl border border-dashed border-border p-5 text-sm text-muted-foreground">
                   No invoices shared in this portal.
                 </div>
               )}
             </div>
 
-            <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
+            <div className="bg-card rounded-2xl border border-border p-5 space-y-3">
               <div>
-                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Progress snapshot</h2>
-                <p className="text-sm text-[#667C74]">Recent tasks and activity for this engagement.</p>
+                <h2 className="font-display text-xl font-semibold text-foreground">Progress snapshot</h2>
+                <p className="text-sm text-muted-foreground">Recent tasks and activity for this engagement.</p>
               </div>
               <div className="space-y-2">
                 {(data?.tasks || []).slice(0, 6).map((task) => (
-                  <div key={task.id} className="flex items-center justify-between text-sm border-b border-[#EEF3F0] pb-2">
+                  <div key={task.id} className="flex items-center justify-between text-sm border-b border-border/60 pb-2">
                     <span>{task.title}</span>
-                    <span className="text-xs text-[#8EA39B]">{task.status}</span>
+                    <span className="text-xs text-muted-foreground">{task.status}</span>
                   </div>
                 ))}
                 {(!data?.tasks || data.tasks.length === 0) && (
-                  <div className="text-sm text-[#8EA39B]">No tasks available yet.</div>
+                  <div className="text-sm text-muted-foreground">No tasks available yet.</div>
                 )}
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
+            <div className="bg-card rounded-2xl border border-border p-5 space-y-3">
               <div>
-                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Projects</h2>
-                <p className="text-sm text-[#667C74]">Delivery status across your active workstreams.</p>
+                <h2 className="font-display text-xl font-semibold text-foreground">Projects</h2>
+                <p className="text-sm text-muted-foreground">Delivery status across your active workstreams.</p>
               </div>
               <div className="space-y-3">
                 {(data?.projects || []).slice(0, 6).map((project) => (
-                  <div key={project.id} className="rounded-xl border border-[#E5ECE8] p-3">
+                  <div key={project.id} className="rounded-xl border border-border p-3">
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <div className="font-medium">{project.name}</div>
-                        <div className="text-xs text-[#8EA39B] mt-1">
+                        <div className="text-xs text-muted-foreground mt-1">
                           {project.start_date ? `Started ${formatDate(project.start_date)}` : "Start date pending"}
                         </div>
                       </div>
-                      <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-[#EEF5F1] text-[#476158]">
+                      <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-muted/40 text-muted-foreground">
                         <Rocket className="w-3.5 h-3.5" /> {project.status || "active"}
                       </span>
                     </div>
                   </div>
                 ))}
                 {(!data?.projects || data.projects.length === 0) && (
-                  <div className="text-sm text-[#8EA39B]">No projects published yet.</div>
+                  <div className="text-sm text-muted-foreground">No projects published yet.</div>
                 )}
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
+            <div className="bg-card rounded-2xl border border-border p-5 space-y-3">
               <div>
-                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Recent activity</h2>
-                <p className="text-sm text-[#667C74]">A timeline of updates shared with you.</p>
+                <h2 className="font-display text-xl font-semibold text-foreground">Recent activity</h2>
+                <p className="text-sm text-muted-foreground">A timeline of updates shared with you.</p>
               </div>
               <div className="space-y-3">
                 {(data?.timeline_events || []).slice(0, 6).map((evt) => (
-                  <div key={evt.id} className="rounded-xl border border-[#E5ECE8] p-3">
+                  <div key={evt.id} className="rounded-xl border border-border p-3">
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <div className="font-medium">{evt.title}</div>
-                        {evt.details && <div className="text-sm text-[#536660] mt-1 whitespace-pre-wrap">{evt.details}</div>}
+                        {evt.details && <div className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">{evt.details}</div>}
                       </div>
-                      <div className="text-xs text-[#8EA39B] inline-flex items-center gap-1.5">
+                      <div className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
                         <Clock3 className="w-3.5 h-3.5" /> {formatDate(evt.occurred_at)}
                       </div>
                     </div>
                   </div>
                 ))}
                 {(!data?.timeline_events || data.timeline_events.length === 0) && (
-                  <div className="text-sm text-[#8EA39B]">No activity posted yet.</div>
+                  <div className="text-sm text-muted-foreground">No activity posted yet.</div>
                 )}
               </div>
             </div>
 
             {data?.portal?.allow_feedback ? (
-              <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 space-y-3">
+              <div className="bg-card rounded-2xl border border-border p-5 space-y-3">
               <div>
-                <h2 className="font-display text-xl font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">Leave feedback</h2>
-                <p className="text-sm text-[#667C74]">Share notes or questions with the delivery team.</p>
+                <h2 className="font-display text-xl font-semibold text-foreground">Leave feedback</h2>
+                <p className="text-sm text-muted-foreground">Share notes or questions with the delivery team.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <input
@@ -558,33 +558,33 @@ export default function ClientPortalPage() {
                   max="5"
                   value={feedback.rating}
                   onChange={(e) => setFeedback((prev) => ({ ...prev, rating: e.target.value }))}
-                  className="h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm"
+                  className="h-10 px-3 rounded-lg border border-border text-sm"
                   placeholder="Rating (1-5)"
                 />
                 <input
                   value={client.email || ""}
                   disabled
-                  className="h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm bg-[#F7FAF8]"
+                  className="h-10 px-3 rounded-lg border border-border text-sm bg-muted/40"
                 />
               </div>
               <textarea
                 rows={3}
                 value={feedback.message}
                 onChange={(e) => setFeedback((prev) => ({ ...prev, message: e.target.value }))}
-                className="w-full px-3 py-2 rounded-lg border border-[#E5ECE8] text-sm"
+                className="w-full px-3 py-2 rounded-lg border border-border text-sm"
                 placeholder="Let us know what you think."
               />
               <button
                 type="button"
                 onClick={submitFeedback}
                 disabled={busy.feedback}
-                className="h-10 px-4 rounded-lg bg-[#1C4B3E] text-white text-sm font-medium hover:bg-[#163A30] disabled:opacity-60 inline-flex items-center gap-2"
+                className="h-10 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 disabled:opacity-60 inline-flex items-center gap-2"
               >
                 <MessageCircle className="w-4 h-4" /> {busy.feedback ? "Sending..." : "Send feedback"}
               </button>
               </div>
             ) : (
-              <div className="bg-white rounded-2xl border border-[#E5ECE8] p-5 text-sm text-[#667C74]">
+              <div className="bg-card rounded-2xl border border-border p-5 text-sm text-muted-foreground">
                 Feedback is currently disabled for this portal link.
               </div>
             )}
@@ -597,8 +597,8 @@ export default function ClientPortalPage() {
 
 function SummaryCard({ label, value }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3">
-      <div className="text-xs uppercase tracking-[0.2em] text-[#CDE0D8]">{label}</div>
+    <div className="rounded-2xl border border-white/10 bg-card/10 px-4 py-3">
+      <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground/80">{label}</div>
       <div className="mt-2 text-2xl font-display font-semibold text-white">{value}</div>
     </div>
   );
@@ -606,7 +606,7 @@ function SummaryCard({ label, value }) {
 
 function Badge({ icon: Icon, label }) {
   return (
-    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-[#EAF4EF] text-[#2f6f5a]">
+    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-muted/40 text-primary">
       <Icon className="w-3.5 h-3.5" /> {label}
     </span>
   );
@@ -615,8 +615,8 @@ function Badge({ icon: Icon, label }) {
 function Alert({ tone, text }) {
   const styles =
     tone === "error"
-      ? "border-[#F0D9D9] bg-[#FFF6F6] text-[#9A3838]"
-      : "border-[#D4EEDD] bg-[#EEF9F2] text-[#1f6a42]";
+      ? "border-destructive/30 bg-destructive/10 text-destructive"
+      : "border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400";
   return (
     <div className={`rounded-lg border px-3 py-2 text-sm ${styles}`}>{text}</div>
   );

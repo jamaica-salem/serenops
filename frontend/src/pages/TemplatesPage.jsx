@@ -96,18 +96,18 @@ export default function TemplatesPage() {
     <div className="space-y-5 animate-fade-up" data-testid="templates-page">
       <div className="flex items-end justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Templates</h1>
-          <p className="text-sm text-gray-500 mt-1">Reusable client operations templates</p>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground">Templates</h1>
+          <p className="text-sm text-muted-foreground mt-1">Reusable client operations templates</p>
         </div>
         <button
           onClick={loadTemplates}
-          className="inline-flex items-center gap-1 text-xs px-3 h-9 rounded-lg border border-gray-200 hover:bg-gray-100"
+          className="inline-flex items-center gap-1 text-xs px-3 h-9 rounded-lg border border-border hover:bg-muted"
         >
           <RefreshCw className="w-3.5 h-3.5" /> Refresh
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-200 p-4 grid grid-cols-1 md:grid-cols-3 gap-2">
+      <div className="bg-card rounded-2xl border border-border p-4 grid grid-cols-1 md:grid-cols-3 gap-2">
         <Input
           placeholder="Template name"
           value={form.name}
@@ -147,7 +147,7 @@ export default function TemplatesPage() {
       </div>
 
       <div className="flex items-center gap-2">
-        <div className="text-xs text-gray-500">Filter:</div>
+        <div className="text-xs text-muted-foreground">Filter:</div>
         <Select value={filter} onValueChange={setFilter}>
           <SelectTrigger className="w-72"><SelectValue /></SelectTrigger>
           <SelectContent>
@@ -161,32 +161,32 @@ export default function TemplatesPage() {
 
       <div className="space-y-3">
         {filtered.map((t) => (
-          <div key={t.id} className="bg-white rounded-xl border border-gray-200 p-4">
+          <div key={t.id} className="bg-card rounded-xl border border-border p-4">
             <div className="flex items-center justify-between gap-2">
               <div>
-                <h3 className="font-medium text-[#1C4B3E] dark:text-[#d7e6b6]">{t.name}</h3>
-                <div className="text-xs text-gray-500">{pretty(t.template_type)}{t.is_default ? " · Default" : ""}</div>
+                <h3 className="font-medium text-foreground">{t.name}</h3>
+                <div className="text-xs text-muted-foreground">{pretty(t.template_type)}{t.is_default ? " · Default" : ""}</div>
               </div>
               <button
                 onClick={() => startEdit(t)}
-                className="text-xs px-3 h-8 rounded-md border border-gray-200 hover:bg-gray-100 inline-flex items-center gap-1"
+                className="text-xs px-3 h-8 rounded-md border border-border hover:bg-muted inline-flex items-center gap-1"
               >
                 <Pencil className="w-3.5 h-3.5" /> Edit
               </button>
               <button
                 onClick={() => deleteTemplate(t.id)}
-                className="text-xs px-3 h-8 rounded-md border border-gray-200 hover:bg-gray-100"
+                className="text-xs px-3 h-8 rounded-md border border-border hover:bg-muted"
               >
                 Delete
               </button>
             </div>
-            <pre className="text-xs text-gray-600 mt-3 whitespace-pre-wrap font-sans bg-gray-50 rounded-lg p-3 border border-gray-100">
+            <pre className="text-xs text-muted-foreground mt-3 whitespace-pre-wrap font-sans bg-muted/50 rounded-lg p-3 border border-border/70">
               {t.content || "No content"}
             </pre>
           </div>
         ))}
         {filtered.length === 0 && (
-          <div className="text-sm text-gray-400 italic text-center py-10">
+          <div className="text-sm text-muted-foreground/80 italic text-center py-10">
             {busy ? "Loading templates..." : "No templates found for this filter."}
           </div>
         )}

@@ -8,7 +8,21 @@ import { Textarea } from "../components/ui/textarea";
 import { Button } from "../components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 
-const COLOR_CHOICES = ["#EA580C", "#3B82F6", "#10B981", "#8B5CF6", "#EC4899", "#F59E0B"];
+const COLOR_CHOICES = [
+  "hsl(var(--chart-1))",
+  "hsl(var(--chart-2))",
+  "hsl(var(--chart-3))",
+  "hsl(var(--chart-4))",
+  "hsl(var(--chart-5))",
+  "hsl(var(--primary))",
+];
+
+function withAlpha(color, alpha = 0.14) {
+  if (!color) return `hsl(var(--muted) / ${alpha})`;
+  if (color.startsWith("hsl(")) return color.replace(")", ` / ${alpha})`);
+  if (color.startsWith("#") && (color.length === 7 || color.length === 4)) return `${color}22`;
+  return color;
+}
 
 export default function ProjectsPage() {
   const location = useLocation();
@@ -83,13 +97,13 @@ export default function ProjectsPage() {
     <div className="space-y-6 animate-fade-up" data-testid="projects-page">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Projects</h1>
-          <p className="text-sm text-gray-500 mt-1">Group tasks by initiative</p>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground">Projects</h1>
+          <p className="text-sm text-muted-foreground mt-1">Group tasks by initiative</p>
         </div>
         <button
           data-testid="projects-add-btn"
           onClick={startCreate}
-          className="bg-orange-600 hover:bg-orange-700 text-white text-sm px-4 h-9 rounded-lg inline-flex items-center gap-1"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm px-4 h-9 rounded-lg inline-flex items-center gap-1"
         >
           <Plus className="w-4 h-4" /> New Project
         </button>
@@ -105,40 +119,40 @@ export default function ProjectsPage() {
             <div
               key={p.id}
               data-testid={`project-card-${p.id}`}
-              className="bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md transition-shadow"
+              className="bg-card rounded-2xl border border-border p-5 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start justify-between mb-4">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: p.color + "20" }}>
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: withAlpha(p.color, 0.14) }}>
                   <Folder className="w-5 h-5" style={{ color: p.color }} />
                 </div>
                 <div className="flex items-center gap-1">
                   <button
                     data-testid={`project-edit-${p.id}`}
                     onClick={() => startEdit(p)}
-                    className="p-1.5 text-gray-300 hover:text-gray-700 hover:bg-gray-100 rounded"
+                    className="p-1.5 text-muted-foreground/70 hover:text-foreground hover:bg-muted rounded"
                   >
                     <Pencil className="w-3.5 h-3.5" />
                   </button>
                   <button
                     data-testid={`project-delete-${p.id}`}
                     onClick={() => remove(p.id)}
-                    className="p-1.5 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded"
+                    className="p-1.5 text-muted-foreground/70 hover:text-destructive hover:bg-destructive/10 rounded"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
-              <h3 className="font-display font-semibold text-[#1C4B3E] dark:text-[#d7e6b6] mb-1">{p.name}</h3>
-              <p className="text-xs text-gray-500 mb-1">
+              <h3 className="font-display font-semibold text-foreground mb-1">{p.name}</h3>
+              <p className="text-xs text-muted-foreground mb-1">
                 Client: {client?.name || "Unlinked"}
               </p>
-              <p className="text-sm text-gray-500 line-clamp-2 mb-4 min-h-[40px]">{p.description || "No description"}</p>
+              <p className="text-sm text-muted-foreground line-clamp-2 mb-4 min-h-[40px]">{p.description || "No description"}</p>
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-gray-500">{projTasks.length} task{projTasks.length !== 1 ? "s" : ""}</span>
-                  <span className="font-medium text-gray-900">{pct}%</span>
+                  <span className="text-muted-foreground">{projTasks.length} task{projTasks.length !== 1 ? "s" : ""}</span>
+                  <span className="font-medium text-foreground">{pct}%</span>
                 </div>
-                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                   <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: p.color }} />
                 </div>
               </div>
@@ -146,7 +160,7 @@ export default function ProjectsPage() {
           );
         })}
         {projects.length === 0 && (
-          <div className="col-span-full text-sm text-gray-400 italic py-12 text-center">No projects yet. Create your first one.</div>
+          <div className="col-span-full text-sm text-muted-foreground/80 italic py-12 text-center">No projects yet. Create your first one.</div>
         )}
       </div>
 
@@ -170,7 +184,7 @@ export default function ProjectsPage() {
               rows={3}
             />
             <div>
-              <div className="text-xs font-medium text-gray-600 mb-2">Client</div>
+              <div className="text-xs font-medium text-muted-foreground mb-2">Client</div>
               <Select value={form.client_id || "none"} onValueChange={(v) => setForm({ ...form, client_id: v })}>
                 <SelectTrigger>
                   <SelectValue placeholder="Link client" />
@@ -184,14 +198,14 @@ export default function ProjectsPage() {
               </Select>
             </div>
             <div>
-              <div className="text-xs font-medium text-gray-600 mb-2">Color</div>
+              <div className="text-xs font-medium text-muted-foreground mb-2">Color</div>
               <div className="flex gap-2">
                 {COLOR_CHOICES.map((c) => (
                   <button
                     key={c}
                     type="button"
                     onClick={() => setForm({ ...form, color: c })}
-                    className={`w-7 h-7 rounded-full border-2 transition-all ${form.color === c ? "border-gray-900 scale-110" : "border-transparent"}`}
+                    className={`w-7 h-7 rounded-full border-2 transition-all ${form.color === c ? "border-foreground scale-110" : "border-transparent"}`}
                     style={{ backgroundColor: c }}
                     aria-label={c}
                   />
@@ -201,7 +215,7 @@ export default function ProjectsPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={upsert} className="bg-orange-600 hover:bg-orange-700 text-white" data-testid="project-form-save">
+            <Button onClick={upsert} className="bg-primary hover:bg-primary/90 text-primary-foreground" data-testid="project-form-save">
               {editingProjectId ? "Save changes" : "Create"}
             </Button>
           </DialogFooter>

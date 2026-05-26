@@ -22,25 +22,25 @@ const STATUS_LABEL = {
   backlog: "Backlog",
 };
 const STATUS_CHIP = {
-  todo: "bg-gray-100 text-gray-700",
-  in_progress: "bg-blue-50 text-blue-700",
-  waiting_for_client: "bg-amber-50 text-amber-700",
-  for_review: "bg-orange-50 text-orange-700",
-  done: "bg-green-50 text-green-700",
-  backlog: "bg-amber-50 text-amber-700",
+  todo: "bg-muted text-foreground",
+  in_progress: "bg-sky-500/10 text-sky-700 dark:text-sky-400",
+  waiting_for_client: "bg-amber-500/10 text-amber-700 dark:text-amber-400",
+  for_review: "bg-primary/10 text-primary",
+  done: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+  backlog: "bg-amber-500/10 text-amber-700 dark:text-amber-400",
 };
 const PRIORITY_CHIP = {
-  low: "bg-gray-100 text-gray-600",
-  medium: "bg-blue-50 text-blue-700",
-  high: "bg-amber-50 text-amber-700",
-  urgent: "bg-red-50 text-red-700",
+  low: "bg-muted text-muted-foreground",
+  medium: "bg-sky-500/10 text-sky-700 dark:text-sky-400",
+  high: "bg-amber-500/10 text-amber-700 dark:text-amber-400",
+  urgent: "bg-destructive/10 text-destructive",
 };
 const COL_DOT = {
-  todo: "bg-gray-400",
-  in_progress: "bg-blue-500",
+  todo: "bg-muted-foreground",
+  in_progress: "bg-sky-500/100",
   waiting_for_client: "bg-amber-500",
-  for_review: "bg-orange-500",
-  done: "bg-green-500",
+  for_review: "bg-primary",
+  done: "bg-emerald-500/100",
   backlog: "bg-amber-500",
 };
 const COLUMNS = ["todo", "in_progress", "waiting_for_client", "for_review", "done", "backlog"];
@@ -60,19 +60,19 @@ function KanbanCard({ task, onEdit }) {
       ref={setNodeRef}
       style={style}
       data-testid={`kanban-card-${task.id}`}
-      className="bg-white rounded-lg p-3 border border-gray-100 hover:shadow-sm transition group cursor-grab active:cursor-grabbing"
+      className="bg-card rounded-lg p-3 border border-border/70 hover:shadow-sm transition group cursor-grab active:cursor-grabbing"
       {...attributes}
       {...listeners}
     >
-      <div className="text-sm font-medium text-gray-900 mb-1">{task.title}</div>
-      {task.description && <div className="text-xs text-gray-500 line-clamp-2 mb-2">{task.description}</div>}
+      <div className="text-sm font-medium text-foreground mb-1">{task.title}</div>
+      {task.description && <div className="text-xs text-muted-foreground line-clamp-2 mb-2">{task.description}</div>}
       <div className="flex items-center gap-1.5">
         <span className={`text-[10px] px-1.5 py-0.5 rounded ${PRIORITY_CHIP[task.priority]}`}>{task.priority}</span>
-        {task.due_date && <span className="text-[10px] text-gray-500">{task.due_date}</span>}
+        {task.due_date && <span className="text-[10px] text-muted-foreground">{task.due_date}</span>}
         <button
           onPointerDown={(e) => e.stopPropagation()}
           onClick={(e) => { e.stopPropagation(); onEdit(task); }}
-          className="ml-auto text-gray-300 hover:text-gray-700"
+          className="ml-auto text-muted-foreground/70 hover:text-foreground"
         ><Pencil className="w-3 h-3" /></button>
       </div>
     </div>
@@ -85,22 +85,22 @@ function KanbanColumn({ id, items, onEdit }) {
     <div
       ref={setNodeRef}
       data-testid={`kanban-col-${id}`}
-      className={`bg-gray-50 rounded-xl p-3 border transition-colors ${
-        isOver ? "border-orange-400 bg-orange-50/40" : "border-gray-100"
+      className={`bg-muted/50 rounded-xl p-3 border transition-colors ${
+        isOver ? "border-primary/50 bg-primary/10" : "border-border/70"
       }`}
     >
       <div className="flex items-center justify-between mb-3 px-1">
         <div className="flex items-center gap-2">
           <span className={`w-2 h-2 rounded-full ${COL_DOT[id]}`} />
-          <span className="font-display text-sm font-semibold text-gray-800">{STATUS_LABEL[id]}</span>
+          <span className="font-display text-sm font-semibold text-foreground">{STATUS_LABEL[id]}</span>
         </div>
-        <span className="text-xs text-gray-500">{items.length}</span>
+        <span className="text-xs text-muted-foreground">{items.length}</span>
       </div>
       <SortableContext items={items.map((t) => t.id)} strategy={verticalListSortingStrategy}>
         <div className="space-y-2 min-h-[200px]">
           {items.map((t) => <KanbanCard key={t.id} task={t} onEdit={onEdit} />)}
           {items.length === 0 && (
-            <div className="text-xs text-gray-400 italic text-center py-6 border-2 border-dashed border-gray-200 rounded-lg">
+            <div className="text-xs text-muted-foreground/80 italic text-center py-6 border-2 border-dashed border-border rounded-lg">
               Drop here
             </div>
           )}
@@ -200,22 +200,22 @@ export default function TasksPage() {
     <div className="space-y-5 animate-fade-up" data-testid="tasks-page">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Tasks</h1>
-          <p className="text-sm text-gray-500 mt-1">Plan and track every task</p>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground">Tasks</h1>
+          <p className="text-sm text-muted-foreground mt-1">Plan and track every task</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex bg-gray-100 rounded-full p-1">
+          <div className="flex bg-muted rounded-full p-1">
             <button
               data-testid="tasks-view-list"
               onClick={() => setView("list")}
-              className={`px-3 py-1.5 text-xs rounded-full flex items-center gap-1 ${view === "list" ? "bg-white shadow-sm text-gray-900" : "text-gray-600"}`}
+              className={`px-3 py-1.5 text-xs rounded-full flex items-center gap-1 ${view === "list" ? "bg-card shadow-sm text-foreground" : "text-muted-foreground"}`}
             >
               <List className="w-3.5 h-3.5" /> List
             </button>
             <button
               data-testid="tasks-view-kanban"
               onClick={() => setView("kanban")}
-              className={`px-3 py-1.5 text-xs rounded-full flex items-center gap-1 ${view === "kanban" ? "bg-white shadow-sm text-gray-900" : "text-gray-600"}`}
+              className={`px-3 py-1.5 text-xs rounded-full flex items-center gap-1 ${view === "kanban" ? "bg-card shadow-sm text-foreground" : "text-muted-foreground"}`}
             >
               <LayoutGrid className="w-3.5 h-3.5" /> Kanban
             </button>
@@ -223,7 +223,7 @@ export default function TasksPage() {
           <button
             data-testid="tasks-add-btn"
             onClick={() => { setEditing(null); setOpen(true); }}
-            className="bg-orange-600 hover:bg-orange-700 text-white text-sm px-4 h-9 rounded-lg inline-flex items-center gap-1 transition"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm px-4 h-9 rounded-lg inline-flex items-center gap-1 transition"
           >
             <Plus className="w-4 h-4" /> Add Task
           </button>
@@ -238,16 +238,16 @@ export default function TasksPage() {
                 key={s}
                 data-testid={`tasks-filter-${s}`}
                 onClick={() => setFilter(s)}
-                className={`text-xs px-3 py-1.5 rounded-full ${filter === s ? "bg-[#1C4B3E] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                className={`text-xs px-3 py-1.5 rounded-full ${filter === s ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
               >
                 {s === "all" ? "All" : STATUS_LABEL[s]}
               </button>
             ))}
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+          <div className="bg-card rounded-2xl border border-border overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="text-xs uppercase tracking-wider text-gray-500 border-b border-gray-100">
+              <thead className="text-xs uppercase tracking-wider text-muted-foreground border-b border-border/70">
                 <tr>
                   <th className="text-left px-5 py-3">Title</th>
                   <th className="text-left px-3 py-3">Status</th>
@@ -263,10 +263,10 @@ export default function TasksPage() {
                   const proj = projects.find((p) => p.id === t.project_id);
                   const u = users.find((x) => x.id === t.assignee_id);
                   return (
-                    <tr key={t.id} data-testid={`task-row-${t.id}`} className="border-b border-gray-50 hover:bg-gray-50/50">
+                    <tr key={t.id} data-testid={`task-row-${t.id}`} className="border-b border-border/50 hover:bg-muted/50/50">
                       <td className="px-5 py-3">
-                        <div className="font-medium text-gray-900">{t.title}</div>
-                        {t.description && <div className="text-xs text-gray-500 line-clamp-1">{t.description}</div>}
+                        <div className="font-medium text-foreground">{t.title}</div>
+                        {t.description && <div className="text-xs text-muted-foreground line-clamp-1">{t.description}</div>}
                       </td>
                       <td className="px-3 py-3">
                         <span className={`text-[11px] px-2 py-0.5 rounded-full ${STATUS_CHIP[t.status]}`}>{STATUS_LABEL[t.status]}</span>
@@ -278,36 +278,36 @@ export default function TasksPage() {
                         {u ? (
                           <div className="flex items-center gap-2">
                             <img src={u.avatar_url} alt={u.name} className="w-6 h-6 rounded-full object-cover" />
-                            <span className="text-xs text-gray-700">{u.name.split(" ")[0]}</span>
+                            <span className="text-xs text-foreground">{u.name.split(" ")[0]}</span>
                           </div>
-                        ) : <span className="text-xs text-gray-400">—</span>}
+                        ) : <span className="text-xs text-muted-foreground/80">—</span>}
                       </td>
-                      <td className="px-3 py-3 text-gray-600">{t.due_date || "—"}</td>
+                      <td className="px-3 py-3 text-muted-foreground">{t.due_date || "—"}</td>
                       <td className="px-3 py-3">
                         {proj ? (
-                          <span className="inline-flex items-center gap-1.5 text-xs text-gray-700">
+                          <span className="inline-flex items-center gap-1.5 text-xs text-foreground">
                             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: proj.color }} />
                             {proj.name}
                           </span>
-                        ) : <span className="text-xs text-gray-400">—</span>}
+                        ) : <span className="text-xs text-muted-foreground/80">—</span>}
                       </td>
                       <td className="px-3 py-3 text-right whitespace-nowrap">
                         <button
                           data-testid={`task-edit-${t.id}`}
                           onClick={() => { setEditing(t); setOpen(true); }}
-                          className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded"
+                          className="p-1.5 text-muted-foreground/80 hover:text-foreground hover:bg-muted rounded"
                         ><Pencil className="w-3.5 h-3.5" /></button>
                         <button
                           data-testid={`task-delete-${t.id}`}
                           onClick={() => remove(t.id)}
-                          className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded ml-1"
+                          className="p-1.5 text-muted-foreground/80 hover:text-destructive hover:bg-destructive/10 rounded ml-1"
                         ><Trash2 className="w-3.5 h-3.5" /></button>
                       </td>
                     </tr>
                   );
                 })}
                 {visible.length === 0 && (
-                  <tr><td colSpan={7} className="text-center text-gray-400 py-12 text-sm italic">No tasks match.</td></tr>
+                  <tr><td colSpan={7} className="text-center text-muted-foreground/80 py-12 text-sm italic">No tasks match.</td></tr>
                 )}
               </tbody>
             </table>
@@ -334,8 +334,8 @@ export default function TasksPage() {
           </div>
           <DragOverlay>
             {activeTask ? (
-              <div className="bg-white rounded-lg p-3 border border-orange-300 shadow-lg w-72 cursor-grabbing">
-                <div className="text-sm font-medium text-gray-900">{activeTask.title}</div>
+              <div className="bg-card rounded-lg p-3 border border-primary/40 shadow-lg w-72 cursor-grabbing">
+                <div className="text-sm font-medium text-foreground">{activeTask.title}</div>
               </div>
             ) : null}
           </DragOverlay>

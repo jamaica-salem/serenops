@@ -652,20 +652,20 @@ export default function ClientsPage() {
     <div className="space-y-6 animate-fade-up" data-testid="clients-page">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Clients</h1>
-          <p className="text-sm text-gray-500 mt-1">Track the full lifecycle of every client</p>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground">Clients</h1>
+          <p className="text-sm text-muted-foreground mt-1">Track the full lifecycle of every client</p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => loadWorkspace(selectedId)}
-            className="inline-flex items-center gap-1 text-xs px-3 h-9 rounded-lg border border-gray-200 hover:bg-gray-100"
+            className="inline-flex items-center gap-1 text-xs px-3 h-9 rounded-lg border border-border hover:bg-muted"
           >
             <RefreshCw className="w-3.5 h-3.5" /> Refresh
           </button>
           <button
             data-testid="clients-add-btn"
             onClick={startCreateClient}
-            className="bg-orange-600 hover:bg-orange-700 text-white text-sm px-4 h-9 rounded-lg inline-flex items-center gap-1"
+            className="bg-primary hover:bg-primary/90 text-white text-sm px-4 h-9 rounded-lg inline-flex items-center gap-1"
           >
             <Plus className="w-4 h-4" /> New Client
           </button>
@@ -673,51 +673,51 @@ export default function ClientsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <aside className="lg:col-span-4 bg-white rounded-2xl border border-gray-200 p-3 space-y-2">
+        <aside className="lg:col-span-4 bg-card rounded-2xl border border-border p-3 space-y-2">
           {clients.map((c) => (
             <button
               key={c.id}
               onClick={() => setSelectedId(c.id)}
               className={`w-full text-left rounded-xl border p-3 transition ${
                 selectedId === c.id
-                  ? "border-orange-300 bg-orange-50"
-                  : "border-gray-100 hover:border-gray-300"
+                  ? "border-primary/40 bg-primary/10"
+                  : "border-border/70 hover:border-border"
               }`}
             >
               <div className="flex items-center justify-between gap-2">
-                <div className="font-medium text-sm text-gray-900 truncate">{c.name}</div>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                <div className="font-medium text-sm text-foreground truncate">{c.name}</div>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
                   {prettyStatus(c.status)}
                 </span>
               </div>
-              <div className="text-xs text-gray-500 mt-1 truncate">{c.company_name || "No company"}</div>
-              <div className="text-[11px] text-gray-400 mt-1 truncate">{c.email || "No email"}</div>
+              <div className="text-xs text-muted-foreground mt-1 truncate">{c.company_name || "No company"}</div>
+              <div className="text-[11px] text-muted-foreground/80 mt-1 truncate">{c.email || "No email"}</div>
             </button>
           ))}
           {clients.length === 0 && (
-            <div className="text-sm text-gray-400 italic text-center py-8">No clients yet.</div>
+            <div className="text-sm text-muted-foreground/80 italic text-center py-8">No clients yet.</div>
           )}
         </aside>
 
-        <section className="lg:col-span-8 bg-white rounded-2xl border border-gray-200 p-5">
+        <section className="lg:col-span-8 bg-card rounded-2xl border border-border p-5">
           {!selectedClient ? (
-            <div className="text-sm text-gray-400 italic py-20 text-center">Select a client to open its workspace.</div>
+            <div className="text-sm text-muted-foreground/80 italic py-20 text-center">Select a client to open its workspace.</div>
           ) : (
             <>
               <div className="flex flex-wrap gap-4 items-start justify-between mb-5">
                 <div className="space-y-1">
-                  <h2 className="font-display text-2xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">{selectedClient.name}</h2>
-                  <div className="text-sm text-gray-500">
+                  <h2 className="font-display text-2xl font-bold text-foreground">{selectedClient.name}</h2>
+                  <div className="text-sm text-muted-foreground">
                     {selectedClient.company_name || "No company"} · {selectedClient.client_type}
                   </div>
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                  <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-1"><Mail className="w-3 h-3" /> {selectedClient.email || "—"}</span>
                     <span className="inline-flex items-center gap-1"><Phone className="w-3 h-3" /> {selectedClient.phone || "—"}</span>
                     <span className="inline-flex items-center gap-1"><Globe className="w-3 h-3" /> {selectedClient.website || "—"}</span>
                   </div>
                 </div>
                 <div className="w-56">
-                  <div className="text-[11px] text-gray-500 mb-1">Client status</div>
+                  <div className="text-[11px] text-muted-foreground mb-1">Client status</div>
                   <Select value={selectedClient.status} onValueChange={updateClientStatus}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -741,7 +741,7 @@ export default function ClientsPage() {
 
               <Tabs value={activeWorkspaceTab} onValueChange={setActiveWorkspaceTab}>
                 <div className="md:hidden mb-3">
-                  <div className="text-[11px] text-gray-500 mb-1">Workspace section</div>
+                  <div className="text-[11px] text-muted-foreground mb-1">Workspace section</div>
                   <Select value={activeWorkspaceTab} onValueChange={setActiveWorkspaceTab}>
                     <SelectTrigger className="w-full">
                       <SelectValue />
@@ -758,8 +758,8 @@ export default function ClientsPage() {
 
                 <div className="md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-4">
                   <div className="hidden md:block">
-                    <div className="rounded-xl border border-[#E5ECE8] bg-[#F7FAF8] p-2">
-                      <div className="px-2 pt-1 pb-2 text-[11px] font-medium uppercase tracking-wide text-[#6f847c]">
+                    <div className="rounded-xl border border-border bg-muted/40 p-2">
+                      <div className="px-2 pt-1 pb-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                         Workspace
                       </div>
                       <TabsList className="flex h-auto w-full flex-col items-stretch justify-start gap-1 rounded-none bg-transparent p-0 text-inherit">
@@ -767,7 +767,7 @@ export default function ClientsPage() {
                           <TabsTrigger
                             key={tab}
                             value={tab}
-                            className="w-full justify-start capitalize rounded-lg px-3 py-2 text-xs font-medium text-[#5f736b] hover:bg-white hover:text-[#1C4B3E] data-[state=active]:bg-[#1C4B3E] data-[state=active]:text-white data-[state=active]:shadow-none"
+                            className="w-full justify-start capitalize rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-card hover:text-primary data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-none"
                           >
                             {tab.replace("-", " ")}
                           </TabsTrigger>
@@ -791,33 +791,33 @@ export default function ClientsPage() {
                     <MetricCard label="Handover" value={`${summary?.handover_done ?? 0}/${summary?.handover_total ?? 0}`} />
                     <MetricCard label="Maintenance" value={`${summary?.maintenance_active ?? 0}/${summary?.maintenance_total ?? 0}`} />
                   </div>
-                  <div className="rounded-xl border border-gray-100 p-4">
+                  <div className="rounded-xl border border-border/70 p-4">
                     <div className="text-sm font-medium mb-2">Notes</div>
-                    <div className="text-sm text-gray-500 whitespace-pre-wrap min-h-12">
+                    <div className="text-sm text-muted-foreground whitespace-pre-wrap min-h-12">
                       {selectedClient.notes || "No notes yet."}
                     </div>
                   </div>
                 </TabsContent>
 
                 <TabsContent value="onboarding" className="space-y-4 pt-3">
-                  <div className="rounded-xl border border-gray-100 p-3 space-y-2">
+                  <div className="rounded-xl border border-border/70 p-3 space-y-2">
                     {onboardingItems.map((item) => (
-                      <label key={item.id} className="flex items-start gap-3 rounded-lg border border-gray-100 p-2">
+                      <label key={item.id} className="flex items-start gap-3 rounded-lg border border-border/70 p-2">
                         <Checkbox checked={item.completed} onCheckedChange={() => toggleOnboarding(item)} />
                         <div className="flex-1">
-                          <div className={`text-sm ${item.completed ? "line-through text-gray-400" : "text-gray-800"}`}>
+                          <div className={`text-sm ${item.completed ? "line-through text-muted-foreground/80" : "text-foreground"}`}>
                             {item.title}
                           </div>
-                          <div className="text-xs text-gray-500 capitalize">{item.category.replace(/_/g, " ")}</div>
+                          <div className="text-xs text-muted-foreground capitalize">{item.category.replace(/_/g, " ")}</div>
                         </div>
                       </label>
                     ))}
                     {onboardingItems.length === 0 && (
-                      <div className="text-sm text-gray-400 italic py-4 text-center">No onboarding items yet.</div>
+                      <div className="text-sm text-muted-foreground/80 italic py-4 text-center">No onboarding items yet.</div>
                     )}
                   </div>
 
-                  <div className="rounded-xl border border-gray-100 p-3 grid grid-cols-1 md:grid-cols-3 gap-2">
+                  <div className="rounded-xl border border-border/70 p-3 grid grid-cols-1 md:grid-cols-3 gap-2">
                     <Input
                       value={newOnboardingTitle}
                       onChange={(e) => setNewOnboardingTitle(e.target.value)}
@@ -843,7 +843,7 @@ export default function ClientsPage() {
                 </TabsContent>
 
                 <TabsContent value="proposals" className="space-y-3 pt-3">
-                  <div className="rounded-xl border border-gray-100 p-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div className="rounded-xl border border-border/70 p-3 grid grid-cols-1 md:grid-cols-2 gap-2">
                     <Input placeholder="Project title" value={proposalForm.project_title} onChange={(e) => setProposalForm({ ...proposalForm, project_title: e.target.value })} />
                     <Select value={proposalForm.status} onValueChange={(v) => setProposalForm({ ...proposalForm, status: v })}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
@@ -863,9 +863,9 @@ export default function ClientsPage() {
                     <Button onClick={createProposal}>Create proposal</Button>
                   </div>
 
-                  <div className="rounded-xl border border-gray-100 overflow-hidden">
+                  <div className="rounded-xl border border-border/70 overflow-hidden">
                     <table className="w-full text-sm">
-                      <thead className="border-b border-gray-100 text-xs text-gray-500 uppercase">
+                      <thead className="border-b border-border/70 text-xs text-muted-foreground uppercase">
                         <tr>
                           <th className="text-left px-3 py-2">Project</th>
                           <th className="text-left px-3 py-2">Status</th>
@@ -875,26 +875,26 @@ export default function ClientsPage() {
                       </thead>
                       <tbody>
                         {proposals.map((p) => (
-                          <tr key={p.id} className="border-b border-gray-100">
+                          <tr key={p.id} className="border-b border-border/70">
                             <td className="px-3 py-2">
                               <div className="font-medium">{p.project_title}</div>
-                              <div className="text-xs text-gray-500">{p.scope_of_work || "No scope"}</div>
+                              <div className="text-xs text-muted-foreground">{p.scope_of_work || "No scope"}</div>
                             </td>
                             <td className="px-3 py-2">{prettyStatus(p.status)}</td>
                             <td className="px-3 py-2">{p.pricing || "—"}</td>
                             <td className="px-3 py-2">{p.timeline || "—"}</td>
                           </tr>
                         ))}
-                        {proposals.length === 0 && <tr><td colSpan={4} className="text-center py-8 text-gray-400 italic">No proposals yet.</td></tr>}
+                        {proposals.length === 0 && <tr><td colSpan={4} className="text-center py-8 text-muted-foreground/80 italic">No proposals yet.</td></tr>}
                       </tbody>
                     </table>
                   </div>
                 </TabsContent>
 
                 <TabsContent value="projects" className="pt-3">
-                  <div className="rounded-xl border border-gray-100 overflow-hidden">
+                  <div className="rounded-xl border border-border/70 overflow-hidden">
                     <table className="w-full text-sm">
-                      <thead className="border-b border-gray-100 text-xs text-gray-500 uppercase">
+                      <thead className="border-b border-border/70 text-xs text-muted-foreground uppercase">
                         <tr>
                           <th className="text-left px-3 py-2">Project</th>
                           <th className="text-left px-3 py-2">Status</th>
@@ -904,10 +904,10 @@ export default function ClientsPage() {
                       </thead>
                       <tbody>
                         {clientProjects.map((p) => (
-                          <tr key={p.id} className="border-b border-gray-100">
+                          <tr key={p.id} className="border-b border-border/70">
                             <td className="px-3 py-2">
                               <div className="font-medium">{p.name}</div>
-                              <div className="text-xs text-gray-500">{p.description || "No description"}</div>
+                              <div className="text-xs text-muted-foreground">{p.description || "No description"}</div>
                             </td>
                             <td className="px-3 py-2 capitalize">{prettyStatus(p.status)}</td>
                             <td className="px-3 py-2 capitalize">{p.priority}</td>
@@ -915,7 +915,7 @@ export default function ClientsPage() {
                           </tr>
                         ))}
                         {clientProjects.length === 0 && (
-                          <tr><td colSpan={4} className="text-center py-8 text-gray-400 italic">No projects linked yet.</td></tr>
+                          <tr><td colSpan={4} className="text-center py-8 text-muted-foreground/80 italic">No projects linked yet.</td></tr>
                         )}
                       </tbody>
                     </table>
@@ -923,27 +923,27 @@ export default function ClientsPage() {
                 </TabsContent>
 
                 <TabsContent value="tasks" className="pt-3">
-                  <div className="rounded-xl border border-gray-100 space-y-2 p-3">
+                  <div className="rounded-xl border border-border/70 space-y-2 p-3">
                     {clientTasks.map((t) => (
-                      <div key={t.id} className="rounded-lg border border-gray-100 p-3 flex items-start justify-between gap-3">
+                      <div key={t.id} className="rounded-lg border border-border/70 p-3 flex items-start justify-between gap-3">
                         <div>
                           <div className="font-medium text-sm">{t.title}</div>
-                          <div className="text-xs text-gray-500">{t.description || "No description"}</div>
+                          <div className="text-xs text-muted-foreground">{t.description || "No description"}</div>
                         </div>
-                        <div className="text-right text-xs text-gray-500">
+                        <div className="text-right text-xs text-muted-foreground">
                           <div className="capitalize">{prettyStatus(t.status)}</div>
                           <div>Due: {t.due_date || "—"}</div>
                         </div>
                       </div>
                     ))}
                     {clientTasks.length === 0 && (
-                      <div className="text-sm text-gray-400 italic text-center py-5">No tasks linked yet.</div>
+                      <div className="text-sm text-muted-foreground/80 italic text-center py-5">No tasks linked yet.</div>
                     )}
                   </div>
                 </TabsContent>
 
                 <TabsContent value="invoices" className="space-y-3 pt-3">
-                  <div className="rounded-xl border border-gray-100 p-3 grid grid-cols-1 md:grid-cols-4 gap-2">
+                  <div className="rounded-xl border border-border/70 p-3 grid grid-cols-1 md:grid-cols-4 gap-2">
                     <Input placeholder="Invoice #" value={invoiceForm.invoice_number} onChange={(e) => setInvoiceForm({ ...invoiceForm, invoice_number: e.target.value })} />
                     <Input type="date" value={invoiceForm.issue_date} onChange={(e) => setInvoiceForm({ ...invoiceForm, issue_date: e.target.value })} />
                     <Input type="date" value={invoiceForm.due_date} onChange={(e) => setInvoiceForm({ ...invoiceForm, due_date: e.target.value })} />
@@ -965,9 +965,9 @@ export default function ClientsPage() {
                     <Button onClick={createInvoice}>Create invoice</Button>
                   </div>
 
-                  <div className="rounded-xl border border-gray-100 overflow-hidden">
+                  <div className="rounded-xl border border-border/70 overflow-hidden">
                     <table className="w-full text-sm">
-                      <thead className="border-b border-gray-100 text-xs text-gray-500 uppercase">
+                      <thead className="border-b border-border/70 text-xs text-muted-foreground uppercase">
                         <tr>
                           <th className="text-left px-3 py-2">Invoice</th>
                           <th className="text-left px-3 py-2">Status</th>
@@ -979,10 +979,10 @@ export default function ClientsPage() {
                       </thead>
                       <tbody>
                         {invoices.map((inv) => (
-                          <tr key={inv.id} className="border-b border-gray-100">
+                          <tr key={inv.id} className="border-b border-border/70">
                             <td className="px-3 py-2">
                               <div className="font-medium">{inv.invoice_number}</div>
-                              <div className="text-xs text-gray-500">{inv.issue_date}</div>
+                              <div className="text-xs text-muted-foreground">{inv.issue_date}</div>
                             </td>
                             <td className="px-3 py-2">{prettyStatus(inv.status)}</td>
                             <td className="px-3 py-2">{money(inv.total)}</td>
@@ -991,14 +991,14 @@ export default function ClientsPage() {
                             <td className="px-3 py-2">{inv.due_date}</td>
                           </tr>
                         ))}
-                        {invoices.length === 0 && <tr><td colSpan={6} className="text-center py-8 text-gray-400 italic">No invoices yet.</td></tr>}
+                        {invoices.length === 0 && <tr><td colSpan={6} className="text-center py-8 text-muted-foreground/80 italic">No invoices yet.</td></tr>}
                       </tbody>
                     </table>
                   </div>
                 </TabsContent>
 
                 <TabsContent value="contracts" className="space-y-3 pt-3">
-                  <div className="rounded-xl border border-gray-100 p-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div className="rounded-xl border border-border/70 p-3 grid grid-cols-1 md:grid-cols-2 gap-2">
                     <Input placeholder="Contract title" value={contractForm.title} onChange={(e) => setContractForm({ ...contractForm, title: e.target.value })} />
                     <Select value={contractForm.status} onValueChange={(v) => setContractForm({ ...contractForm, status: v })}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
@@ -1016,22 +1016,22 @@ export default function ClientsPage() {
                     <Button onClick={createContract}>Create contract</Button>
                   </div>
 
-                  <div className="rounded-xl border border-gray-100 space-y-2 p-3">
+                  <div className="rounded-xl border border-border/70 space-y-2 p-3">
                     {contracts.map((c) => (
-                      <div key={c.id} className="rounded-lg border border-gray-100 p-3">
+                      <div key={c.id} className="rounded-lg border border-border/70 p-3">
                         <div className="flex items-center justify-between gap-2">
                           <div className="font-medium">{c.title}</div>
                           <div className="text-xs">{prettyStatus(c.status)}</div>
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">{c.scope_of_work || "No scope yet"}</div>
+                        <div className="text-xs text-muted-foreground mt-1">{c.scope_of_work || "No scope yet"}</div>
                       </div>
                     ))}
-                    {contracts.length === 0 && <div className="text-sm text-gray-400 italic text-center py-5">No contracts yet.</div>}
+                    {contracts.length === 0 && <div className="text-sm text-muted-foreground/80 italic text-center py-5">No contracts yet.</div>}
                   </div>
                 </TabsContent>
 
                 <TabsContent value="payments" className="space-y-3 pt-3">
-                  <div className="rounded-xl border border-gray-100 p-3 grid grid-cols-1 md:grid-cols-4 gap-2">
+                  <div className="rounded-xl border border-border/70 p-3 grid grid-cols-1 md:grid-cols-4 gap-2">
                     <Select value={paymentForm.invoice_id || "none"} onValueChange={(v) => setPaymentForm({ ...paymentForm, invoice_id: v === "none" ? "" : v })}>
                       <SelectTrigger><SelectValue placeholder="Select invoice" /></SelectTrigger>
                       <SelectContent>
@@ -1046,9 +1046,9 @@ export default function ClientsPage() {
                     <Button onClick={createPayment}>Record payment</Button>
                   </div>
 
-                  <div className="rounded-xl border border-gray-100 overflow-hidden">
+                  <div className="rounded-xl border border-border/70 overflow-hidden">
                     <table className="w-full text-sm">
-                      <thead className="border-b border-gray-100 text-xs text-gray-500 uppercase">
+                      <thead className="border-b border-border/70 text-xs text-muted-foreground uppercase">
                         <tr>
                           <th className="text-left px-3 py-2">Date</th>
                           <th className="text-left px-3 py-2">Invoice</th>
@@ -1061,7 +1061,7 @@ export default function ClientsPage() {
                         {payments.map((p) => {
                           const inv = invoices.find((x) => x.id === p.invoice_id);
                           return (
-                            <tr key={p.id} className="border-b border-gray-100">
+                            <tr key={p.id} className="border-b border-border/70">
                               <td className="px-3 py-2">{p.payment_date}</td>
                               <td className="px-3 py-2">{inv?.invoice_number || p.invoice_id}</td>
                               <td className="px-3 py-2">{money(p.amount)}</td>
@@ -1070,14 +1070,14 @@ export default function ClientsPage() {
                             </tr>
                           );
                         })}
-                        {payments.length === 0 && <tr><td colSpan={5} className="text-center py-8 text-gray-400 italic">No payments yet.</td></tr>}
+                        {payments.length === 0 && <tr><td colSpan={5} className="text-center py-8 text-muted-foreground/80 italic">No payments yet.</td></tr>}
                       </tbody>
                     </table>
                   </div>
                 </TabsContent>
 
                 <TabsContent value="revisions" className="space-y-3 pt-3">
-                  <div className="rounded-xl border border-gray-100 p-3 grid grid-cols-1 md:grid-cols-3 gap-2">
+                  <div className="rounded-xl border border-border/70 p-3 grid grid-cols-1 md:grid-cols-3 gap-2">
                     <Input className="md:col-span-2" placeholder="Request title" value={revisionForm.request_title} onChange={(e) => setRevisionForm({ ...revisionForm, request_title: e.target.value })} />
                     <Select value={revisionForm.project_id} onValueChange={(v) => setRevisionForm({ ...revisionForm, project_id: v })}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
@@ -1106,22 +1106,22 @@ export default function ClientsPage() {
                     <Button onClick={createRevision}>Create revision</Button>
                   </div>
 
-                  <div className="rounded-xl border border-gray-100 space-y-2 p-3">
+                  <div className="rounded-xl border border-border/70 space-y-2 p-3">
                     {revisions.map((r) => (
-                      <div key={r.id} className="rounded-lg border border-gray-100 p-3">
+                      <div key={r.id} className="rounded-lg border border-border/70 p-3">
                         <div className="flex items-center justify-between">
                           <div className="font-medium">{r.request_title}</div>
                           <div className="text-xs">{prettyStatus(r.status)}</div>
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">{r.description || "No details"}</div>
+                        <div className="text-xs text-muted-foreground mt-1">{r.description || "No details"}</div>
                       </div>
                     ))}
-                    {revisions.length === 0 && <div className="text-sm text-gray-400 italic text-center py-5">No revisions yet.</div>}
+                    {revisions.length === 0 && <div className="text-sm text-muted-foreground/80 italic text-center py-5">No revisions yet.</div>}
                   </div>
                 </TabsContent>
 
                 <TabsContent value="timeline" className="space-y-3 pt-3">
-                  <div className="rounded-xl border border-gray-100 p-3 grid grid-cols-1 md:grid-cols-3 gap-2">
+                  <div className="rounded-xl border border-border/70 p-3 grid grid-cols-1 md:grid-cols-3 gap-2">
                     <Input className="md:col-span-2" placeholder="Timeline title" value={timelineForm.title} onChange={(e) => setTimelineForm({ ...timelineForm, title: e.target.value })} />
                     <Select value={timelineForm.event_type} onValueChange={(v) => setTimelineForm({ ...timelineForm, event_type: v })}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
@@ -1136,41 +1136,41 @@ export default function ClientsPage() {
                     <Button onClick={addTimelineEvent}>Add event</Button>
                   </div>
 
-                  <div className="rounded-xl border border-gray-100 space-y-2 p-3">
+                  <div className="rounded-xl border border-border/70 space-y-2 p-3">
                     {timelineEvents.map((ev) => (
-                      <div key={ev.id} className="rounded-lg border border-gray-100 p-3">
+                      <div key={ev.id} className="rounded-lg border border-border/70 p-3">
                         <div className="flex items-center justify-between gap-2">
                           <div className="font-medium text-sm">{ev.title}</div>
-                          <div className="text-xs text-gray-500">{ev.occurred_at?.slice(0, 10)}</div>
+                          <div className="text-xs text-muted-foreground">{ev.occurred_at?.slice(0, 10)}</div>
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">{prettyStatus(ev.event_type)} {ev.details ? `· ${ev.details}` : ""}</div>
+                        <div className="text-xs text-muted-foreground mt-1">{prettyStatus(ev.event_type)} {ev.details ? `· ${ev.details}` : ""}</div>
                       </div>
                     ))}
-                    {timelineEvents.length === 0 && <div className="text-sm text-gray-400 italic text-center py-5">No timeline events yet.</div>}
+                    {timelineEvents.length === 0 && <div className="text-sm text-muted-foreground/80 italic text-center py-5">No timeline events yet.</div>}
                   </div>
                 </TabsContent>
 
                 <TabsContent value="handover" className="space-y-3 pt-3">
-                  <div className="rounded-xl border border-gray-100 p-3 space-y-2">
+                  <div className="rounded-xl border border-border/70 p-3 space-y-2">
                     {handoverItems.map((item) => (
-                      <label key={item.id} className="flex items-center gap-3 rounded-lg border border-gray-100 p-2">
+                      <label key={item.id} className="flex items-center gap-3 rounded-lg border border-border/70 p-2">
                         <Checkbox checked={item.completed} onCheckedChange={() => toggleHandover(item)} />
-                        <div className={`text-sm ${item.completed ? "line-through text-gray-400" : "text-gray-800"}`}>{item.title}</div>
+                        <div className={`text-sm ${item.completed ? "line-through text-muted-foreground/80" : "text-foreground"}`}>{item.title}</div>
                       </label>
                     ))}
-                    {handoverItems.length === 0 && <div className="text-sm text-gray-400 italic text-center py-5">No handover items yet.</div>}
+                    {handoverItems.length === 0 && <div className="text-sm text-muted-foreground/80 italic text-center py-5">No handover items yet.</div>}
                   </div>
-                  <div className="rounded-xl border border-gray-100 p-3 flex gap-2">
+                  <div className="rounded-xl border border-border/70 p-3 flex gap-2">
                     <Input placeholder="Add custom handover item" value={newHandoverTitle} onChange={(e) => setNewHandoverTitle(e.target.value)} />
                     <Button onClick={addHandoverItem}>Add</Button>
                   </div>
                 </TabsContent>
 
                 <TabsContent value="files-links" className="space-y-3 pt-3">
-                  <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
+                  <div className="rounded-xl border border-amber-500/35 bg-amber-500/10 p-3 text-xs text-amber-800 dark:text-amber-300">
                     Security warning: do not store plaintext passwords in this module. Save only URLs and non-sensitive notes unless an encrypted vault exists.
                   </div>
-                  <div className="rounded-xl border border-gray-100 p-3 grid grid-cols-1 md:grid-cols-4 gap-2">
+                  <div className="rounded-xl border border-border/70 p-3 grid grid-cols-1 md:grid-cols-4 gap-2">
                     <Input className="md:col-span-2" placeholder="Label" value={fileLinkForm.label} onChange={(e) => setFileLinkForm({ ...fileLinkForm, label: e.target.value })} />
                     <Select value={fileLinkForm.link_type} onValueChange={(v) => setFileLinkForm({ ...fileLinkForm, link_type: v })}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
@@ -1192,9 +1192,9 @@ export default function ClientsPage() {
                     <Button onClick={createFileLink}>Add link</Button>
                   </div>
 
-                  <div className="rounded-xl border border-gray-100 overflow-hidden">
+                  <div className="rounded-xl border border-border/70 overflow-hidden">
                     <table className="w-full text-sm">
-                      <thead className="border-b border-gray-100 text-xs text-gray-500 uppercase">
+                      <thead className="border-b border-border/70 text-xs text-muted-foreground uppercase">
                         <tr>
                           <th className="text-left px-3 py-2">Label</th>
                           <th className="text-left px-3 py-2">Type</th>
@@ -1206,23 +1206,23 @@ export default function ClientsPage() {
                         {fileLinks.map((f) => {
                           const p = clientProjects.find((x) => x.id === f.project_id);
                           return (
-                            <tr key={f.id} className="border-b border-gray-100">
+                            <tr key={f.id} className="border-b border-border/70">
                               <td className="px-3 py-2">{f.label}</td>
                               <td className="px-3 py-2">{prettyStatus(f.link_type)}</td>
                               <td className="px-3 py-2">{p?.name || "—"}</td>
                               <td className="px-3 py-2">
-                                <a href={f.url} target="_blank" rel="noreferrer" className="text-blue-600 underline break-all">{f.url}</a>
+                                <a href={f.url} target="_blank" rel="noreferrer" className="text-primary underline break-all">{f.url}</a>
                               </td>
                             </tr>
                           );
                         })}
-                        {fileLinks.length === 0 && <tr><td colSpan={4} className="text-center py-8 text-gray-400 italic">No links yet.</td></tr>}
+                        {fileLinks.length === 0 && <tr><td colSpan={4} className="text-center py-8 text-muted-foreground/80 italic">No links yet.</td></tr>}
                       </tbody>
                     </table>
                   </div>
                 </TabsContent>
                 <TabsContent value="maintenance" className="space-y-3 pt-3">
-                  <div className="rounded-xl border border-gray-100 p-3 grid grid-cols-1 md:grid-cols-3 gap-2">
+                  <div className="rounded-xl border border-border/70 p-3 grid grid-cols-1 md:grid-cols-3 gap-2">
                     <Input
                       className="md:col-span-2"
                       placeholder="Maintenance plan name"
@@ -1288,15 +1288,15 @@ export default function ClientsPage() {
                     <Button onClick={createMaintenancePlan}>Create maintenance plan</Button>
                   </div>
 
-                  <div className="rounded-xl border border-gray-100 space-y-2 p-3">
+                  <div className="rounded-xl border border-border/70 space-y-2 p-3">
                     {maintenancePlans.map((plan) => {
                       const project = clientProjects.find((p) => p.id === plan.project_id);
                       return (
-                        <div key={plan.id} className="rounded-lg border border-gray-100 p-3 space-y-2">
+                        <div key={plan.id} className="rounded-lg border border-border/70 p-3 space-y-2">
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <div>
                               <div className="font-medium">{plan.plan_name}</div>
-                              <div className="text-xs text-gray-500">
+                              <div className="text-xs text-muted-foreground">
                                 {project?.name || "No project"} · ${money(plan.monthly_fee)}/mo
                               </div>
                             </div>
@@ -1309,16 +1309,16 @@ export default function ClientsPage() {
                               </Select>
                             </div>
                           </div>
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-muted-foreground">
                             Start: {plan.start_date || "—"} · Renewal: {plan.renewal_date || "—"}
                           </div>
                           {plan.included_services?.length > 0 && (
-                            <div className="text-xs text-gray-500">
+                            <div className="text-xs text-muted-foreground">
                               Services: {plan.included_services.join(", ")}
                             </div>
                           )}
                           {plan.support_requests && (
-                            <div className="text-xs text-gray-500">
+                            <div className="text-xs text-muted-foreground">
                               Support requests: {plan.support_requests}
                             </div>
                           )}
@@ -1326,7 +1326,7 @@ export default function ClientsPage() {
                       );
                     })}
                     {maintenancePlans.length === 0 && (
-                      <div className="text-sm text-gray-400 italic text-center py-5">
+                      <div className="text-sm text-muted-foreground/80 italic text-center py-5">
                         No maintenance plans yet.
                       </div>
                     )}
@@ -1345,7 +1345,7 @@ export default function ClientsPage() {
                 </div>
               </Tabs>
 
-              {busy && <div className="text-xs text-gray-500 mt-3">Updating workspace data...</div>}
+              {busy && <div className="text-xs text-muted-foreground mt-3">Updating workspace data...</div>}
             </>
           )}
         </section>
@@ -1431,8 +1431,8 @@ export default function ClientsPage() {
 
 function MetricCard({ label, value }) {
   return (
-    <div className="rounded-xl border border-gray-100 p-3">
-      <div className="text-xs text-gray-500">{label}</div>
+    <div className="rounded-xl border border-border/70 p-3">
+      <div className="text-xs text-muted-foreground">{label}</div>
       <div className="text-xl font-semibold mt-1">{value}</div>
     </div>
   );

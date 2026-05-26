@@ -39,12 +39,12 @@ export function invoiceStatusLabel(status) {
 
 export function invoiceStatusBadgeClass(status) {
   const value = String(status || "draft");
-  if (value === "paid") return "bg-[#6FCF97]/20 text-[#1f6a42] border-[#6FCF97]/30";
-  if (value === "partially_paid") return "bg-[#D4A373]/18 text-[#8A5A2B] border-[#D4A373]/35";
-  if (value === "overdue") return "bg-[#D97C7C]/15 text-[#9a3838] border-[#D97C7C]/30";
-  if (value === "cancelled") return "bg-[#E5ECE8] text-[#667C74] border-[#D7E0DB]";
-  if (value === "sent") return "bg-[#5FA38D]/16 text-[#2f6f5a] border-[#5FA38D]/30";
-  return "bg-[#E8F3EE] text-[#2F6F5A] border-[#D3E7DE]";
+  if (value === "paid") return "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30";
+  if (value === "partially_paid") return "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30";
+  if (value === "overdue") return "bg-destructive/15 text-destructive border-destructive/30";
+  if (value === "cancelled") return "bg-muted text-muted-foreground border-border";
+  if (value === "sent") return "bg-primary/16 text-primary border-primary/30";
+  return "bg-muted/60 text-primary border-border";
 }
 
 export function calculateInvoiceTotals(invoice) {

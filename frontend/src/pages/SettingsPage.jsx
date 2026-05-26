@@ -58,24 +58,24 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6 animate-fade-up max-w-3xl" data-testid="settings-page">
       <div>
-        <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Settings</h1>
-        <p className="text-sm text-gray-500 mt-1">Configure your AI assistant</p>
+        <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground">Settings</h1>
+        <p className="text-sm text-muted-foreground mt-1">Configure your AI assistant</p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+      <div className="bg-card rounded-2xl border border-border p-6">
         <div className="flex items-start gap-4 mb-6">
-          <div className="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="font-display text-lg font-semibold text-[#1C4B3E] dark:text-[#d7e6b6]">AI Provider</h2>
-            <p className="text-sm text-gray-500">Choose the LLM behind SerenOps AI and configure your own provider key.</p>
+            <h2 className="font-display text-lg font-semibold text-foreground">AI Provider</h2>
+            <p className="text-sm text-muted-foreground">Choose the LLM behind SerenOps AI and configure your own provider key.</p>
           </div>
         </div>
 
         <div className="space-y-5">
           <div>
-            <label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Provider</label>
+            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Provider</label>
             <div className="grid sm:grid-cols-2 gap-2 mt-2">
               {PROVIDERS.map((p) => (
                 <button
@@ -84,19 +84,19 @@ export default function SettingsPage() {
                   onClick={() => setCfg({ ...cfg, provider: p.value, model: MODEL_SUGGESTIONS[p.value][0] })}
                   className={`text-left rounded-xl border p-3 transition-all ${
                     cfg.provider === p.value
-                      ? "border-orange-500 bg-orange-50/40 ring-2 ring-orange-500/10"
-                      : "border-gray-200 hover:border-gray-300"
+                      ? "border-ring bg-primary/10 ring-2 ring-ring/10"
+                      : "border-border hover:border-border"
                   }`}
                 >
-                  <div className="font-medium text-sm text-gray-900">{p.label}</div>
-                  <div className="text-xs text-gray-500">{p.desc}</div>
+                  <div className="font-medium text-sm text-foreground">{p.label}</div>
+                  <div className="text-xs text-muted-foreground">{p.desc}</div>
                 </button>
               ))}
             </div>
           </div>
 
           <div>
-            <label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Model</label>
+            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Model</label>
             <Select value={cfg.model} onValueChange={(v) => setCfg({ ...cfg, model: v })}>
               <SelectTrigger data-testid="settings-model" className="mt-2 max-w-xs"><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -116,7 +116,7 @@ export default function SettingsPage() {
 
           {cfg.provider === "custom" && (
             <div>
-              <label className="text-xs font-medium text-gray-600 uppercase tracking-wider">Base URL</label>
+              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Base URL</label>
               <Input
                 data-testid="settings-base-url"
                 value={cfg.base_url}
@@ -128,7 +128,7 @@ export default function SettingsPage() {
           )}
 
           <div>
-            <label className="text-xs font-medium text-gray-600 uppercase tracking-wider flex items-center gap-1.5">
+            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
               <KeyRound className="w-3.5 h-3.5" /> API Key
             </label>
             <Input
@@ -139,21 +139,21 @@ export default function SettingsPage() {
               placeholder={hasCustomKey ? "•••••••• (saved)  — paste new key to replace" : "Paste your API key"}
               className="mt-2 font-mono text-sm"
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Keys are stored server-side per user. Leave blank to keep the existing one.
             </p>
           </div>
 
-          <div className="pt-4 border-t border-gray-100 flex items-center gap-3">
+          <div className="pt-4 border-t border-border/70 flex items-center gap-3">
             <Button
               data-testid="settings-save"
               onClick={save}
               disabled={busy}
-              className="bg-orange-600 hover:bg-orange-700 text-white"
+              className="bg-primary hover:bg-primary/90 text-white"
             >
               <Save className="w-4 h-4 mr-1" /> {busy ? "Saving…" : "Save settings"}
             </Button>
-            {saved && <span className="text-sm text-green-700" data-testid="settings-saved">Saved ✓</span>}
+            {saved && <span className="text-sm text-emerald-700 dark:text-emerald-400" data-testid="settings-saved">Saved ✓</span>}
           </div>
         </div>
       </div>

@@ -6,8 +6,8 @@ export function paymentStatusLabel(status) {
 
 export function paymentStatusBadgeClass(status) {
   const value = String(status || "recorded");
-  if (value === "pending") return "bg-[#D4A373]/18 text-[#8A5A2B] border-[#D4A373]/35";
-  if (value === "failed") return "bg-[#D97C7C]/15 text-[#9a3838] border-[#D97C7C]/30";
-  if (value === "refunded") return "bg-[#E5ECE8] text-[#667C74] border-[#D7E0DB]";
-  return "bg-[#E8F3EE] text-[#2f6f5a] border-[#D3E7DE]";
+  if (value === "pending") return "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30";
+  if (value === "failed") return "bg-destructive/15 text-destructive border-destructive/30";
+  if (value === "refunded") return "bg-muted text-muted-foreground border-border";
+  return "bg-muted/60 text-primary border-border";
 }

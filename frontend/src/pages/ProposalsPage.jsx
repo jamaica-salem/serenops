@@ -72,31 +72,31 @@ export default function ProposalsPage() {
   return (
     <div className="space-y-5 animate-fade-up" data-testid="proposals-page">
       <div>
-        <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Proposals</h1>
-        <p className="text-sm text-gray-500 mt-1">Track draft and sent proposals</p>
+        <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground">Proposals</h1>
+        <p className="text-sm text-muted-foreground mt-1">Track draft and sent proposals</p>
       </div>
 
       <div className="space-y-3">
         {proposals.map((p) => (
-          <div key={p.id} className="bg-white rounded-xl border border-gray-200 p-4">
+          <div key={p.id} className="bg-card rounded-xl border border-border p-4">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="font-medium text-[#1C4B3E] dark:text-[#d7e6b6]">{p.project_title}</h3>
+              <h3 className="font-medium text-foreground">{p.project_title}</h3>
               <div className="flex items-center gap-2">
-                <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{String(p.status || "").replace(/_/g, " ")}</span>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{String(p.status || "").replace(/_/g, " ")}</span>
                 <button
                   type="button"
                   onClick={() => startEdit(p)}
-                  className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded"
+                  className="p-1.5 text-muted-foreground/80 hover:text-foreground hover:bg-muted rounded"
                   data-testid={`proposal-edit-${p.id}`}
                 >
                   <Pencil className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
-            <p className="text-sm text-gray-500 mt-1">{p.scope_of_work || "No scope details"}</p>
+            <p className="text-sm text-muted-foreground mt-1">{p.scope_of_work || "No scope details"}</p>
           </div>
         ))}
-        {proposals.length === 0 && <div className="text-sm text-gray-400 italic text-center py-10">No proposals yet.</div>}
+        {proposals.length === 0 && <div className="text-sm text-muted-foreground/80 italic text-center py-10">No proposals yet.</div>}
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>

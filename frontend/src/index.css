@@ -60,8 +60,8 @@ code, pre, .font-mono {
         --card-foreground: 79 49% 81%; /* #d7e6b6 */
         --popover: 157 22% 12%;
         --popover-foreground: 79 49% 81%; /* #d7e6b6 */
-        --primary: 158 34% 56%;
-        --primary-foreground: 157 26% 9%;
+        --primary: 158 42% 30%;
+        --primary-foreground: 0 0% 100%;
         --secondary: 157 20% 18%;
         --secondary-foreground: 79 49% 81%; /* #d7e6b6 */
         --muted: 157 18% 16%;
@@ -86,9 +86,7 @@ code, pre, .font-mono {
     body { @apply bg-background text-foreground; }
 }
 
-@layer utilities {
-    .dark .text-white { color: #d7e6b6 !important; }
-    .dark .bg-white { background-color: hsl(var(--card)) !important; }
+@layer utilities {    .dark .bg-white { background-color: hsl(var(--card)) !important; }
     .dark .bg-\[\#F7FAF8\],
     .dark .bg-\[\#F6FAF8\],
     .dark .bg-\[\#f7faf8\] { background-color: hsl(var(--background)) !important; }

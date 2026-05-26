@@ -20,18 +20,18 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F7FAF8] px-6">
+    <div className="min-h-screen flex items-center justify-center bg-muted/40 px-6">
       <form
         onSubmit={submit}
-        className="w-full max-w-sm bg-white rounded-2xl p-8 shadow-sm border border-[#E5ECE8] space-y-5"
+        className="w-full max-w-sm bg-card rounded-2xl p-8 shadow-sm border border-border space-y-5"
         data-testid="register-form"
       >
         <div className="flex items-center gap-2 mb-2">
           <BrandLogo className="h-9 w-auto select-none" alt="SerenOps" />
         </div>
         <div>
-          <h2 className="font-display text-2xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Create account</h2>
-          <p className="text-sm text-[#667C74] mt-1">Start managing projects in minutes.</p>
+          <h2 className="font-display text-2xl font-bold text-foreground">Create account</h2>
+          <p className="text-sm text-muted-foreground mt-1">Start managing projects in minutes.</p>
         </div>
 
         <div className="space-y-3">
@@ -41,7 +41,7 @@ export default function Register() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="w-full h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
+            className="w-full h-10 px-3 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring/25 focus:border-ring"
           />
           <input
             data-testid="register-email"
@@ -50,7 +50,7 @@ export default function Register() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
+            className="w-full h-10 px-3 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring/25 focus:border-ring"
           />
           <input
             data-testid="register-password"
@@ -60,12 +60,12 @@ export default function Register() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="w-full h-10 px-3 rounded-lg border border-[#E5ECE8] text-sm focus:outline-none focus:ring-2 focus:ring-[#5FA38D]/25 focus:border-[#5FA38D]"
+            className="w-full h-10 px-3 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring/25 focus:border-ring"
           />
         </div>
 
         {error && (
-          <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg p-2" data-testid="register-error">
+          <div className="text-sm text-destructive bg-destructive/10 border border-destructive/30 rounded-lg p-2" data-testid="register-error">
             {error}
           </div>
         )}
@@ -74,14 +74,14 @@ export default function Register() {
           data-testid="register-submit"
           type="submit"
           disabled={busy}
-          className="w-full h-10 rounded-lg bg-[#5FA38D] text-white font-medium hover:bg-[#4E8C79] transition-colors disabled:opacity-60"
+          className="w-full h-10 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-60"
         >
           {busy ? "Creating…" : "Create account"}
         </button>
 
-        <div className="text-sm text-[#667C74] text-center">
+        <div className="text-sm text-muted-foreground text-center">
           Already have an account?{" "}
-          <Link to="/login" className="text-[#2f6f5a] font-medium hover:underline">
+          <Link to="/login" className="text-primary font-medium hover:underline">
             Sign in
           </Link>
         </div>

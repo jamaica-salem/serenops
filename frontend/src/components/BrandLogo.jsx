@@ -15,7 +15,7 @@ export default function BrandLogo({ className = "", alt = "SerenOps logo", showT
         }}
       />
       {showText && (
-        <span className="font-display text-3xl font-semibold text-[#d7e6b6] dark:text-[#d7e6b6]">
+        <span className="font-display text-3xl font-semibold text-foreground">
           erenOps
         </span>
       )}
