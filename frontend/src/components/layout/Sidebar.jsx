@@ -3,6 +3,7 @@ import {
   LayoutDashboard, ListTodo, FolderKanban, Sparkles, Settings, LogOut, BriefcaseBusiness, ReceiptText, FileSignature, RefreshCcwDot, FilePenLine, LayoutTemplate, Landmark,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
+import BrandLogo from "../BrandLogo";
 
 const items = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard", testid: "nav-dashboard", end: true },
@@ -43,14 +44,8 @@ export default function Sidebar({ isOpen, onClose }) {
       >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_8%,rgba(123,196,164,0.26),transparent_38%),radial-gradient(circle_at_20%_85%,rgba(95,163,141,0.18),transparent_34%)]" />
 
-      <div className="relative h-20 flex items-center gap-3 px-5 border-b border-white/10">
-        <div className="w-10 h-10 rounded-full bg-white/10 border border-white/35 flex items-center justify-center text-white font-bold font-display shadow-sm">
-          S
-        </div>
-        <div>
-          <div className="font-display font-semibold text-lg text-[#F3F7F5] leading-none">SerenOps</div>
-          <div className="text-[10px] uppercase tracking-[0.18em] text-[#B8C8C1] mt-0.5">client os</div>
-        </div>
+      <div className="relative h-20 flex items-center px-5 border-b border-white/10">
+        <BrandLogo className="h-11 w-auto max-w-full select-none" alt="SerenOps" />
       </div>
 
       <nav className="relative flex-1 px-3 py-5 space-y-1.5">
