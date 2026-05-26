@@ -1,5 +1,6 @@
 import { Search, Bell, Mail, Plus, PanelLeft, Moon, Sun, AlertTriangle, Clock, Sparkles, CheckCheck, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../../lib/api";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -23,15 +24,23 @@ const NOTIF_TINTS = {
 };
 
 const unreadCount = (rows) => rows.filter((n) => !n.read).length;
+const QUICK_CREATE_ACTIONS = [
+  { label: "New Task", href: "/tasks?new=1" },
+  { label: "New Client", href: "/clients?new=1" },
+  { label: "New Project", href: "/projects?new=1" },
+];
 
 export default function TopBar({ filter, onFilterChange, search, onSearch, sidebarOpen, onToggleSidebar }) {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [notifCount, setNotifCount] = useState(0);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
   const [notifs, setNotifs] = useState([]);
   const [notifBusy, setNotifBusy] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
   const notifRef = useRef(null);
+  const createRef = useRef(null);
 
   const syncNotifications = (rows) => {
     setNotifs(rows);
@@ -57,14 +66,20 @@ export default function TopBar({ filter, onFilterChange, search, onSearch, sideb
   }, [notifOpen]);
 
   useEffect(() => {
-    if (!notifOpen) return;
+    if (!notifOpen && !createOpen) return;
     const handleClick = (event) => {
       if (notifRef.current && !notifRef.current.contains(event.target)) {
         setNotifOpen(false);
       }
+      if (createRef.current && !createRef.current.contains(event.target)) {
+        setCreateOpen(false);
+      }
     };
     const handleKey = (event) => {
-      if (event.key === "Escape") setNotifOpen(false);
+      if (event.key === "Escape") {
+        setNotifOpen(false);
+        setCreateOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClick);
     document.addEventListener("keydown", handleKey);
@@ -72,7 +87,7 @@ export default function TopBar({ filter, onFilterChange, search, onSearch, sideb
       document.removeEventListener("mousedown", handleClick);
       document.removeEventListener("keydown", handleKey);
     };
-  }, [notifOpen]);
+  }, [notifOpen, createOpen]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -123,6 +138,37 @@ export default function TopBar({ filter, onFilterChange, search, onSearch, sideb
       </div>
 
       <div className="ml-auto flex items-center gap-1 md:gap-2">
+        <div className="relative" ref={createRef}>
+          <button
+            type="button"
+            onClick={() => {
+              setNotifOpen(false);
+              setCreateOpen((prev) => !prev);
+            }}
+            className="w-9 h-9 rounded-full bg-[#0F6A4F] text-white hover:bg-[#0C5B44] flex items-center justify-center"
+            aria-label="Quick create"
+            data-testid="topbar-create"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+          {createOpen && (
+            <div className="absolute right-0 mt-3 w-44 rounded-xl border border-border bg-background shadow-xl z-50 p-1">
+              {QUICK_CREATE_ACTIONS.map((action) => (
+                <button
+                  key={action.href}
+                  type="button"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm text-foreground hover:bg-muted"
+                  onClick={() => {
+                    setCreateOpen(false);
+                    navigate(action.href);
+                  }}
+                >
+                  {action.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <button
           type="button"
           onClick={() => setTheme((prev) => (prev === "dark" ? "light" : "dark"))}
@@ -132,16 +178,16 @@ export default function TopBar({ filter, onFilterChange, search, onSearch, sideb
         >
           {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
-        <button className="hidden md:flex w-9 h-9 rounded-full bg-[#0F6A4F] text-white hover:bg-[#0C5B44] items-center justify-center" aria-label="Create" data-testid="topbar-create">
-          <Plus className="w-4 h-4" />
-        </button>
         <button className="hidden md:flex w-9 h-9 rounded-full hover:bg-muted items-center justify-center text-muted-foreground" aria-label="Mail" data-testid="topbar-mail">
           <Mail className="w-4 h-4" />
         </button>
         <div className="relative" ref={notifRef}>
           <button
             type="button"
-            onClick={() => setNotifOpen((prev) => !prev)}
+            onClick={() => {
+              setCreateOpen(false);
+              setNotifOpen((prev) => !prev);
+            }}
             aria-label="Notifications"
             aria-expanded={notifOpen}
             className="relative w-9 h-9 rounded-full hover:bg-muted flex items-center justify-center text-muted-foreground"
