@@ -37,8 +37,8 @@ export default function Sidebar({ isOpen, onClose }) {
         />
       )}
       <aside
-        className={`fixed md:relative z-50 md:z-auto inset-y-0 left-0 w-60 shrink-0 border-r border-[#1e3a31] bg-gradient-to-b from-[#0F2B24] to-[#123C31] flex flex-col text-[#F3F7F5] overflow-hidden transition-all duration-200 ${
-          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0 md:w-0 md:border-r-0"
+        className={`fixed md:relative z-50 md:z-auto top-0 bottom-0 left-0 w-60 shrink-0 rounded-2xl border border-[#1e3a31] bg-gradient-to-b from-[#0F2B24] to-[#123C31] shadow-[0_18px_50px_rgba(8,18,15,0.35)] flex flex-col text-[#F3F7F5] overflow-hidden transition-all duration-200 md:ml-4 md:my-4 md:h-[calc(100%-2rem)] ${
+          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0 md:w-0 md:border-0 md:shadow-none"
         }`}
         data-testid="sidebar"
       >
