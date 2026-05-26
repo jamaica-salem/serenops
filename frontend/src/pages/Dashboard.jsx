@@ -45,6 +45,7 @@ import TaskProgressCard from "../components/dashboard/TaskProgressCard";
 import OpenTicketsCard from "../components/dashboard/OpenTicketsCard";
 import TaskFormDialog from "../components/TaskFormDialog";
 import { useAuth } from "../contexts/AuthContext";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 
 const DASHBOARD_LAYOUT_KEY = "serenops_dashboard_cards_v1";
 const DASHBOARD_KPI_LAYOUT_KEY = "serenops_dashboard_kpis_v1";
@@ -125,15 +126,113 @@ function swapItems(list, fromIndex, toIndex) {
   return next;
 }
 
+function parseDate(input) {
+  if (!input) return null;
+  const d = new Date(input);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function daysFromNow(input, now) {
+  const d = parseDate(input);
+  if (!d) return null;
+  const delta = d.setHours(0, 0, 0, 0) - now.setHours(0, 0, 0, 0);
+  return Math.round(delta / 86400000);
+}
+
+function deriveDashboardSummary({ tasks, clients, proposals, invoices, contracts, revisions, projects, userId }) {
+  const today = new Date();
+  const counts = { overdue: 0, in_progress: 0, completed: 0, backlog: 0, not_started: 0 };
+
+  for (const t of tasks) {
+    const status = t.status || "todo";
+    if (status === "in_progress") counts.in_progress += 1;
+    if (status === "done") counts.completed += 1;
+    if (status === "backlog") counts.backlog += 1;
+    if (status === "todo") counts.not_started += 1;
+    const dueDiff = daysFromNow(t.due_date, new Date(today));
+    if (dueDiff !== null && dueDiff < 0 && status !== "done") counts.overdue += 1;
+  }
+
+  const active_clients = clients.filter((c) => ["active", "onboarding", "waiting_for_client", "maintenance"].includes(c.status)).length;
+  const leads = clients.filter((c) => c.status === "lead").length;
+  const pending_proposals = proposals.filter((p) => ["draft", "sent"].includes(p.status)).length;
+  const pending_invoices = invoices.filter((i) => ["sent", "partially_paid", "overdue"].includes(i.status)).length;
+  const pending_contracts = contracts.filter((c) => ["draft", "sent"].includes(c.status)).length;
+  const projects_in_progress = projects.filter((p) => p.status === "in_progress").length;
+  const revisions_pending = revisions.filter((r) => ["requested", "in_progress"].includes(r.status)).length;
+  const payments_due = invoices.filter((i) => Number(i.balance_due || 0) > 0 && i.status !== "cancelled").length;
+
+  const upcoming_task_deadlines = tasks.filter((t) => {
+    const dueDiff = daysFromNow(t.due_date, new Date(today));
+    return dueDiff !== null && dueDiff >= 0 && dueDiff <= 7 && t.status !== "done";
+  }).length;
+
+  const upcoming_invoice_deadlines = invoices.filter((i) => {
+    const dueDiff = daysFromNow(i.due_date, new Date(today));
+    return dueDiff !== null && dueDiff >= 0 && dueDiff <= 7 && ["sent", "partially_paid", "overdue"].includes(i.status);
+  }).length;
+
+  const clients_needing_follow_up = clients.filter((c) => {
+    if (!["lead", "active", "onboarding", "waiting_for_client", "maintenance"].includes(c.status)) return false;
+    const last = parseDate(c.last_contacted_at || c.created_at);
+    if (!last) return false;
+    const diff = Math.floor((today - last) / 86400000);
+    return diff >= 14;
+  }).length;
+
+  const myTasks = tasks.filter((t) => t.assignee_id === userId);
+  const myOverdue = myTasks.filter((t) => {
+    const dueDiff = daysFromNow(t.due_date, new Date(today));
+    return dueDiff !== null && dueDiff < 0 && t.status !== "done";
+  }).length;
+  const myInProgress = myTasks.filter((t) => t.status === "in_progress").length;
+  const myDueToday = myTasks.filter((t) => {
+    const dueDiff = daysFromNow(t.due_date, new Date(today));
+    return dueDiff === 0 && t.status !== "done";
+  }).length;
+
+  const ai_insights = [];
+  if (myOverdue) ai_insights.push(`You have ${myOverdue} overdue task${myOverdue !== 1 ? "s" : ""}.`);
+  if (myInProgress >= 3) ai_insights.push(`You're juggling ${myInProgress} tasks in progress — consider focusing on top 2.`);
+  if (myDueToday) ai_insights.push(`${myDueToday} task${myDueToday !== 1 ? "s" : ""} due today.`);
+  if (!ai_insights.length) ai_insights.push("All clear! No urgent attention needed today.");
+  if (counts.backlog > 5) ai_insights.push(`Backlog growing: ${counts.backlog} items waiting.`);
+
+  return {
+    total_tasks: tasks.length,
+    overdue: counts.overdue,
+    in_progress: counts.in_progress,
+    completed: counts.completed,
+    backlog: counts.backlog,
+    not_started: counts.not_started,
+    total_clients: clients.length,
+    active_clients,
+    leads,
+    pending_proposals,
+    pending_invoices,
+    pending_contracts,
+    projects_in_progress,
+    revisions_pending,
+    payments_due,
+    upcoming_deadlines: upcoming_task_deadlines + upcoming_invoice_deadlines,
+    clients_needing_follow_up,
+    ai_insights: ai_insights.slice(0, 4),
+  };
+}
+
 export default function Dashboard() {
   const { user } = useAuth();
   const { search } = useOutletContext();
-  const [summary, setSummary] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [meetings, setMeetings] = useState([]);
   const [users, setUsers] = useState([]);
   const [projects, setProjects] = useState([]);
   const [clients, setClients] = useState([]);
+  const [proposals, setProposals] = useState([]);
+  const [invoices, setInvoices] = useState([]);
+  const [contracts, setContracts] = useState([]);
+  const [revisions, setRevisions] = useState([]);
+  const [selectedClientId, setSelectedClientId] = useState("all");
   const [openDialog, setOpenDialog] = useState(false);
   const [customizing, setCustomizing] = useState(false);
   const [cardOrder, setCardOrder] = useState([...DEFAULT_DASHBOARD_CARDS]);
@@ -172,20 +271,26 @@ export default function Dashboard() {
 
   const reload = async () => {
     try {
-      const [s, t, m, p, u, c] = await Promise.all([
-        api.get("/dashboard/summary"),
+      const [t, m, p, u, c, pr, inv, ctr, rev] = await Promise.all([
         api.get("/tasks"),
         api.get("/meetings"),
         api.get("/projects"),
         api.get("/users"),
         api.get("/clients"),
+        api.get("/proposals"),
+        api.get("/invoices"),
+        api.get("/contracts"),
+        api.get("/revisions"),
       ]);
-      setSummary(s.data);
       setTasks(t.data);
       setMeetings(m.data);
       setProjects(p.data);
       setUsers(u.data);
       setClients(c.data);
+      setProposals(pr.data);
+      setInvoices(inv.data);
+      setContracts(ctr.data);
+      setRevisions(rev.data);
     } catch (e) {
       if (e?.response?.status !== 401) console.error("Dashboard reload failed:", e);
     }
@@ -193,13 +298,51 @@ export default function Dashboard() {
 
   useEffect(() => { reload(); /* eslint-disable-line */ }, []);
 
-  const myTasks = tasks.filter((t) => t.assignee_id === user?.id);
+  const scopedClients = selectedClientId === "all"
+    ? clients
+    : clients.filter((c) => c.id === selectedClientId);
+
+  const scopedProjects = selectedClientId === "all"
+    ? projects
+    : projects.filter((p) => p.client_id === selectedClientId);
+
+  const scopedProjectIds = new Set(scopedProjects.map((p) => p.id));
+  const isClientScoped = selectedClientId !== "all";
+
+  const scopedTasks = tasks.filter((t) => {
+    if (!isClientScoped) return true;
+    if (t.client_id === selectedClientId) return true;
+    return t.project_id && scopedProjectIds.has(t.project_id);
+  });
+
+  const scopedMeetings = meetings.filter((m) => {
+    if (!isClientScoped) return true;
+    return m.project_id && scopedProjectIds.has(m.project_id);
+  });
+
+  const scopedProposals = isClientScoped ? proposals.filter((p) => p.client_id === selectedClientId) : proposals;
+  const scopedInvoices = isClientScoped ? invoices.filter((i) => i.client_id === selectedClientId) : invoices;
+  const scopedContracts = isClientScoped ? contracts.filter((c) => c.client_id === selectedClientId) : contracts;
+  const scopedRevisions = isClientScoped ? revisions.filter((r) => r.client_id === selectedClientId) : revisions;
+
+  const scopedSummary = useMemo(() => deriveDashboardSummary({
+    tasks: scopedTasks,
+    clients: scopedClients,
+    proposals: scopedProposals,
+    invoices: scopedInvoices,
+    contracts: scopedContracts,
+    revisions: scopedRevisions,
+    projects: scopedProjects,
+    userId: user?.id,
+  }), [scopedTasks, scopedClients, scopedProposals, scopedInvoices, scopedContracts, scopedRevisions, scopedProjects, user?.id]);
+
+  const myTasks = scopedTasks.filter((t) => t.assignee_id === user?.id);
   const filtered = search
-    ? tasks.filter((t) => t.title.toLowerCase().includes(search.toLowerCase()))
-    : tasks;
+    ? scopedTasks.filter((t) => t.title.toLowerCase().includes(search.toLowerCase()))
+    : scopedTasks;
 
   const toggleTaskDone = async (task) => {
-    const nextStatus = task.status === "done" ? "in_progress" : "done";
+    const nextStatus = task.status === "done" ? "todo" : "done";
     setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, status: nextStatus } : t)));
     try {
       await api.patch(`/tasks/${task.id}`, { status: nextStatus });
@@ -212,12 +355,12 @@ export default function Dashboard() {
 
   const cardContent = {
     my_tasks: <MyTasksCard tasks={myTasks} onAdd={() => setOpenDialog(true)} onToggleDone={toggleTaskDone} />,
-    projects_overview: <ProjectsOverviewCard summary={summary} />,
-    ai_insights: <AIInsightsCard insights={summary?.ai_insights || []} />,
-    meetings: <MeetingsCard meetings={meetings} />,
-    task_progress: <TaskProgressCard summary={summary} />,
+    projects_overview: <ProjectsOverviewCard summary={scopedSummary} />,
+    ai_insights: <AIInsightsCard insights={scopedSummary?.ai_insights || []} />,
+    meetings: <MeetingsCard meetings={scopedMeetings} />,
+    task_progress: <TaskProgressCard summary={scopedSummary} />,
     open_tickets: <OpenTicketsCard tasks={filtered} users={users} />,
-    proposals: <ProposalsCard pending={summary?.pending_proposals ?? 0} />,
+    proposals: <ProposalsCard pending={scopedSummary?.pending_proposals ?? 0} />,
     notes: <NotesCard notes={notes} onChange={setNotes} />,
   };
 
@@ -281,19 +424,33 @@ export default function Dashboard() {
           </h1>
           <p className="text-sm text-[#667C74] dark:text-[#9bb2a8] mt-2">Manage every client, project, and deliverable in one calm, organized space.</p>
         </div>
-        <button
-          type="button"
-          onClick={() => setCustomizing((prev) => !prev)}
-          className={`h-10 px-4 rounded-xl border text-sm inline-flex items-center gap-2 transition-colors ${
-            customizing
-              ? "border-[#1C4B3E] bg-[#1C4B3E] text-white"
-              : "border-[#E5ECE8] bg-white text-[#42534d] hover:bg-[#f7faf8] dark:border-[#29433a] dark:bg-[#102821] dark:text-[#d7e6b6] dark:hover:bg-[#15342a]"
-          }`}
-          data-testid="dashboard-customize-btn"
-        >
-          <SlidersHorizontal className="w-4 h-4" />
-          {customizing ? "Done" : "Customize Dashboard"}
-        </button>
+        <div className="flex items-center gap-2">
+          <Select value={selectedClientId} onValueChange={setSelectedClientId}>
+            <SelectTrigger className="h-10 min-w-[180px] rounded-xl border-[#E5ECE8] dark:border-[#29433a]">
+              <SelectValue placeholder="Filter by client" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Clients</SelectItem>
+              {clients.map((client) => (
+                <SelectItem key={client.id} value={client.id}>{client.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <button
+            type="button"
+            onClick={() => setCustomizing((prev) => !prev)}
+            className={`h-10 px-4 rounded-xl border text-sm inline-flex items-center gap-2 transition-colors ${
+              customizing
+                ? "border-[#1C4B3E] bg-[#1C4B3E] text-white"
+                : "border-[#E5ECE8] bg-white text-[#42534d] hover:bg-[#f7faf8] dark:border-[#29433a] dark:bg-[#102821] dark:text-[#d7e6b6] dark:hover:bg-[#15342a]"
+            }`}
+            data-testid="dashboard-customize-btn"
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+            {customizing ? "Done" : "Customize Dashboard"}
+          </button>
+        </div>
       </div>
 
       {customizing && (
@@ -347,7 +504,7 @@ export default function Dashboard() {
                   removable={kpiOrder.length > 1}
                   onRemove={() => removeKpi(kpiId)}
                 >
-                  <Metric label={kpi.label} value={kpi.getValue(summary)} icon={kpi.icon} />
+                  <Metric label={kpi.label} value={kpi.getValue(scopedSummary)} icon={kpi.icon} />
                 </SortableKpiCard>
               );
             })}
