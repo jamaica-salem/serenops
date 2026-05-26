@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { Sparkles } from "lucide-react";
+import BrandLogo from "../components/BrandLogo";
 
 export default function Login() {
   const { user, login, error } = useAuth();
@@ -24,12 +25,8 @@ export default function Login() {
       <div className="hidden md:flex w-1/2 relative overflow-hidden bg-gradient-to-b from-[#0F2B24] to-[#123C31] p-12 flex-col justify-between text-[#f3f7f5]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_15%,rgba(123,196,164,0.22),transparent_40%),radial-gradient(circle_at_10%_82%,rgba(95,163,141,0.18),transparent_35%)]" />
 
-        <div className="relative flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-white/10 border border-white/35 flex items-center justify-center text-white font-bold font-display">S</div>
-          <div>
-            <div className="font-display font-semibold text-2xl">SerenOps</div>
-            <div className="text-xs uppercase tracking-[0.2em] text-[#c8d7d1]">Client OS</div>
-          </div>
+        <div className="relative flex items-center">
+          <BrandLogo className="h-14 w-auto select-none" alt="SerenOps" />
         </div>
 
         <div className="relative space-y-6 max-w-md">

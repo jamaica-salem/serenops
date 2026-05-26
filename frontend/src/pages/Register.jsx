@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import BrandLogo from "../components/BrandLogo";
 
 export default function Register() {
   const { user, register, error } = useAuth();
@@ -26,8 +27,7 @@ export default function Register() {
         data-testid="register-form"
       >
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-8 h-8 rounded-full bg-[#1B2B25] border border-[#31443D] flex items-center justify-center text-white font-bold font-display">S</div>
-          <span className="font-display font-bold text-[#1D2A25]">SerenOps</span>
+          <BrandLogo className="h-9 w-auto select-none" alt="SerenOps" />
         </div>
         <div>
           <h2 className="font-display text-2xl font-bold text-[#1D2A25]">Create account</h2>
