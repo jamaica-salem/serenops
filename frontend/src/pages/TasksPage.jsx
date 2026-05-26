@@ -190,7 +190,7 @@ export default function TasksPage() {
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
           <p className="text-sm text-gray-500">Plan and track every task</p>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-gray-900">Tasks</h1>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#1C4B3E] dark:text-[#d7e6b6]">Tasks</h1>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex bg-gray-100 rounded-full p-1">
@@ -227,7 +227,7 @@ export default function TasksPage() {
                 key={s}
                 data-testid={`tasks-filter-${s}`}
                 onClick={() => setFilter(s)}
-                className={`text-xs px-3 py-1.5 rounded-full ${filter === s ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                className={`text-xs px-3 py-1.5 rounded-full ${filter === s ? "bg-[#1C4B3E] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
               >
                 {s === "all" ? "All" : STATUS_LABEL[s]}
               </button>
