@@ -1,6 +1,5 @@
-import { Search, Bell, Mail, Plus, PanelLeft, Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Search, Bell, Mail, Plus, PanelLeft, Moon, Sun, AlertTriangle, Clock, Sparkles, CheckCheck, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import api from "../../lib/api";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -11,18 +10,69 @@ const FILTERS = [
   { key: "year", label: "This Year" },
 ];
 
+const NOTIF_ICONS = {
+  overdue: AlertTriangle,
+  due_soon: Clock,
+  ai_alert: Sparkles,
+};
+
+const NOTIF_TINTS = {
+  overdue: "bg-red-50 text-red-700 border-red-100",
+  due_soon: "bg-amber-50 text-amber-700 border-amber-100",
+  ai_alert: "bg-orange-50 text-orange-700 border-orange-100",
+};
+
+const unreadCount = (rows) => rows.filter((n) => !n.read).length;
+
 export default function TopBar({ filter, onFilterChange, search, onSearch, sidebarOpen, onToggleSidebar }) {
   const { user } = useAuth();
   const [notifCount, setNotifCount] = useState(0);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifs, setNotifs] = useState([]);
+  const [notifBusy, setNotifBusy] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+  const notifRef = useRef(null);
+
+  const syncNotifications = (rows) => {
+    setNotifs(rows);
+    setNotifCount(unreadCount(rows));
+  };
+
+  const loadNotifications = async () => {
+    try {
+      const { data } = await api.get("/notifications");
+      syncNotifications(data);
+    } catch {
+      // swallowed; interceptor handles 401 redirects
+    }
+  };
 
   useEffect(() => {
-    let mounted = true;
-    api.get("/notifications").then(({ data }) => {
-      if (mounted) setNotifCount(data.filter((n) => !n.read).length);
-    }).catch(() => { /* swallowed; interceptor handles 401 redirects */ });
-    return () => { mounted = false; };
+    loadNotifications();
   }, []);
+
+  useEffect(() => {
+    if (!notifOpen) return;
+    loadNotifications();
+  }, [notifOpen]);
+
+  useEffect(() => {
+    if (!notifOpen) return;
+    const handleClick = (event) => {
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setNotifOpen(false);
+      }
+    };
+    const handleKey = (event) => {
+      if (event.key === "Escape") setNotifOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [notifOpen]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -88,16 +138,123 @@ export default function TopBar({ filter, onFilterChange, search, onSearch, sideb
         <button className="hidden md:flex w-9 h-9 rounded-full hover:bg-muted items-center justify-center text-muted-foreground" aria-label="Mail" data-testid="topbar-mail">
           <Mail className="w-4 h-4" />
         </button>
-        <Link
-          to="/notifications"
-          className="relative w-9 h-9 rounded-full hover:bg-muted flex items-center justify-center text-muted-foreground"
-          data-testid="topbar-notifications"
-        >
-          <Bell className="w-4 h-4" />
-          {notifCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#5FA38D] rounded-full" />
+        <div className="relative" ref={notifRef}>
+          <button
+            type="button"
+            onClick={() => setNotifOpen((prev) => !prev)}
+            aria-label="Notifications"
+            aria-expanded={notifOpen}
+            className="relative w-9 h-9 rounded-full hover:bg-muted flex items-center justify-center text-muted-foreground"
+            data-testid="topbar-notifications"
+          >
+            <Bell className="w-4 h-4" />
+            {notifCount > 0 && (
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#5FA38D] rounded-full" />
+            )}
+          </button>
+          {notifOpen && (
+            <div
+              className="absolute right-0 mt-3 w-[360px] max-w-[85vw] rounded-2xl border border-border bg-background shadow-xl z-50"
+              data-testid="topbar-notifications-panel"
+            >
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+                <div className="text-sm font-semibold text-foreground">Notifications</div>
+                {notifCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setNotifBusy(true);
+                      const next = notifs.map((n) => ({ ...n, read: true }));
+                      syncNotifications(next);
+                      try {
+                        await api.post("/notifications/read-all");
+                      } catch {
+                        loadNotifications();
+                      } finally {
+                        setNotifBusy(false);
+                      }
+                    }}
+                    disabled={notifBusy}
+                    className="text-xs px-2.5 py-1 rounded-md border border-border hover:bg-muted disabled:opacity-50"
+                    data-testid="notif-mark-all-read"
+                  >
+                    <CheckCheck className="w-3.5 h-3.5 inline-block mr-1" />
+                    Mark all
+                  </button>
+                )}
+              </div>
+              {notifs.length === 0 ? (
+                <div className="px-6 py-8 text-center text-sm text-muted-foreground">
+                  You are all caught up.
+                </div>
+              ) : (
+                <div className="max-h-[420px] overflow-auto">
+                  {notifs.map((n) => {
+                    const Icon = NOTIF_ICONS[n.type] || Bell;
+                    const tint = NOTIF_TINTS[n.type] || "bg-muted text-muted-foreground border-border";
+                    return (
+                      <div
+                        key={n.id}
+                        className={`px-4 py-3 flex items-start gap-3 border-b border-border/60 last:border-b-0 ${
+                          n.read ? "opacity-60" : "hover:bg-muted/40"
+                        }`}
+                        data-testid={`notif-${n.id}`}
+                      >
+                        <div className={`w-9 h-9 rounded-lg flex items-center justify-center border ${tint}`}>
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-foreground flex items-center gap-2">
+                            {n.title}
+                            {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />}
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{n.message}</div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {!n.read && (
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                const next = notifs.map((item) => (item.id === n.id ? { ...item, read: true } : item));
+                                syncNotifications(next);
+                                try {
+                                  await api.patch(`/notifications/${n.id}/read`);
+                                } catch {
+                                  loadNotifications();
+                                }
+                              }}
+                              className="text-xs px-2 py-1 rounded text-muted-foreground hover:bg-muted"
+                              data-testid={`notif-mark-${n.id}`}
+                            >
+                              Mark read
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              const next = notifs.filter((item) => item.id !== n.id);
+                              syncNotifications(next);
+                              try {
+                                await api.delete(`/notifications/${n.id}`);
+                              } catch {
+                                loadNotifications();
+                              }
+                            }}
+                            className="p-1.5 rounded text-muted-foreground/60 hover:text-red-600 hover:bg-red-50"
+                            aria-label="Dismiss"
+                            data-testid={`notif-delete-${n.id}`}
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           )}
-        </Link>
+        </div>
 
         <button
           type="button"
