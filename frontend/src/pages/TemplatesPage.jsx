@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { RefreshCw, Plus } from "lucide-react";
+import { RefreshCw, Plus, Pencil } from "lucide-react";
 import api from "../lib/api";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
@@ -26,6 +26,7 @@ export default function TemplatesPage() {
   const [templates, setTemplates] = useState([]);
   const [busy, setBusy] = useState(false);
   const [filter, setFilter] = useState("all");
+  const [editingTemplateId, setEditingTemplateId] = useState(null);
   const [form, setForm] = useState({
     name: "",
     template_type: "other",
@@ -54,20 +55,36 @@ export default function TemplatesPage() {
     loadTemplates();
   }, []);
 
-  const createTemplate = async () => {
+  const upsertTemplate = async () => {
     if (!form.name.trim()) return;
-    await api.post("/templates", {
+    const payload = {
       ...form,
       name: form.name.trim(),
       content: form.content || "",
-    });
+    };
+    if (editingTemplateId) {
+      await api.patch(`/templates/${editingTemplateId}`, payload);
+    } else {
+      await api.post("/templates", payload);
+    }
     setForm({
       name: "",
       template_type: "other",
       content: "",
       is_default: false,
     });
+    setEditingTemplateId(null);
     await loadTemplates();
+  };
+
+  const startEdit = (template) => {
+    setEditingTemplateId(template.id);
+    setForm({
+      name: template.name || "",
+      template_type: template.template_type || "other",
+      content: template.content || "",
+      is_default: !!template.is_default,
+    });
   };
 
   const deleteTemplate = async (id) => {
@@ -104,8 +121,8 @@ export default function TemplatesPage() {
             ))}
           </SelectContent>
         </Select>
-        <Button onClick={createTemplate} disabled={!form.name.trim()}>
-          <Plus className="w-4 h-4 mr-1" /> Add template
+        <Button onClick={upsertTemplate} disabled={!form.name.trim()}>
+          {editingTemplateId ? "Save template" : <><Plus className="w-4 h-4 mr-1" /> Add template</>}
         </Button>
         <Textarea
           rows={5}
@@ -114,6 +131,19 @@ export default function TemplatesPage() {
           value={form.content}
           onChange={(e) => setForm({ ...form, content: e.target.value })}
         />
+        {editingTemplateId && (
+          <Button
+            type="button"
+            variant="outline"
+            className="md:col-span-3"
+            onClick={() => {
+              setEditingTemplateId(null);
+              setForm({ name: "", template_type: "other", content: "", is_default: false });
+            }}
+          >
+            Cancel editing
+          </Button>
+        )}
       </div>
 
       <div className="flex items-center gap-2">
@@ -137,6 +167,12 @@ export default function TemplatesPage() {
                 <h3 className="font-medium text-[#1C4B3E] dark:text-[#d7e6b6]">{t.name}</h3>
                 <div className="text-xs text-gray-500">{pretty(t.template_type)}{t.is_default ? " · Default" : ""}</div>
               </div>
+              <button
+                onClick={() => startEdit(t)}
+                className="text-xs px-3 h-8 rounded-md border border-gray-200 hover:bg-gray-100 inline-flex items-center gap-1"
+              >
+                <Pencil className="w-3.5 h-3.5" /> Edit
+              </button>
               <button
                 onClick={() => deleteTemplate(t.id)}
                 className="text-xs px-3 h-8 rounded-md border border-gray-200 hover:bg-gray-100"

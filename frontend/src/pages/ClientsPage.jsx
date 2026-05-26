@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Plus, Mail, Phone, Globe, RefreshCw } from "lucide-react";
 import api from "../lib/api";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../components/ui/dialog";
@@ -52,6 +53,8 @@ function money(v) {
 }
 
 export default function ClientsPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const [selectedId, setSelectedId] = useState("");
   const [summary, setSummary] = useState(null);
@@ -70,6 +73,7 @@ export default function ClientsPage() {
   const [busy, setBusy] = useState(false);
 
   const [open, setOpen] = useState(false);
+  const [editingClientId, setEditingClientId] = useState(null);
   const [addingOnboarding, setAddingOnboarding] = useState(false);
   const [newOnboardingTitle, setNewOnboardingTitle] = useState("");
   const [newOnboardingCategory, setNewOnboardingCategory] = useState("onboarding_checklist");
@@ -284,16 +288,27 @@ export default function ClientsPage() {
     loadWorkspace(selectedId);
   }, [selectedId]);
 
-  const createClient = async () => {
-    if (!form.name.trim()) return;
-    await api.post("/clients", {
-      ...form,
-      email: form.email?.trim() ? form.email.trim() : null,
-      phone: form.phone?.trim() || "",
-      website: form.website?.trim() || "",
-      notes: form.notes?.trim() || "",
-    });
-    setOpen(false);
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("new") === "1") {
+      setEditingClientId(null);
+      setForm({
+        name: "",
+        company_name: "",
+        email: "",
+        phone: "",
+        website: "",
+        client_type: "freelancer_client",
+        status: "lead",
+        source: "manual",
+        notes: "",
+      });
+      setOpen(true);
+      navigate("/clients", { replace: true });
+    }
+  }, [location.search, navigate]);
+
+  const resetClientForm = () => {
     setForm({
       name: "",
       company_name: "",
@@ -305,7 +320,51 @@ export default function ClientsPage() {
       source: "manual",
       notes: "",
     });
+    setEditingClientId(null);
+  };
+
+  const startCreateClient = () => {
+    resetClientForm();
+    setOpen(true);
+  };
+
+  const startEditClient = () => {
+    if (!selectedClient) return;
+    setEditingClientId(selectedClient.id);
+    setForm({
+      name: selectedClient.name || "",
+      company_name: selectedClient.company_name || "",
+      email: selectedClient.email || "",
+      phone: selectedClient.phone || "",
+      website: selectedClient.website || "",
+      client_type: selectedClient.client_type || "freelancer_client",
+      status: selectedClient.status || "lead",
+      source: selectedClient.source || "manual",
+      notes: selectedClient.notes || "",
+    });
+    setOpen(true);
+  };
+
+  const upsertClient = async () => {
+    if (!form.name.trim()) return;
+    const payload = {
+      ...form,
+      email: form.email?.trim() ? form.email.trim() : null,
+      phone: form.phone?.trim() || "",
+      website: form.website?.trim() || "",
+      notes: form.notes?.trim() || "",
+    };
+    if (editingClientId) {
+      await api.patch(`/clients/${editingClientId}`, payload);
+    } else {
+      await api.post("/clients", payload);
+    }
+    setOpen(false);
+    resetClientForm();
     await loadClients();
+    if (editingClientId) {
+      await loadWorkspace(editingClientId);
+    }
   };
 
   const updateClientStatus = async (status) => {
@@ -605,7 +664,7 @@ export default function ClientsPage() {
           </button>
           <button
             data-testid="clients-add-btn"
-            onClick={() => setOpen(true)}
+            onClick={startCreateClient}
             className="bg-orange-600 hover:bg-orange-700 text-white text-sm px-4 h-9 rounded-lg inline-flex items-center gap-1"
           >
             <Plus className="w-4 h-4" /> New Client
@@ -667,6 +726,16 @@ export default function ClientsPage() {
                       ))}
                     </SelectContent>
                   </Select>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="w-full mt-2"
+                    onClick={startEditClient}
+                    data-testid="client-edit-btn"
+                  >
+                    Edit details
+                  </Button>
                 </div>
               </div>
 
@@ -1285,7 +1354,7 @@ export default function ClientsPage() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="font-display">Create client</DialogTitle>
+            <DialogTitle className="font-display">{editingClientId ? "Edit client" : "Create client"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
             <Input
@@ -1316,6 +1385,14 @@ export default function ClientsPage() {
               onChange={(e) => setForm({ ...form, website: e.target.value })}
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <Select value={form.client_type} onValueChange={(v) => setForm({ ...form, client_type: v })}>
+                <SelectTrigger><SelectValue placeholder="Client type" /></SelectTrigger>
+                <SelectContent>
+                  {["freelancer_client", "agency_client", "retainer_client", "one_time_client", "other"].map((s) => (
+                    <SelectItem key={s} value={s}>{prettyStatus(s)}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
                 <SelectTrigger><SelectValue placeholder="Status" /></SelectTrigger>
                 <SelectContent>
@@ -1342,7 +1419,9 @@ export default function ClientsPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={createClient} disabled={!form.name.trim()}>Create client</Button>
+            <Button onClick={upsertClient} disabled={!form.name.trim()}>
+              {editingClientId ? "Save changes" : "Create client"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

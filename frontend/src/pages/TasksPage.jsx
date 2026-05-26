@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
 import { Plus, List, LayoutGrid, Trash2, Pencil } from "lucide-react";
 import {
   DndContext, PointerSensor, useSensor, useSensors,
@@ -111,6 +111,8 @@ function KanbanColumn({ id, items, onEdit }) {
 }
 
 export default function TasksPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const { search } = useOutletContext();
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -139,6 +141,15 @@ export default function TasksPage() {
   };
 
   useEffect(() => { load(); }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("new") === "1") {
+      setEditing(null);
+      setOpen(true);
+      navigate("/tasks", { replace: true });
+    }
+  }, [location.search, navigate]);
 
   const remove = async (id) => {
     if (!confirm("Delete this task?")) return;

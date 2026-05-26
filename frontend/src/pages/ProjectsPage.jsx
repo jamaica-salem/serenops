@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Plus, Trash2, Folder } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Plus, Trash2, Folder, Pencil } from "lucide-react";
 import api from "../lib/api";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../components/ui/dialog";
 import { Input } from "../components/ui/input";
@@ -10,10 +11,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 const COLOR_CHOICES = ["#EA580C", "#3B82F6", "#10B981", "#8B5CF6", "#EC4899", "#F59E0B"];
 
 export default function ProjectsPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [clients, setClients] = useState([]);
   const [open, setOpen] = useState(false);
+  const [editingProjectId, setEditingProjectId] = useState(null);
   const [form, setForm] = useState({ name: "", description: "", color: COLOR_CHOICES[0], client_id: "none" });
 
   const load = async () => {
@@ -28,12 +32,45 @@ export default function ProjectsPage() {
   };
   useEffect(() => { load(); }, []);
 
-  const create = async () => {
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("new") === "1") {
+      setEditingProjectId(null);
+      setForm({ name: "", description: "", color: COLOR_CHOICES[0], client_id: "none" });
+      setOpen(true);
+      navigate("/projects", { replace: true });
+    }
+  }, [location.search, navigate]);
+
+  const upsert = async () => {
     if (!form.name.trim()) return;
-    await api.post("/projects", { ...form, client_id: form.client_id === "none" ? null : form.client_id });
+    const payload = { ...form, client_id: form.client_id === "none" ? null : form.client_id };
+    if (editingProjectId) {
+      await api.patch(`/projects/${editingProjectId}`, payload);
+    } else {
+      await api.post("/projects", payload);
+    }
     setForm({ name: "", description: "", color: COLOR_CHOICES[0], client_id: "none" });
+    setEditingProjectId(null);
     setOpen(false);
     load();
+  };
+
+  const startCreate = () => {
+    setEditingProjectId(null);
+    setForm({ name: "", description: "", color: COLOR_CHOICES[0], client_id: "none" });
+    setOpen(true);
+  };
+
+  const startEdit = (project) => {
+    setEditingProjectId(project.id);
+    setForm({
+      name: project.name || "",
+      description: project.description || "",
+      color: project.color || COLOR_CHOICES[0],
+      client_id: project.client_id || "none",
+    });
+    setOpen(true);
   };
 
   const remove = async (id) => {
@@ -51,7 +88,7 @@ export default function ProjectsPage() {
         </div>
         <button
           data-testid="projects-add-btn"
-          onClick={() => setOpen(true)}
+          onClick={startCreate}
           className="bg-orange-600 hover:bg-orange-700 text-white text-sm px-4 h-9 rounded-lg inline-flex items-center gap-1"
         >
           <Plus className="w-4 h-4" /> New Project
@@ -74,13 +111,22 @@ export default function ProjectsPage() {
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: p.color + "20" }}>
                   <Folder className="w-5 h-5" style={{ color: p.color }} />
                 </div>
-                <button
-                  data-testid={`project-delete-${p.id}`}
-                  onClick={() => remove(p.id)}
-                  className="p-1.5 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    data-testid={`project-edit-${p.id}`}
+                    onClick={() => startEdit(p)}
+                    className="p-1.5 text-gray-300 hover:text-gray-700 hover:bg-gray-100 rounded"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    data-testid={`project-delete-${p.id}`}
+                    onClick={() => remove(p.id)}
+                    className="p-1.5 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
               <h3 className="font-display font-semibold text-[#1C4B3E] dark:text-[#d7e6b6] mb-1">{p.name}</h3>
               <p className="text-xs text-gray-500 mb-1">
@@ -107,7 +153,7 @@ export default function ProjectsPage() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent data-testid="project-form-dialog">
           <DialogHeader>
-            <DialogTitle className="font-display">Create project</DialogTitle>
+            <DialogTitle className="font-display">{editingProjectId ? "Edit project" : "Create project"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <Input
@@ -155,7 +201,9 @@ export default function ProjectsPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={create} className="bg-orange-600 hover:bg-orange-700 text-white" data-testid="project-form-save">Create</Button>
+            <Button onClick={upsert} className="bg-orange-600 hover:bg-orange-700 text-white" data-testid="project-form-save">
+              {editingProjectId ? "Save changes" : "Create"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
