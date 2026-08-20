@@ -1,4 +1,9 @@
-export default function BrandLogo({ className = "", alt = "SerenOps logo", showText = true }) {
+export default function BrandLogo({
+  className = "",
+  alt = "SerenOps logo",
+  showText = true,
+  textClassName = "text-[#F3F7F5]",
+}) {
   const imgSrc = "/serenops-icon.png";
 
   return (
@@ -15,7 +20,7 @@ export default function BrandLogo({ className = "", alt = "SerenOps logo", showT
         }}
       />
       {showText && (
-        <span className="font-display text-3xl font-semibold text-foreground">
+        <span className={`font-display text-3xl font-semibold ${textClassName}`}>
           erenOps
         </span>
       )}

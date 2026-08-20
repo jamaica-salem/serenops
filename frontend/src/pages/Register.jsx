@@ -27,7 +27,7 @@ export default function Register() {
         data-testid="register-form"
       >
         <div className="flex items-center gap-2 mb-2">
-          <BrandLogo className="h-9 w-auto select-none" alt="SerenOps" />
+          <BrandLogo className="h-9 w-auto select-none" textClassName="text-foreground" alt="SerenOps" />
         </div>
         <div>
           <h2 className="font-display text-2xl font-bold text-foreground">Create account</h2>
