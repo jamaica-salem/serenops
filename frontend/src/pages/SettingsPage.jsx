@@ -217,7 +217,7 @@ export default function SettingsPage() {
       {/* Demo & Sample Data Management Section */}
       <div className="bg-card rounded-2xl border border-border p-6" data-testid="sample-data-section">
         <div className="flex items-start gap-4 mb-6">
-          <div className="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
             <Database className="w-5 h-5" />
           </div>
           <div>
@@ -233,7 +233,7 @@ export default function SettingsPage() {
             data-testid="sample-data-feedback"
             className={`p-3.5 rounded-xl text-sm flex items-center gap-2.5 mb-5 ${
               sampleFeedback.type === "success"
-                ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
+                ? "bg-primary/10 text-primary border border-primary/20"
                 : "bg-destructive/10 text-destructive border border-destructive/20"
             }`}
           >
@@ -251,7 +251,7 @@ export default function SettingsPage() {
             data-testid="load-sample-data-btn"
             onClick={handleLoadSampleData}
             disabled={sampleLoading || sampleClearing}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-2"
+            className="bg-primary hover:bg-primary/90 text-white flex items-center gap-2"
           >
             {sampleLoading ? (
               <RefreshCw className="w-4 h-4 animate-spin" />
@@ -266,7 +266,7 @@ export default function SettingsPage() {
             variant="outline"
             onClick={() => setConfirmClearOpen(true)}
             disabled={sampleLoading || sampleClearing}
-            className="border-destructive/40 text-destructive hover:bg-destructive/10 flex items-center gap-2"
+            className="border-destructive/30 text-destructive hover:bg-destructive/10 flex items-center gap-2"
           >
             {sampleClearing ? (
               <RefreshCw className="w-4 h-4 animate-spin" />
