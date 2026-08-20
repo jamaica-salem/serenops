@@ -2,7 +2,7 @@ export default function BrandLogo({
   className = "",
   alt = "SerenOps logo",
   showText = true,
-  textClassName = "text-[#F3F7F5]",
+  textClassName = "text-[#d7e6b6]",
 }) {
   const imgSrc = "/serenops-icon.png";
 
