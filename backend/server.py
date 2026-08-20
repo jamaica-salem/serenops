@@ -23,6 +23,7 @@ import routes_projects
 import routes_tasks
 import routes_users
 import routes_portal
+import routes_sample_data
 from seed import run_seed
 
 # ---------- Mongo ----------
@@ -52,6 +53,7 @@ api_router.include_router(routes_dashboard.router)
 api_router.include_router(routes_llm.router)
 api_router.include_router(routes_chat.router)
 api_router.include_router(routes_portal.router)
+api_router.include_router(routes_sample_data.router)
 
 app.include_router(api_router)
 
