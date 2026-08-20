@@ -7,7 +7,22 @@ leads, onboarding, proposals, contracts, invoices, payments, projects, tasks, re
 - Backend: FastAPI + MongoDB
 - Frontend: React + Tailwind
 
-## Quick Setup
+## Quick Setup with Docker (Recommended)
+
+Run MongoDB, Backend, and Frontend all together with a single command:
+
+```bash
+docker compose up --build
+```
+
+To stop all services:
+```bash
+docker compose down
+```
+
+---
+
+## Manual Setup
 
 ### 1. Backend
 ```bash

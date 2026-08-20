@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: serenops-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: serenops-backend
+    ports:
+      - "8008:8008"
+    environment:
+      - MONGO_URL=mongodb://mongo:27017
+      - DB_NAME=serenops
+      - JWT_SECRET=serenops-super-secret-key-12345
+      - CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+      - COOKIE_SECURE=false
+      - COOKIE_SAMESITE=lax
+    depends_on:
+      - mongo
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_BACKEND_URL: http://localhost:8008
+        REACT_APP_BYPASS_AUTH: "true"
+    container_name: serenops-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  mongo_data:
