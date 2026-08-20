@@ -279,12 +279,120 @@ function dashboardSummary(db) {
   };
 }
 
+function populateSampleDb(db) {
+  const stamp = nowIso();
+  const today = todayIso();
+  const ownerId = DEV_USER.id;
+
+  const c1 = rid(), c2 = rid(), c3 = rid(), c4 = rid();
+  const p1 = rid(), p2 = rid(), p3 = rid(), p4 = rid();
+  const inv1 = rid(), inv2 = rid(), inv3 = rid();
+
+  const clients = [
+    { id: c1, name: "Acme Studios", company_name: "Acme Media Group", email: "contact@acmestudios.com", phone: "+1 (555) 234-5678", status: "active", source: "referral", notes: "Key branding & website client", owner_id: ownerId, created_at: stamp, updated_at: stamp },
+    { id: c2, name: "Apex Digital", company_name: "Apex Solutions Inc", email: "hello@apexdigital.co", phone: "+1 (555) 876-5432", status: "active", source: "website", notes: "Mobile app companion project", owner_id: ownerId, created_at: stamp, updated_at: stamp },
+    { id: c3, name: "Nova Health", company_name: "Nova Wellness Ltd", email: "info@novahealth.org", phone: "+1 (555) 345-6789", status: "lead", source: "inbound", notes: "In discussion for internal analytics portal", owner_id: ownerId, created_at: stamp, updated_at: stamp },
+    { id: c4, name: "Pinnacle Tech", company_name: "Pinnacle Systems", email: "partners@pinnacle.io", phone: "+1 (555) 901-2345", status: "completed", source: "linkedin", notes: "DevOps & GitHub Sync project completed", owner_id: ownerId, created_at: stamp, updated_at: stamp },
+  ];
+
+  const projects = [
+    { id: p1, name: "BrightBridge Website", description: "Marketing site refresh & CMS migration", color: "#EA580C", status: "in_progress", client_id: c1, owner_id: ownerId, created_at: stamp, updated_at: stamp },
+    { id: p2, name: "9TDesign Mobile App", description: "iOS & Android companion prototype", color: "#3B82F6", status: "in_progress", client_id: c2, owner_id: ownerId, created_at: stamp, updated_at: stamp },
+    { id: p3, name: "Horizon Dashboard", description: "Internal analytics & telemetry dashboard", color: "#10B981", status: "planning", client_id: c3, owner_id: ownerId, created_at: stamp, updated_at: stamp },
+    { id: p4, name: "GitHub Sync Pipeline", description: "Dev assets sync & automation", color: "#8B5CF6", status: "completed", client_id: c4, owner_id: ownerId, created_at: stamp, updated_at: stamp },
+  ];
+
+  const tasks = [
+    { id: rid(), title: "Design framer website with modern templates", description: "BrightBridge marketing landing page design", status: "in_progress", priority: "high", due_date: today, project_id: p1, client_id: c1, assignee_id: ownerId, creator_id: ownerId, created_at: stamp, updated_at: stamp },
+    { id: rid(), title: "Fix navbar overflow on mobile screens", description: "Critical UI bug on small viewport sizes", status: "in_progress", priority: "urgent", due_date: today, project_id: p1, client_id: c1, assignee_id: ownerId, creator_id: ownerId, created_at: stamp, updated_at: stamp },
+    { id: rid(), title: "Mobile App Prototype ready for testing", description: "Prepare Figma prototype for user testing", status: "todo", priority: "high", due_date: today, project_id: p2, client_id: c2, assignee_id: ownerId, creator_id: ownerId, created_at: stamp, updated_at: stamp },
+    { id: rid(), title: "Dashboard Design layout review", description: "Finalize card grid and chart components", status: "todo", priority: "medium", due_date: today, project_id: p3, client_id: c3, assignee_id: ownerId, creator_id: ownerId, created_at: stamp, updated_at: stamp },
+    { id: rid(), title: "API contract for tasks endpoint", description: "Document OpenAPI schema & REST routes", status: "done", priority: "medium", due_date: today, project_id: p3, client_id: c3, assignee_id: ownerId, creator_id: ownerId, created_at: stamp, updated_at: stamp },
+    { id: rid(), title: "Launch checklist QA verification", description: "Pre-launch cross browser check", status: "done", priority: "low", due_date: today, project_id: p4, client_id: c4, assignee_id: ownerId, creator_id: ownerId, created_at: stamp, updated_at: stamp },
+  ];
+
+  const proposals = [
+    { id: rid(), client_id: c1, project_title: "BrightBridge Website Redesign & Brand Refresh", scope_of_work: "Complete UI/UX overhaul, responsive template development, CMS setup.", deliverables: "Figma design system, React landing pages.", pricing: "$12,500 USD", status: "accepted", sent_date: today, valid_until: today, notes: "Accepted by client.", created_at: stamp, updated_at: stamp, owner_id: ownerId },
+    { id: rid(), client_id: c2, project_title: "Apex Companion Mobile App MVP", scope_of_work: "Cross-platform mobile application prototype.", deliverables: "iOS/Android app bundle, API specs.", pricing: "$18,000 USD", status: "sent", sent_date: today, valid_until: today, notes: "Sent to client team.", created_at: stamp, updated_at: stamp, owner_id: ownerId },
+  ];
+
+  const contracts = [
+    { id: rid(), client_id: c1, title: "Master Services Agreement - Acme Studios", scope_of_work: "Design & development services for BrightBridge Website Refresh.", payment_terms: "50% upfront deposit ($6,250), 50% upon project completion ($6,250).", status: "signed", effective_date: today, created_at: stamp, updated_at: stamp, owner_id: ownerId }
+  ];
+
+  const i1 = { id: inv1, invoice_number: "INV-2026-001", client_id: c1, project_id: p1, issue_date: today, due_date: today, currency: "USD", line_items: [{ description: "50% Upfront Deposit - Website Redesign", quantity: 1, rate: 6250.0 }], subtotal: 6250.0, discount: 0, tax_fees: 0, total: 6250.0, amount_paid: 6250.0, balance_due: 0, status: "paid", notes: "Thank you for your business!", created_at: stamp, updated_at: stamp, owner_id: ownerId };
+  const i2 = { id: inv2, invoice_number: "INV-2026-002", client_id: c1, project_id: p1, issue_date: today, due_date: today, currency: "USD", line_items: [{ description: "Final Milestone Payment - Website Delivery", quantity: 1, rate: 6250.0 }], subtotal: 6250.0, discount: 0, tax_fees: 0, total: 6250.0, amount_paid: 0, balance_due: 6250.0, status: "sent", notes: "Due upon final launch.", created_at: stamp, updated_at: stamp, owner_id: ownerId };
+  const i3 = { id: inv3, invoice_number: "INV-2026-003", client_id: c2, project_id: p2, issue_date: today, due_date: today, currency: "USD", line_items: [{ description: "Mobile App Prototype & Wireframes", quantity: 1, rate: 4500.0 }], subtotal: 4500.0, discount: 0, tax_fees: 0, total: 4500.0, amount_paid: 0, balance_due: 4500.0, status: "overdue", notes: "Please process payment as soon as possible.", created_at: stamp, updated_at: stamp, owner_id: ownerId };
+  const invoices = [i1, i2, i3];
+
+  const payments = [
+    { id: rid(), client_id: c1, invoice_id: inv1, project_id: p1, payment_date: today, amount: 6250.0, method: "stripe", reference_number: "ch_3N1xYZ2eZvKYlo2C", notes: "Stripe online payment received", status: "recorded", remaining_balance: 0.0, created_at: stamp, owner_id: ownerId }
+  ];
+
+  const revisions = [
+    { id: rid(), client_id: c1, project_id: p1, request_title: "Hero CTA alignment & font weight update", description: "Increase primary button size and adjust hero banner typography.", status: "in_progress", date_requested: today, created_at: stamp, updated_at: stamp, owner_id: ownerId },
+    { id: rid(), client_id: c2, project_id: p2, request_title: "Color scheme adjustments for dark mode on mobile", description: "Ensure high contrast on dark mode background cards.", status: "requested", date_requested: today, created_at: stamp, updated_at: stamp, owner_id: ownerId }
+  ];
+
+  const maintenance_plans = [
+    { id: rid(), client_id: c4, project_id: p4, plan_name: "Standard Maintenance & Security SLA", monthly_fee: 450.0, start_date: today, status: "active", notes: "Includes monthly server patch & backup verification.", created_at: stamp, updated_at: stamp, owner_id: ownerId }
+  ];
+
+  const timeline_events = [
+    { id: rid(), client_id: c1, event_type: "client_created", title: "Client onboarded: Acme Studios", details: "Acme Media Group", occurred_at: today, created_at: stamp, owner_id: ownerId },
+    { id: rid(), client_id: c1, event_type: "contract_signed", title: "Contract signed: Master Services Agreement", details: "50% upfront deposit", occurred_at: today, created_at: stamp, owner_id: ownerId },
+    { id: rid(), client_id: c1, event_type: "payment_received", title: "Payment received for INV-2026-001", details: "$6,250.00 via Stripe", occurred_at: today, created_at: stamp, owner_id: ownerId }
+  ];
+
+  const meetings = [
+    { id: rid(), title: "BrightBridge Design Sync", platform: "Google Meet", starts_at: stamp, project_id: p1 },
+    { id: rid(), title: "Apex Mobile App Demo", platform: "Zoom", starts_at: stamp, project_id: p2 }
+  ];
+
+  const nextDb = { ...db, clients, projects, tasks, proposals, contracts, invoices, payments, revisions, maintenance_plans, timeline_events, meetings };
+  clients.forEach((c) => ensureClientArtifacts(nextDb, c.id));
+  return nextDb;
+}
+
+function clearSampleDb(db) {
+  return {
+    ...db,
+    clients: [],
+    projects: [],
+    tasks: [],
+    invoices: [],
+    payments: [],
+    proposals: [],
+    contracts: [],
+    file_links: [],
+    revisions: [],
+    timeline_events: [],
+    maintenance_plans: [],
+    onboarding_items: [],
+    handover_items: [],
+    meetings: [],
+  };
+}
+
 function localRequest(method, url, payload = null, config = {}) {
   const db = readDb();
   const path = normalizePath(url);
   const parts = path.replace(/^\//, "").split("/").filter(Boolean);
   const params = config?.params || {};
   const stamp = nowIso();
+
+  if (parts[0] === "sample-data") {
+    if (parts[1] === "load" && method === "post") {
+      const sample = populateSampleDb(db);
+      writeDb(sample);
+      return response({ ok: true, message: "Sample data loaded successfully." });
+    }
+    if (parts[1] === "clear" && method === "delete") {
+      const cleared = clearSampleDb(db);
+      writeDb(cleared);
+      return response({ ok: true, message: "Sample data removed successfully." });
+    }
+  }
 
   if (parts[0] === "auth") {
     if (method === "get" && parts[1] === "me") return response(DEV_USER);
