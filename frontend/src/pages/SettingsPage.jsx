@@ -111,14 +111,15 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-up max-w-3xl" data-testid="settings-page">
+    <div className="space-y-6 animate-fade-up w-full" data-testid="settings-page">
       <div>
         <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground">Settings</h1>
         <p className="text-sm text-muted-foreground mt-1">Configure your AI assistant & workspace data</p>
       </div>
 
-      {/* AI Provider Section */}
-      <div className="bg-card rounded-2xl border border-border p-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* AI Provider Section */}
+        <div className="bg-card rounded-2xl border border-border p-6">
         <div className="flex items-start gap-4 mb-6">
           <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
             <Sparkles className="w-5 h-5" />
@@ -277,6 +278,7 @@ export default function SettingsPage() {
           </Button>
         </div>
       </div>
+    </div>
 
       {/* Confirmation Modal for Clearing Sample Data */}
       <AlertDialog open={confirmClearOpen} onOpenChange={setConfirmClearOpen}>
